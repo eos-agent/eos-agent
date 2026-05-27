@@ -1,0 +1,2631 @@
+/* ═══════════════════════════════════════════════════════════════
+   EOS AGENT — JARVIS VISUAL OVERHAUL  v5.0 — N172 Full Upgrade
+   3-column holographic dashboard: Left / Center Hero / Right
+═══════════════════════════════════════════════════════════════ */
+
+/* ── ROOT ────────────────────────────────────────────────────── */
+:root {
+  --bg:  #01010a !important;
+  --s1:  rgba(4,4,18,.97) !important;
+  --s2:  rgba(6,6,22,.97) !important;
+  --s3:  rgba(9,9,28,.98) !important;
+  --r:   #aa0000 !important;
+  --r2:  #ee1a1a !important;
+  --r3:  #ff5555 !important;
+  --rg:  rgba(238,26,26,.38) !important;
+  --rb:  rgba(180,0,0,.14) !important;
+  --rd:  rgba(180,0,0,.05) !important;
+  --tx:  #dde0f5 !important;
+  --mid: #6070a8 !important;
+  --dim: #222240 !important;
+  --bdr: rgba(255,255,255,.03) !important;
+}
+
+html, body {
+  background: #01010a !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+body::before {
+  content: '' !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(140,0,0,.09) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 12% 88%, rgba(100,0,0,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 88% 78%, rgba(120,0,0,.05) 0%, transparent 55%) !important;
+}
+
+/* ── NEW JARVIS DASHBOARD LAYOUT ─────────────────────────────── */
+.j-dashboard {
+  display: grid !important;
+  grid-template-columns: 230px 1fr 270px !important;
+  grid-template-rows: 100% !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+/* Override any inline style that set the old grid */
+#view-dashboard[style] {
+  display: grid !important;
+  grid-template-columns: 230px 1fr 270px !important;
+  grid-template-rows: 100% !important;
+  gap: 8px !important;
+  padding: 8px !important;
+}
+
+.j-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+}
+
+.j-flex {
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+
+/* ── JARVIS PANELS ───────────────────────────────────────────── */
+.j-panel {
+  background: linear-gradient(155deg,
+    rgba(7,6,24,.98) 0%,
+    rgba(4,4,16,.99) 100%) !important;
+  border: 1px solid rgba(160,0,0,.2) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.5),
+    0 8px 24px rgba(0,0,0,.3),
+    inset 0 1px 0 rgba(255,255,255,.04),
+    inset 0 0 40px rgba(0,0,0,.2) !important;
+  transition: border-color .3s ease, box-shadow .3s ease !important;
+}
+
+/* Top glow line */
+.j-panel::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 10% !important;
+  right: 10% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(200,0,0,.5) 40%,
+    rgba(220,0,0,.8) 50%,
+    rgba(200,0,0,.5) 60%,
+    transparent) !important;
+  z-index: 2 !important;
+}
+
+.j-panel:hover {
+  border-color: rgba(200,0,0,.35) !important;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,.6),
+    0 12px 40px rgba(0,0,0,.4),
+    0 0 0 1px rgba(200,0,0,.1),
+    inset 0 0 30px rgba(200,0,0,.04) !important;
+}
+
+/* Panel header */
+.j-ph {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 9px 14px 7px !important;
+  font-family: var(--mo) !important;
+  font-size: 6.5px !important;
+  letter-spacing: 3.5px !important;
+  color: rgba(180,0,0,.55) !important;
+  background: rgba(200,0,0,.025) !important;
+  border-bottom: 1px solid rgba(160,0,0,.1) !important;
+  position: relative !important;
+}
+
+.j-ph::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -1px !important;
+  left: 14px !important;
+  width: 36px !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, #ee1a1a, transparent) !important;
+  box-shadow: 0 0 8px rgba(200,0,0,.5) !important;
+}
+
+.j-ph-dot {
+  width: 4px !important;
+  height: 4px !important;
+  border-radius: 50% !important;
+  background: var(--r) !important;
+  box-shadow: 0 0 5px var(--r), 0 0 10px rgba(200,0,0,.4) !important;
+  animation: pulse 3s infinite !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── HUD CORNER BRACKETS ─────────────────────────────────────── */
+.j-brackets { pointer-events: none !important; }
+
+.j-br {
+  position: absolute !important;
+  width: 14px !important;
+  height: 14px !important;
+  z-index: 3 !important;
+}
+
+.j-br::before,
+.j-br::after {
+  content: '' !important;
+  position: absolute !important;
+  background: rgba(200,0,0,.65) !important;
+  box-shadow: 0 0 4px rgba(200,0,0,.4) !important;
+}
+
+.j-br::before { width: 100% !important; height: 1.5px !important; }
+.j-br::after  { width: 1.5px !important; height: 100% !important; }
+
+.j-br.tl { top: 8px !important; left: 8px !important; }
+.j-br.tl::before, .j-br.tl::after { top: 0 !important; left: 0 !important; }
+
+.j-br.tr { top: 8px !important; right: 8px !important; transform: scaleX(-1) !important; }
+.j-br.bl { bottom: 8px !important; left: 8px !important; transform: scaleY(-1) !important; }
+.j-br.br { bottom: 8px !important; right: 8px !important; transform: scale(-1) !important; }
+
+/* ── ORB HERO PANEL ──────────────────────────────────────────── */
+.j-orb-hero {
+  flex-shrink: 0 !important;
+  height: 360px !important;
+  min-height: 360px !important;
+  max-height: 360px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  /* Fondo JARVIS: radial glow + grid sutil */
+  background:
+    radial-gradient(ellipse 70% 65% at 50% 50%,
+      rgba(140,0,0,.13) 0%,
+      rgba(80,0,0,.06) 45%,
+      rgba(4,4,16,.0) 70%) !important;
+}
+
+/* Grid HUD sutil en el fondo del panel ORB */
+.j-orb-hero::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background-image:
+    linear-gradient(rgba(180,0,0,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,0,0,.028) 1px, transparent 1px) !important;
+  background-size: 38px 38px !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%,
+    black 30%, transparent 80%) !important;
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%,
+    black 30%, transparent 80%) !important;
+}
+
+/* Línea de scan horizontal animada */
+.j-orb-hero .j-ph::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,0,0,.0) 10%,
+    rgba(200,0,0,.35) 50%,
+    rgba(200,0,0,.0) 90%,
+    transparent 100%) !important;
+  animation: eos-scan 4s ease-in-out infinite !important;
+  top: var(--scan-y, 50%) !important;
+  pointer-events: none !important;
+}
+
+@keyframes eos-scan {
+  0%   { top: 5%;  opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 95%; opacity: 0; }
+}
+
+/* orb-panel: ocupa todo el espacio, SIN position:relative
+   (para que el wrap sea relativo al panel completo .j-orb-hero) */
+.j-orb-hero .orb-panel {
+  display: block !important;
+  position: static !important;
+  width: 100% !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+
+/* ORB wrap: CENTRADO, DOMINANTE — 220px */
+.j-orb-hero #eosOrbWrap {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 220px !important;
+  height: 220px !important;
+  z-index: 2 !important;
+}
+
+/* Canvas: forzar que llene el wrap exactamente (hay un !important 250px en el HTML) */
+.j-orb-hero #eosOrbCanvas {
+  width: 100% !important;
+  height: 100% !important;
+  filter: drop-shadow(0 0 18px rgba(200,0,0,.35)) !important;
+}
+
+/* Ocultar label */
+.j-orb-hero #orbLabel { display: none !important; }
+
+/* Botón voz: anclado al fondo, centrado */
+.j-orb-hero .orb-panel > div:nth-child(4) {
+  position: absolute !important;
+  bottom: 52px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  z-index: 2 !important;
+  white-space: nowrap !important;
+}
+
+/* Métricas: ancladas al fondo */
+.j-orb-hero .orb-metrics {
+  position: absolute !important;
+  bottom: 14px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2 !important;
+  white-space: nowrap !important;
+}
+
+/* orb-v-ring: ver sección N172 */
+
+/* Label debajo del ORB */
+.j-orb-hero #orbLabel {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 3.5px !important;
+  color: rgba(200,0,0,.5) !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+}
+
+/* Fila de voz */
+.j-orb-hero .orb-panel > div:nth-child(4) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  justify-content: center !important;
+}
+
+/* Métricas en fila horizontal compacta */
+.j-orb-hero .orb-metrics {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 18px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(200,0,0,.04) !important;
+  border: 1px solid rgba(200,0,0,.1) !important;
+  border-radius: 8px !important;
+  padding: 6px 18px !important;
+}
+
+.j-orb-hero .orb-metric {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+
+.j-orb-hero .orb-metric-val {
+  font-size: 20px !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  color: var(--r2) !important;
+  text-shadow:
+    0 0 14px rgba(200,0,0,.7),
+    0 0 28px rgba(200,0,0,.3) !important;
+  letter-spacing: 2px !important;
+}
+
+.j-orb-hero .orb-metric-lbl {
+  font-family: var(--mo) !important;
+  font-size: 5.5px !important;
+  letter-spacing: 2.5px !important;
+  color: rgba(180,0,0,.45) !important;
+}
+
+#voiceWakeBtn {
+  font-family: var(--mo) !important;
+  font-size: 8px !important;
+  letter-spacing: 2px !important;
+  background: rgba(200,0,0,.1) !important;
+  border: 1px solid rgba(200,0,0,.3) !important;
+  color: var(--r2) !important;
+  padding: 5px 14px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all .2s ease !important;
+}
+
+#voiceWakeBtn:hover {
+  background: rgba(200,0,0,.2) !important;
+  box-shadow: 0 0 12px rgba(200,0,0,.25) !important;
+}
+
+/* ── ORKI ITEMS ──────────────────────────────────────────────── */
+.orki-list {
+  padding: 6px 10px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.orki-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 7px 10px !important;
+  border-radius: 6px !important;
+  border: 1px solid transparent !important;
+  border-left: 2px solid rgba(180,0,0,.12) !important;
+  cursor: pointer !important;
+  transition: all .2s ease !important;
+  position: relative !important;
+}
+
+.orki-item:hover {
+  background: rgba(200,0,0,.06) !important;
+  border-left-color: rgba(200,0,0,.4) !important;
+  border-color: rgba(200,0,0,.12) !important;
+}
+
+.orki-item.active {
+  background: linear-gradient(90deg, rgba(180,0,0,.14), rgba(180,0,0,.03)) !important;
+  border-left-color: #ee1a1a !important;
+  border-color: rgba(200,0,0,.18) !important;
+  box-shadow: inset 0 0 20px rgba(200,0,0,.04) !important;
+}
+
+.orki-n {
+  font-family: var(--mo) !important;
+  font-size: 8px !important;
+  letter-spacing: 1px !important;
+  color: rgba(200,0,0,.4) !important;
+  min-width: 18px !important;
+  font-weight: 600 !important;
+}
+
+.orki-item.active .orki-n {
+  color: var(--r2) !important;
+  text-shadow: 0 0 8px rgba(200,0,0,.6) !important;
+}
+
+.orki-txt {
+  font-size: 10px !important;
+  color: rgba(190,200,240,.45) !important;
+  font-weight: 300 !important;
+}
+
+.orki-item.active .orki-txt {
+  color: rgba(220,225,255,.85) !important;
+}
+
+/* ── STAT GRID ───────────────────────────────────────────────── */
+.stat-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 5px !important;
+  padding: 7px 10px !important;
+}
+
+.stat-item {
+  background: rgba(255,255,255,.018) !important;
+  border: 1px solid rgba(255,255,255,.05) !important;
+  border-radius: 8px !important;
+  padding: 9px 10px !important;
+  cursor: pointer !important;
+  transition: all .2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.stat-item::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(200,0,0,.35), transparent) !important;
+}
+
+.stat-item:hover {
+  background: rgba(200,0,0,.07) !important;
+  border-color: rgba(200,0,0,.22) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,.3) !important;
+}
+
+.stat-val {
+  font-size: 24px !important;
+  font-weight: 200 !important;
+  color: var(--r2) !important;
+  letter-spacing: 1px !important;
+  line-height: 1 !important;
+  text-shadow: 0 0 14px rgba(200,0,0,.55) !important;
+}
+
+.stat-lbl {
+  font-family: var(--mo) !important;
+  font-size: 5.5px !important;
+  letter-spacing: 2px !important;
+  color: rgba(180,0,0,.4) !important;
+  margin-top: 5px !important;
+}
+
+.stat-bar {
+  height: 1.5px !important;
+  background: rgba(255,255,255,.05) !important;
+  border-radius: 1px !important;
+  overflow: hidden !important;
+  margin-top: 6px !important;
+}
+
+.stat-bar-fill {
+  height: 100% !important;
+  background: linear-gradient(90deg, #770000, #ee1a1a) !important;
+  box-shadow: 0 0 6px rgba(200,0,0,.5) !important;
+  border-radius: 1px !important;
+  transition: width 1s cubic-bezier(.4,0,.2,1) !important;
+}
+
+/* ── INTELLIGENCE SCORE ──────────────────────────────────────── */
+.intel-score {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.intel-score-val {
+  font-size: 38px !important;
+  font-weight: 100 !important;
+  color: var(--r2) !important;
+  text-shadow:
+    0 0 22px rgba(200,0,0,.75),
+    0 0 50px rgba(200,0,0,.35),
+    0 0 90px rgba(200,0,0,.12) !important;
+  letter-spacing: 4px !important;
+  line-height: 1 !important;
+}
+
+.intel-score-lbl {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 3px !important;
+  color: rgba(180,0,0,.35) !important;
+}
+
+.intel-score-bar {
+  width: 100% !important;
+  height: 2px !important;
+  background: rgba(255,255,255,.06) !important;
+  border-radius: 1px !important;
+  overflow: hidden !important;
+}
+
+.intel-score-fill {
+  height: 100% !important;
+  background: linear-gradient(90deg, #aa0000, #ee1a1a) !important;
+  box-shadow: 0 0 8px rgba(200,0,0,.6) !important;
+  border-radius: 1px !important;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1) !important;
+}
+
+/* ── MX STRIP (platforms) ────────────────────────────────────── */
+.mx-strip {
+  display: flex !important;
+  gap: 0 !important;
+  border-top: 1px solid rgba(160,0,0,.08) !important;
+  padding: 5px 10px !important;
+}
+
+.mx-cell {
+  flex: 1 !important;
+  text-align: center !important;
+  padding: 5px 4px !important;
+  cursor: pointer !important;
+  border-radius: 5px !important;
+  transition: background .2s !important;
+}
+
+.mx-cell:hover { background: rgba(200,0,0,.06) !important; }
+
+.mx-cell-val {
+  font-size: 13px !important;
+  font-weight: 300 !important;
+  color: rgba(210,220,255,.7) !important;
+  line-height: 1 !important;
+}
+
+.mx-cell-lbl {
+  font-family: var(--mo) !important;
+  font-size: 5.5px !important;
+  letter-spacing: 2px !important;
+  color: rgba(180,0,0,.35) !important;
+  margin-top: 2px !important;
+}
+
+.mx-cell-delta {
+  font-family: var(--mo) !important;
+  font-size: 5px !important;
+  letter-spacing: 1px !important;
+  margin-top: 2px !important;
+}
+
+.mx-cell-delta.up   { color: rgba(34,197,94,.7) !important; }
+.mx-cell-delta.down { color: rgba(200,0,0,.7) !important; }
+.mx-cell-delta.flat { color: rgba(180,0,0,.3) !important; }
+
+/* ── PANEL HEADER REFINEMENT ─────────────────────────────────── */
+.j-ph {
+  font-size: 7px !important;
+  letter-spacing: 4px !important;
+}
+
+/* ── N105 COMANDO HOY ────────────────────────────────────────── */
+#n105Card {
+  padding: 8px 12px !important;
+  border-bottom: 1px solid rgba(180,0,0,.08) !important;
+}
+
+.n105-date {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 3px !important;
+  color: rgba(200,0,0,.4) !important;
+  margin-bottom: 5px !important;
+}
+
+.n105-rows {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.n105-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  font-size: 9px !important;
+}
+
+.n105-label {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 2px !important;
+  color: rgba(150,160,200,.4) !important;
+}
+
+.n105-orki-chip {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 1px !important;
+  background: rgba(200,0,0,.12) !important;
+  border: 1px solid rgba(200,0,0,.22) !important;
+  border-radius: 4px !important;
+  padding: 2px 7px !important;
+  color: var(--r2) !important;
+}
+
+.n105-val {
+  font-size: 11px !important;
+  color: rgba(210,220,255,.65) !important;
+  font-weight: 300 !important;
+}
+
+/* ── N84 SECTION ─────────────────────────────────────────────── */
+.n84-section-label {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 2.5px !important;
+  color: rgba(180,0,0,.35) !important;
+  padding: 8px 0 4px !important;
+}
+
+.n84-mod-btn {
+  background: rgba(255,255,255,.02) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  border-radius: 6px !important;
+  padding: 5px 10px !important;
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 1px !important;
+  color: rgba(190,200,240,.55) !important;
+  cursor: pointer !important;
+  transition: all .2s ease !important;
+}
+
+.n84-mod-btn:hover {
+  background: rgba(200,0,0,.08) !important;
+  border-color: rgba(200,0,0,.22) !important;
+  color: rgba(220,230,255,.8) !important;
+}
+
+.n84-scan-btn {
+  font-family: var(--mo) !important;
+  font-size: 7.5px !important;
+  letter-spacing: 2px !important;
+  background: rgba(200,0,0,.12) !important;
+  border: 1px solid rgba(200,0,0,.3) !important;
+  color: var(--r2) !important;
+  padding: 7px 14px !important;
+  border-radius: 7px !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+  transition: all .25s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.n84-scan-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: -100% !important;
+  width: 100% !important; height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(200,0,0,.1), transparent) !important;
+  transition: left .4s ease !important;
+}
+
+.n84-scan-btn:hover::before { left: 100% !important; }
+
+.n84-scan-btn:hover {
+  background: rgba(200,0,0,.22) !important;
+  box-shadow: 0 0 18px rgba(200,0,0,.2) !important;
+}
+
+/* ── N107 PIPELINE ───────────────────────────────────────────── */
+#n107Pipeline {
+  border-top: 1px solid rgba(180,0,0,.08) !important;
+  padding: 8px 12px !important;
+}
+
+.n107-header {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 2.5px !important;
+  color: rgba(180,0,0,.35) !important;
+  margin-bottom: 7px !important;
+}
+
+.n107-funnel {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.n107-stage {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 3px !important;
+  flex: 1 !important;
+  cursor: pointer !important;
+  padding: 5px !important;
+  border-radius: 6px !important;
+  transition: background .2s !important;
+}
+
+.n107-stage:hover { background: rgba(200,0,0,.06) !important; }
+
+.n107-stage-n {
+  font-size: 16px !important;
+  font-weight: 200 !important;
+  line-height: 1 !important;
+  text-shadow: 0 0 10px currentColor !important;
+}
+
+.n107-stage-n.s1 { color: rgba(180,0,0,.6) !important; }
+.n107-stage-n.s2 { color: rgba(200,80,0,.6) !important; }
+.n107-stage-n.s3 { color: rgba(180,140,0,.6) !important; }
+.n107-stage-n.s4 { color: rgba(34,160,80,.65) !important; }
+
+.n107-stage-lbl {
+  font-family: var(--mo) !important;
+  font-size: 5px !important;
+  letter-spacing: 1.5px !important;
+  color: rgba(180,0,0,.3) !important;
+}
+
+.n107-arrow {
+  color: rgba(180,0,0,.2) !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+}
+
+/* ── AI CENTRAL PANEL ────────────────────────────────────────── */
+.j-ai-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+
+.j-ai-panel #mainChatArea {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  min-height: 0 !important;
+  padding: 16px !important;
+}
+
+/* Greeting bar in AI panel */
+.j-ai-panel #greetingBar {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 16px !important;
+  border-bottom: 1px solid rgba(180,0,0,.1) !important;
+  background: rgba(200,0,0,.025) !important;
+  font-size: 11px !important;
+}
+
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
+.sb {
+  background: linear-gradient(180deg,
+    rgba(3,2,14,.99),
+    rgba(2,2,10,.99)) !important;
+  border-right: 1px solid rgba(160,0,0,.14) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.sb-top {
+  border-bottom: 1px solid rgba(160,0,0,.1) !important;
+  background: linear-gradient(180deg, rgba(180,0,0,.05), transparent) !important;
+  padding: 18px 16px 15px !important;
+}
+
+.sb-eos {
+  font-size: 26px !important;
+  font-weight: 200 !important;
+  letter-spacing: 9px !important;
+  color: #ee1a1a !important;
+  text-shadow:
+    0 0 18px rgba(238,26,26,.7),
+    0 0 40px rgba(180,0,0,.35),
+    0 0 80px rgba(160,0,0,.12) !important;
+}
+
+.sb-jarvis { font-size: 7.5px !important; letter-spacing: 5px !important; color: rgba(180,0,0,.3) !important; }
+.sb-greek  { font-size: 7px !important; letter-spacing: 4px !important; color: rgba(180,0,0,.22) !important; }
+.sg        { font-size: 6px !important; letter-spacing: 4px !important; color: rgba(180,0,0,.22) !important; padding: 14px 14px 4px !important; }
+
+.ni {
+  border-left: 2px solid transparent !important;
+  border-radius: 0 6px 6px 0 !important;
+  margin: 1px 8px 1px 0 !important;
+  transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+}
+.ni:hover  { background: rgba(180,0,0,.07) !important; border-left-color: rgba(200,0,0,.45) !important; }
+.ni.on     { background: linear-gradient(90deg, rgba(180,0,0,.12), rgba(180,0,0,.04)) !important; border-left-color: #ee1a1a !important; }
+.ni.on .ni-t { color: #eef0ff !important; }
+.ni-t      { font-size: 10px !important; font-weight: 400 !important; }
+.ni-b      { background: rgba(180,0,0,.75) !important; border-radius: 10px !important; font-size: 6px !important; padding: 2px 6px !important; box-shadow: 0 0 8px rgba(180,0,0,.5) !important; }
+
+/* ── TOPBAR ──────────────────────────────────────────────────── */
+.topbar {
+  background: rgba(2,2,12,.97) !important;
+  border-bottom: 1px solid rgba(160,0,0,.12) !important;
+  backdrop-filter: blur(24px) !important;
+  box-shadow: 0 1px 0 rgba(180,0,0,.07), 0 4px 24px rgba(0,0,0,.5) !important;
+  height: 46px !important;
+}
+
+.tb-clock { font-size: 12px !important; letter-spacing: 2px !important; color: rgba(238,26,26,.75) !important; text-shadow: 0 0 10px rgba(180,0,0,.4) !important; }
+
+.tb-btn {
+  background: rgba(180,0,0,.07) !important;
+  border: 1px solid rgba(180,0,0,.2) !important;
+  border-radius: 6px !important;
+  font-size: 7.5px !important;
+  letter-spacing: 1.5px !important;
+  transition: all .2s ease !important;
+}
+.tb-btn:hover {
+  background: rgba(180,0,0,.18) !important;
+  border-color: rgba(238,26,26,.5) !important;
+  box-shadow: 0 0 14px rgba(180,0,0,.22) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ── OLD .p PANELS (other views still use them) ──────────────── */
+.p {
+  background: linear-gradient(145deg, rgba(6,5,22,.97), rgba(4,4,16,.99)) !important;
+  border: 1px solid rgba(160,0,0,.18) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04) !important;
+  transition: all .35s cubic-bezier(.4,0,.2,1) !important;
+}
+
+.p::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(200,0,0,.25) 25%, rgba(220,0,0,.5) 50%, rgba(200,0,0,.25) 75%, transparent 100%) !important;
+  z-index: 2 !important;
+}
+
+.p:hover {
+  border-color: rgba(200,0,0,.32) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,.5), 0 12px 40px rgba(0,0,0,.35), inset 0 0 30px rgba(200,0,0,.03) !important;
+}
+
+.ph {
+  font-size: 6.5px !important;
+  letter-spacing: 3.5px !important;
+  color: rgba(180,0,0,.55) !important;
+  padding: 9px 13px 7px !important;
+  background: rgba(200,0,0,.025) !important;
+  border-bottom: 1px solid rgba(160,0,0,.1) !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+
+.ph::after {
+  width: 32px !important;
+  background: linear-gradient(90deg, #ee1a1a, transparent) !important;
+  box-shadow: 0 0 10px rgba(200,0,0,.5) !important;
+  opacity: .65 !important;
+  border-radius: 1px !important;
+}
+
+/* ── CARDS ───────────────────────────────────────────────────── */
+.card {
+  background: rgba(255,255,255,.016) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(8px) !important;
+  transition: all .3s cubic-bezier(.4,0,.2,1) !important;
+  position: relative !important;
+}
+
+.card:hover {
+  border-color: rgba(180,0,0,.28) !important;
+  box-shadow: 0 0 0 1px rgba(180,0,0,.1), 0 8px 28px rgba(0,0,0,.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+.card-title { font-size: 7.5px !important; letter-spacing: 2.5px !important; color: rgba(180,0,0,.6) !important; }
+
+/* ── INPUTS ──────────────────────────────────────────────────── */
+input:not([type="range"]), textarea, select {
+  background: rgba(255,255,255,.03) !important;
+  border-color: rgba(255,255,255,.08) !important;
+  color: var(--tx) !important;
+  border-radius: 7px !important;
+  transition: all .2s ease !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  background: rgba(255,255,255,.05) !important;
+  border-color: rgba(180,0,0,.45) !important;
+  box-shadow: 0 0 0 3px rgba(180,0,0,.07) !important;
+  outline: none !important;
+}
+
+.sa-inp { background: rgba(255,255,255,.03) !important; border: 1px solid rgba(255,255,255,.07) !important; border-radius: 8px !important; }
+.sa-inp:focus { background: rgba(255,255,255,.05) !important; border-color: rgba(180,0,0,.4) !important; box-shadow: 0 0 0 3px rgba(180,0,0,.07) !important; }
+
+/* ── FLOATING CHAT ───────────────────────────────────────────── */
+#floatChatBtn {
+  background: radial-gradient(circle at 35% 35%, rgba(238,40,40,.2), rgba(160,0,0,.06)) !important;
+  border: 1.5px solid rgba(200,0,0,.42) !important;
+  box-shadow: 0 0 22px rgba(180,0,0,.28), 0 0 55px rgba(180,0,0,.1), 0 10px 30px rgba(0,0,0,.5) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+#floatChatPanel {
+  background: rgba(3,3,16,.97) !important;
+  border: 1px solid rgba(180,0,0,.18) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 0 50px rgba(180,0,0,.13), 0 30px 80px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.04) !important;
+  backdrop-filter: blur(30px) !important;
+}
+
+.fcp-header { background: linear-gradient(180deg, rgba(180,0,0,.06), rgba(180,0,0,.02)) !important; border-bottom: 1px solid rgba(180,0,0,.13) !important; }
+
+/* ── MESSAGES ────────────────────────────────────────────────── */
+.msg.bot  { background: rgba(255,255,255,.02) !important; border: 1px solid rgba(255,255,255,.05) !important; border-radius: 8px !important; line-height: 1.65 !important; }
+.msg.user { background: rgba(180,0,0,.1) !important; border: 1px solid rgba(180,0,0,.2) !important; border-radius: 8px !important; }
+.fc-msg-bubble { background: rgba(255,255,255,.03) !important; border: 1px solid rgba(255,255,255,.055) !important; }
+.fc-msg.user .fc-msg-bubble { background: rgba(180,0,0,.1) !important; border-color: rgba(180,0,0,.22) !important; }
+
+/* ── SECTION HEADERS ─────────────────────────────────────────── */
+.mod-title  { font-size: 17px !important; font-weight: 600 !important; color: #eef0ff !important; }
+.mod-sub    { font-size: 7px !important; letter-spacing: 2.5px !important; color: rgba(180,0,0,.45) !important; }
+.mod-header { border-bottom: 1px solid rgba(180,0,0,.1) !important; padding-bottom: 14px !important; margin-bottom: 16px !important; }
+
+/* ── ACCESS SCREEN ───────────────────────────────────────────── */
+#eosAccess {
+  background: radial-gradient(ellipse at 50% 45%, #060010 0%, #02000c 50%, #010008 100%) !important;
+}
+#eosAccess::before {
+  background-image: linear-gradient(rgba(180,0,0,.016) 1px, transparent 1px), linear-gradient(90deg, rgba(180,0,0,.016) 1px, transparent 1px) !important;
+  background-size: 65px 65px !important;
+}
+.acc-logo {
+  font-weight: 200 !important;
+  letter-spacing: 28px !important;
+  text-shadow: 0 0 40px rgba(238,26,26,.75), 0 0 80px rgba(180,0,0,.4), 0 0 160px rgba(160,0,0,.15) !important;
+}
+
+/* ── VIEW TRANSITIONS ────────────────────────────────────────── */
+.view.active { animation: eos-fadein .4s cubic-bezier(.4,0,.2,1) forwards !important; }
+@keyframes eos-fadein {
+  from { opacity: 0; transform: translateY(5px); filter: blur(3px); }
+  to   { opacity: 1; transform: translateY(0);   filter: blur(0);   }
+}
+
+/* ── SCROLLBARS ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px !important; height: 3px !important; }
+::-webkit-scrollbar-track { background: transparent !important; }
+::-webkit-scrollbar-thumb { background: rgba(180,0,0,.22) !important; border-radius: 2px !important; }
+::-webkit-scrollbar-thumb:hover { background: rgba(180,0,0,.4) !important; }
+
+/* ── STATUS DOTS ─────────────────────────────────────────────── */
+.tb-dot, .sa-online-dot, .fcp-status-dot { box-shadow: 0 0 0 2px rgba(34,197,94,.12), 0 0 8px rgba(34,197,94,.5) !important; }
+
+/* ── SELECTION ───────────────────────────────────────────────── */
+::selection { background: rgba(180,0,0,.28) !important; color: #fff !important; }
+
+.sb-agent { border-top: 1px solid rgba(160,0,0,.1) !important; background: linear-gradient(180deg, transparent, rgba(180,0,0,.04)) !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   N172 — JARVIS FULL UPGRADE
+═══════════════════════════════════════════════════════════════ */
+
+/* ── PANEL HEADERS — más impacto, status dot ─────────────────── */
+.j-ph {
+  font-size: 7px !important;
+  letter-spacing: 4px !important;
+  padding: 10px 14px 8px !important;
+}
+
+/* Status "LIVE" en el lado derecho de los headers */
+.j-ph::before {
+  content: '● LIVE' !important;
+  position: absolute !important;
+  right: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 5.5px !important;
+  letter-spacing: 2px !important;
+  color: rgba(34,197,94,.55) !important;
+  text-shadow: 0 0 6px rgba(34,197,94,.4) !important;
+  animation: status-blink 3s ease-in-out infinite !important;
+}
+
+@keyframes status-blink {
+  0%, 100% { opacity: .6; }
+  50%       { opacity: 1; }
+}
+
+/* ── SCAN LINE sobre el panel ORB hero ───────────────────────── */
+.j-orb-hero .orb-panel::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 5% !important; right: 5% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent, rgba(200,0,0,.3) 30%,
+    rgba(220,0,0,.55) 50%,
+    rgba(200,0,0,.3) 70%, transparent) !important;
+  animation: orb-scan 5s linear infinite !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes orb-scan {
+  0%   { top: 0%;   opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ── ORB RINGS — ajustar al nuevo tamaño 220px ───────────────── */
+/* orb-v-ring: ver sección N172 */
+
+/* ── PANEL ORB — voz y métricas z-index ─────────────────────── */
+.j-orb-hero .orb-panel > div:nth-child(4),
+.j-orb-hero .orb-metrics { z-index: 4 !important; }
+
+/* ── COLUMNA IZQUIERDA — ORKIS mejorados ─────────────────────── */
+.orki-item.active {
+  background: linear-gradient(90deg, rgba(200,0,0,.18), rgba(180,0,0,.04)) !important;
+  border-left-color: var(--r2) !important;
+  box-shadow: inset 0 0 20px rgba(200,0,0,.06) !important;
+}
+
+.orki-item.active .orki-n {
+  color: var(--r2) !important;
+  text-shadow: 0 0 10px rgba(200,0,0,.7), 0 0 20px rgba(200,0,0,.3) !important;
+}
+
+.orki-item.active::after {
+  content: '◈' !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 8px !important;
+  color: rgba(200,0,0,.4) !important;
+}
+
+/* ── INTELLIGENCE SCORE — más JARVIS ────────────────────────── */
+#intelScore {
+  font-family: var(--mo) !important;
+  font-size: 42px !important;
+  font-weight: 100 !important;
+  color: var(--r2) !important;
+  letter-spacing: 6px !important;
+  text-shadow:
+    0 0 20px rgba(200,0,0,.8),
+    0 0 50px rgba(200,0,0,.4),
+    0 0 100px rgba(200,0,0,.15) !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+/* ── STAT VALUES — glow más intenso ─────────────────────────── */
+.stat-val {
+  font-size: 28px !important;
+  font-weight: 200 !important;
+  color: var(--r2) !important;
+  text-shadow:
+    0 0 16px rgba(200,0,0,.7),
+    0 0 32px rgba(200,0,0,.25) !important;
+  line-height: 1 !important;
+  letter-spacing: 2px !important;
+}
+
+/* ── MX CELL VALUES — más legibles ──────────────────────────── */
+.mx-cell-val {
+  font-size: 14px !important;
+  font-weight: 300 !important;
+  color: rgba(220,225,255,.75) !important;
+  letter-spacing: 1px !important;
+}
+
+/* ── COLUMNA DERECHA — panel radar identidad ─────────────────── */
+/* Header del panel derecho (asumiendo j-col-right) */
+.j-col-right .j-panel:first-child .j-ph::before {
+  content: '◈ RADAR' !important;
+  color: rgba(180,0,0,.4) !important;
+  text-shadow: none !important;
+  animation: none !important;
+}
+
+/* ── AI PANEL — greeting bar más visible ────────────────────── */
+#greetingBar {
+  background: linear-gradient(90deg,
+    rgba(200,0,0,.04), rgba(200,0,0,.01)) !important;
+  border-bottom: 1px solid rgba(200,0,0,.12) !important;
+  padding: 10px 16px !important;
+}
+
+#greetingBar .gr-accent {
+  color: var(--r2) !important;
+  text-shadow: 0 0 8px rgba(200,0,0,.6) !important;
+  font-size: 13px !important;
+}
+
+#greetingText {
+  font-size: 11px !important;
+  color: rgba(210,220,255,.75) !important;
+  letter-spacing: .3px !important;
+}
+
+/* ── CHAT AREA — mensajes más limpios ────────────────────────── */
+.msg.bot {
+  border-radius: 8px !important;
+  border-left: 2px solid rgba(200,0,0,.2) !important;
+  padding: 10px 14px !important;
+}
+
+/* ── TOPBAR — reloj más impactante ───────────────────────────── */
+.tb-clock {
+  font-size: 14px !important;
+  letter-spacing: 3px !important;
+  color: rgba(238,26,26,.85) !important;
+  text-shadow:
+    0 0 12px rgba(200,0,0,.5),
+    0 0 24px rgba(200,0,0,.2) !important;
+}
+
+/* ── SIDEBAR EOS LOGO — más cinematic ────────────────────────── */
+.sb-eos {
+  font-size: 28px !important;
+  font-weight: 200 !important;
+  letter-spacing: 10px !important;
+  color: #ee1a1a !important;
+  text-shadow:
+    0 0 20px rgba(238,26,26,.75),
+    0 0 45px rgba(180,0,0,.4),
+    0 0 90px rgba(160,0,0,.15) !important;
+}
+
+/* ── SIDEBAR NAV ITEMS ──────────────────────────────────────── */
+.ni.on {
+  background: linear-gradient(90deg,
+    rgba(180,0,0,.14), rgba(180,0,0,.03)) !important;
+  border-left-color: #ee1a1a !important;
+}
+
+.ni.on .ni-t {
+  color: #eef0ff !important;
+  font-weight: 500 !important;
+}
+
+/* ── HOVER GLOW en todos los j-panel ─────────────────────────── */
+.j-panel:hover {
+  border-color: rgba(200,0,0,.38) !important;
+  box-shadow:
+    0 4px 20px rgba(0,0,0,.7),
+    0 0 0 1px rgba(200,0,0,.12),
+    inset 0 0 30px rgba(200,0,0,.05) !important;
+}
+
+/* ── PULSE animación ─────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--r), 0 0 10px rgba(200,0,0,.4); }
+  50%       { opacity: .5; box-shadow: 0 0 2px var(--r); }
+}
+
+/* ── ORB HERO — botón voz más visible ────────────────────────── */
+#voiceWakeBtn {
+  font-size: 9px !important;
+  letter-spacing: 3px !important;
+  padding: 6px 18px !important;
+  background: rgba(200,0,0,.12) !important;
+  border: 1px solid rgba(200,0,0,.35) !important;
+  border-radius: 8px !important;
+  color: var(--r2) !important;
+  text-shadow: 0 0 8px rgba(200,0,0,.4) !important;
+}
+
+/* ── ORB METRICS — más compactas y definidas ─────────────────── */
+.j-orb-hero .orb-metrics {
+  background: rgba(0,0,0,.35) !important;
+  border: 1px solid rgba(200,0,0,.15) !important;
+  border-radius: 8px !important;
+  padding: 6px 22px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.j-orb-hero .orb-metric-val {
+  font-size: 22px !important;
+  letter-spacing: 3px !important;
+  text-shadow: 0 0 16px rgba(200,0,0,.8), 0 0 32px rgba(200,0,0,.3) !important;
+}
+
+/* ── N84 SCAN BUTTON — efecto más JARVIS ────────────────────── */
+.n84-scan-btn {
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  animation: scan-pulse 4s ease-in-out infinite !important;
+}
+
+@keyframes scan-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200,0,0,.2); }
+  50%       { box-shadow: 0 0 12px 2px rgba(200,0,0,.15); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   N173 — JARVIS SECONDARY PANELS
+═══════════════════════════════════════════════════════════════ */
+
+/* ── N75 LIVE GRID — holographic data cards ──────────────────── */
+#n75LiveGrid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+  padding: 10px 12px !important;
+}
+
+.n75-card {
+  background: rgba(255,255,255,.018) !important;
+  border: 1px solid rgba(255,255,255,.055) !important;
+  border-radius: 9px !important;
+  padding: 10px 12px !important;
+  cursor: pointer !important;
+  transition: all .25s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.n75-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent, rgba(200,0,0,.3), transparent) !important;
+}
+
+.n75-card:hover {
+  background: rgba(200,0,0,.07) !important;
+  border-color: rgba(200,0,0,.25) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,.4) !important;
+}
+
+.n75-card-icon {
+  font-size: 14px !important;
+  color: rgba(200,0,0,.45) !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+.n75-card-val {
+  font-size: 22px !important;
+  font-weight: 200 !important;
+  color: var(--r2) !important;
+  line-height: 1 !important;
+  letter-spacing: 2px !important;
+  text-shadow: 0 0 14px rgba(200,0,0,.6) !important;
+}
+
+.n75-card-label {
+  font-family: var(--mo) !important;
+  font-size: 5.5px !important;
+  letter-spacing: 2px !important;
+  color: rgba(180,0,0,.4) !important;
+  margin-top: 5px !important;
+  text-transform: uppercase !important;
+}
+
+.n75-card-sub {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 1.5px !important;
+  color: rgba(150,160,200,.35) !important;
+  margin-top: 3px !important;
+}
+
+/* Card especial: ORKI activo */
+.n75-card.orki {
+  border-color: rgba(200,0,0,.2) !important;
+  background: linear-gradient(135deg,
+    rgba(180,0,0,.1), rgba(100,0,0,.04)) !important;
+}
+
+.n75-card.orki .n75-card-val {
+  font-size: 11px !important;
+  letter-spacing: 3px !important;
+}
+
+/* Mini barra de progreso en metas */
+.n75-mini-bar {
+  height: 2px !important;
+  background: rgba(255,255,255,.05) !important;
+  border-radius: 1px !important;
+  margin-top: 6px !important;
+  overflow: hidden !important;
+}
+
+.n75-mini-fill {
+  height: 100% !important;
+  background: linear-gradient(90deg, #770000, #ee1a1a) !important;
+  box-shadow: 0 0 6px rgba(200,0,0,.5) !important;
+  border-radius: 1px !important;
+  transition: width 1s ease !important;
+}
+
+/* ── N62 DAILY DIRECTIVE — más cinematic ─────────────────────── */
+#n62DailyDirective {
+  background: linear-gradient(135deg,
+    rgba(200,0,0,.08), rgba(100,0,0,.03)) !important;
+  border: 1px solid rgba(200,0,0,.28) !important;
+  border-left: 3px solid rgba(200,0,0,.6) !important;
+  border-radius: 10px !important;
+  padding: 14px 16px !important;
+  position: relative !important;
+  margin: 0 12px 8px !important;
+}
+
+#n62DirectiveText {
+  font-size: 12px !important;
+  line-height: 1.9 !important;
+  color: rgba(220,225,255,.85) !important;
+  font-style: italic !important;
+}
+
+/* ── RADAR CULTURAL — frame HUD ──────────────────────────────── */
+.radar-wrap {
+  padding: 8px 10px 10px !important;
+  display: flex !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.radar-wrap::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%,
+    rgba(180,0,0,.07) 0%, transparent 70%) !important;
+  pointer-events: none !important;
+}
+
+#radarC {
+  filter: drop-shadow(0 0 8px rgba(200,0,0,.25)) !important;
+}
+
+/* ── N86 SALUD EOS — health panel ───────────────────────────── */
+#n86HealthPanel {
+  padding: 8px 12px 10px !important;
+}
+
+.n86-total-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid rgba(180,0,0,.08) !important;
+  margin-bottom: 8px !important;
+}
+
+.n86-total-score {
+  font-size: 36px !important;
+  font-weight: 100 !important;
+  color: var(--r2) !important;
+  letter-spacing: 4px !important;
+  line-height: 1 !important;
+  text-shadow:
+    0 0 18px rgba(200,0,0,.7),
+    0 0 40px rgba(200,0,0,.3) !important;
+}
+
+.n86-total-label {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 2.5px !important;
+  color: rgba(180,0,0,.4) !important;
+}
+
+.n86-total-trend {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  color: rgba(150,160,200,.5) !important;
+  letter-spacing: 1px !important;
+  margin-top: 3px !important;
+}
+
+.n86-module-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 5px 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.03) !important;
+}
+
+.n86-mod-icon {
+  font-size: 10px !important;
+  color: rgba(200,0,0,.4) !important;
+  width: 16px !important;
+  flex-shrink: 0 !important;
+  text-align: center !important;
+}
+
+.n86-mod-name {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 1.5px !important;
+  color: rgba(180,190,230,.45) !important;
+  width: 60px !important;
+  flex-shrink: 0 !important;
+}
+
+.n86-mod-bar {
+  flex: 1 !important;
+  height: 3px !important;
+  background: rgba(255,255,255,.05) !important;
+  border-radius: 2px !important;
+  overflow: hidden !important;
+}
+
+.n86-mod-fill {
+  height: 100% !important;
+  border-radius: 2px !important;
+  transition: width 1s cubic-bezier(.4,0,.2,1) !important;
+  box-shadow: 0 0 6px rgba(200,0,0,.4) !important;
+}
+
+.n86-mod-val {
+  font-family: var(--mo) !important;
+  font-size: 8px !important;
+  color: rgba(200,210,255,.55) !important;
+  width: 28px !important;
+  text-align: right !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── N59 INTELIGENCIA EN VIVO — stat cards ───────────────────── */
+.n59-stats-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 5px !important;
+  margin-bottom: 8px !important;
+}
+
+.n59-stat-card {
+  background: rgba(255,255,255,.016) !important;
+  border: 1px solid rgba(255,255,255,.05) !important;
+  border-radius: 7px !important;
+  padding: 7px 6px !important;
+  text-align: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.n59-stat-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent, rgba(200,0,0,.4), transparent) !important;
+}
+
+.n59-stat-value {
+  font-size: 18px !important;
+  font-weight: 200 !important;
+  color: var(--r2) !important;
+  line-height: 1 !important;
+  letter-spacing: 1px !important;
+  text-shadow: 0 0 12px rgba(200,0,0,.6) !important;
+}
+
+.n59-stat-label {
+  font-family: var(--mo) !important;
+  font-size: 5px !important;
+  letter-spacing: 1.5px !important;
+  color: rgba(180,0,0,.38) !important;
+  margin-top: 4px !important;
+}
+
+/* Live feed items */
+.live-feed {
+  padding: 6px 10px !important;
+}
+
+/* ── SESSION INTELLIGENCE CARD ───────────────────────────────── */
+.si-loading {
+  display: flex !important;
+  gap: 4px !important;
+  padding: 12px 16px !important;
+}
+
+.si-loading-dot {
+  width: 4px !important;
+  height: 4px !important;
+  border-radius: 50% !important;
+  background: rgba(200,0,0,.5) !important;
+  animation: si-bounce .8s ease-in-out infinite !important;
+}
+
+.si-loading-dot:nth-child(2) { animation-delay: .15s !important; }
+.si-loading-dot:nth-child(3) { animation-delay: .3s !important; }
+
+@keyframes si-bounce {
+  0%, 100% { transform: translateY(0); opacity: .4; }
+  50%       { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ── HIST TIMELINE ───────────────────────────────────────────── */
+.hist-timeline {
+  padding: 4px 10px 8px !important;
+  display: flex !important;
+  gap: 2px !important;
+  align-items: flex-end !important;
+  height: 28px !important;
+}
+
+/* ── n59 FEED LIST ────────────────────────────────────────────── */
+.n59-feed-list {
+  margin-bottom: 4px !important;
+}
+
+/* ── GENERAL — j-col heights fix ─────────────────────────────── */
+.j-col-right .j-panel:nth-child(1) { flex-shrink: 0 !important; }
+.j-col-right .j-panel:nth-child(2) { flex-shrink: 0 !important; }
+.j-col-right .j-panel:nth-child(3) { flex: 1 !important; min-height: 0 !important; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   N174 — JARVIS DEEP UPGRADE: TAB BAR, CHAT, MICRO-DETAILS
+══════════════════════════════════════════════════════════════ */
+
+/* ── TAB BAR ─────────────────────────────────────────────────── */
+.tabbar {
+  background: rgba(2,2,12,.97) !important;
+  border-bottom: 1px solid rgba(160,0,0,.1) !important;
+  position: relative !important;
+  padding: 0 4px !important;
+  gap: 0 !important;
+}
+
+/* bottom glow line */
+.tabbar::before {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,0,0,.1) 20%,
+    rgba(200,0,0,.28) 50%,
+    rgba(200,0,0,.1) 80%,
+    transparent 100%) !important;
+  pointer-events: none !important;
+}
+
+.tab {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 2.5px !important;
+  color: rgba(150,70,70,.5) !important;
+  padding: 0 14px !important;
+  height: 36px !important;
+  border-bottom: 2px solid transparent !important;
+  transition: all .25s cubic-bezier(.4,0,.2,1) !important;
+  position: relative !important;
+  white-space: nowrap !important;
+}
+
+.tab:hover {
+  color: rgba(230,130,130,.85) !important;
+  background: rgba(180,0,0,.06) !important;
+  border-bottom-color: rgba(200,0,0,.25) !important;
+}
+
+/* ACTIVE TAB */
+.tab.tab-on {
+  color: rgba(240,140,140,.95) !important;
+  border-bottom-color: #cc2200 !important;
+  background: linear-gradient(180deg,
+    rgba(200,0,0,.09) 0%,
+    rgba(200,0,0,.02) 100%) !important;
+  text-shadow:
+    0 0 8px rgba(220,0,0,.55),
+    0 0 20px rgba(200,0,0,.2) !important;
+}
+
+/* top accent on active tab */
+.tab.tab-on::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 8px !important; right: 8px !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent, rgba(220,0,0,.6), transparent) !important;
+}
+
+/* ALERT BADGE */
+.tab-badge {
+  background: rgba(200,0,0,.85) !important;
+  color: rgba(255,210,210,.9) !important;
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: .5px !important;
+  padding: 2px 5px !important;
+  border-radius: 8px !important;
+  margin-left: 5px !important;
+  box-shadow:
+    0 0 8px rgba(200,0,0,.55),
+    0 0 18px rgba(200,0,0,.2) !important;
+  animation: badgePulse 2.8s ease-in-out infinite !important;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(200,0,0,.55), 0 0 18px rgba(200,0,0,.2); }
+  50%       { box-shadow: 0 0 14px rgba(200,0,0,.85), 0 0 30px rgba(200,0,0,.35); }
+}
+
+/* SEARCH FIELD */
+.tab-search {
+  font-family: var(--mo) !important;
+  font-size: 6.5px !important;
+  letter-spacing: 1.5px !important;
+  color: rgba(130,60,60,.5) !important;
+  background: rgba(180,0,0,.04) !important;
+  border: 1px solid rgba(180,0,0,.1) !important;
+  border-radius: 5px !important;
+  padding: 4px 10px !important;
+  margin: auto 6px !important;
+  transition: all .2s ease !important;
+  cursor: pointer !important;
+}
+
+.tab-search:hover {
+  color: rgba(200,120,120,.8) !important;
+  background: rgba(180,0,0,.09) !important;
+  border-color: rgba(200,0,0,.28) !important;
+  box-shadow: 0 0 12px rgba(180,0,0,.12) !important;
+}
+
+/* ⌘K BADGE */
+.tab-cmd {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  color: rgba(110,55,55,.55) !important;
+  background: rgba(255,255,255,.03) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  border-radius: 4px !important;
+  padding: 3px 7px !important;
+  margin: auto 4px !important;
+  transition: all .2s ease !important;
+  cursor: pointer !important;
+}
+
+.tab-cmd:hover {
+  color: rgba(220,120,120,.85) !important;
+  border-color: rgba(200,0,0,.3) !important;
+  background: rgba(200,0,0,.07) !important;
+  box-shadow: 0 0 8px rgba(200,0,0,.1) !important;
+}
+
+
+/* ── SA CHAT INPUT — HUD JARVIS ──────────────────────────────── */
+.sa-inp-wrap {
+  position: relative !important;
+}
+
+.sa-inp {
+  background: rgba(180,0,0,.03) !important;
+  border: 1px solid rgba(160,0,0,.2) !important;
+  border-radius: 6px !important;
+  color: rgba(230,220,220,.85) !important;
+  font-family: var(--fn) !important;
+  font-size: 10px !important;
+  padding: 8px 32px 8px 12px !important;
+  transition: all .25s ease !important;
+  letter-spacing: .3px !important;
+}
+
+.sa-inp::placeholder {
+  color: rgba(150,70,70,.45) !important;
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 2px !important;
+}
+
+.sa-inp:focus {
+  background: rgba(180,0,0,.07) !important;
+  border-color: rgba(200,0,0,.5) !important;
+  box-shadow:
+    0 0 0 2px rgba(180,0,0,.1),
+    0 0 18px rgba(180,0,0,.12) !important;
+  outline: none !important;
+}
+
+.sa-send {
+  position: absolute !important;
+  right: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: rgba(180,0,0,.15) !important;
+  border: 1px solid rgba(180,0,0,.3) !important;
+  border-radius: 4px !important;
+  color: rgba(220,80,80,.9) !important;
+  font-size: 9px !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all .2s ease !important;
+}
+
+.sa-send:hover {
+  background: rgba(200,0,0,.3) !important;
+  border-color: rgba(220,0,0,.6) !important;
+  box-shadow: 0 0 10px rgba(200,0,0,.35) !important;
+  transform: translateY(-50%) scale(1.08) !important;
+}
+
+
+/* ── SIDEBAR — NAV ICON glow ─────────────────────────────────── */
+.ni-i {
+  color: rgba(180,60,60,.5) !important;
+  font-size: 11px !important;
+  transition: color .2s ease !important;
+  width: 20px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.ni:hover .ni-i {
+  color: rgba(220,80,80,.85) !important;
+  text-shadow: 0 0 8px rgba(200,0,0,.5) !important;
+}
+
+.ni.on .ni-i {
+  color: #ee1a1a !important;
+  text-shadow:
+    0 0 10px rgba(238,26,26,.75),
+    0 0 22px rgba(180,0,0,.35) !important;
+}
+
+
+/* ── SALUD EOS — progress bars con glow mínimo ───────────────── */
+.n86-mod-fill {
+  min-width: 3px !important;
+  background: linear-gradient(90deg, rgba(120,0,0,.6), rgba(200,0,0,.85)) !important;
+  box-shadow: 0 0 6px rgba(200,0,0,.5) !important;
+  position: relative !important;
+}
+
+/* shimmer on bars even when at 0% */
+.n86-mod-bar {
+  position: relative !important;
+  overflow: visible !important;
+  border-radius: 2px !important;
+}
+
+.n86-mod-bar::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,0,0,.07) 40%,
+    rgba(200,0,0,.18) 50%,
+    rgba(200,0,0,.07) 60%,
+    transparent 100%) !important;
+  background-size: 200% 100% !important;
+  animation: barShimmer 3s ease-in-out infinite !important;
+  border-radius: 2px !important;
+}
+
+@keyframes barShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Calculating text pulse */
+#n86HealthPanel .n86-total-score {
+  animation: calcPulse 2.5s ease-in-out infinite !important;
+}
+
+@keyframes calcPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .55; }
+}
+
+
+/* ── MX STRIP — social metrics más cinematic ─────────────────── */
+.mx-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 3px !important;
+  padding: 6px 8px !important;
+  border-top: 1px solid rgba(180,0,0,.07) !important;
+}
+
+.mx-cell {
+  background: rgba(255,255,255,.014) !important;
+  border: 1px solid rgba(255,255,255,.04) !important;
+  border-radius: 5px !important;
+  padding: 5px 6px !important;
+  text-align: center !important;
+  transition: all .2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.mx-cell::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(200,0,0,.2), transparent) !important;
+}
+
+.mx-cell:hover {
+  background: rgba(200,0,0,.07) !important;
+  border-color: rgba(200,0,0,.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+.mx-cell-val {
+  font-size: 13px !important;
+  font-weight: 300 !important;
+  color: rgba(230,225,255,.75) !important;
+  letter-spacing: 1px !important;
+  line-height: 1.2 !important;
+}
+
+.mx-cell-lbl {
+  font-family: var(--mo) !important;
+  font-size: 5px !important;
+  letter-spacing: 2px !important;
+  color: rgba(160,70,70,.5) !important;
+  margin-top: 2px !important;
+}
+
+.mx-cell-delta {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: .5px !important;
+  margin-top: 2px !important;
+}
+
+
+/* ── DIRECTIVA EOS bar — pulse en el punto ───────────────────── */
+#directiveBar,
+.directive-bar {
+  background: linear-gradient(90deg,
+    rgba(180,0,0,.06) 0%,
+    rgba(180,0,0,.03) 50%,
+    rgba(180,0,0,.06) 100%) !important;
+  border: 1px solid rgba(180,0,0,.15) !important;
+  border-radius: 6px !important;
+}
+
+
+/* ── ORB PANEL — scan line cinematic ─────────────────────────── */
+/* subtle horizontal scan line sweeping through orb */
+.j-orb-hero::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,0,0,.06) 15%,
+    rgba(220,0,0,.22) 45%,
+    rgba(240,0,0,.28) 50%,
+    rgba(220,0,0,.22) 55%,
+    rgba(200,0,0,.06) 85%,
+    transparent 100%) !important;
+  animation: scanSweep 6s ease-in-out infinite !important;
+  z-index: 3 !important;
+  pointer-events: none !important;
+}
+
+@keyframes scanSweep {
+  0%   { top: 15%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 85%; opacity: 0; }
+}
+
+
+/* ── STAT ITEMS — corner accent ──────────────────────────────── */
+.stat-item::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 4px !important; right: 4px !important;
+  width: 4px !important; height: 4px !important;
+  border-right: 1px solid rgba(200,0,0,.25) !important;
+  border-bottom: 1px solid rgba(200,0,0,.25) !important;
+}
+
+
+/* ── N59 STAT CARDS — glow on value ──────────────────────────── */
+.n59-stat-card {
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all .25s ease !important;
+}
+
+.n59-stat-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(200,0,0,.3), transparent) !important;
+}
+
+.n59-stat-card:hover {
+  background: rgba(200,0,0,.06) !important;
+  border-color: rgba(200,0,0,.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+
+/* ── LIVE DOT animations — breathe ──────────────────────────── */
+.j-ph-dot {
+  animation: breatheDot 2.2s ease-in-out infinite !important;
+}
+
+@keyframes breatheDot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--r), 0 0 10px rgba(200,0,0,.4); transform: scale(1); }
+  50%       { opacity: .5; box-shadow: 0 0 2px var(--r); transform: scale(.8); }
+}
+
+
+/* ── PANEL corners — JARVIS bracket detail ───────────────────── */
+.j-panel::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    rgba(200,0,0,.4) 0%,
+    rgba(200,0,0,.15) 30%,
+    transparent 60%) !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+/* bottom-right bracket corner */
+.j-panel::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 6px !important; right: 6px !important;
+  width: 8px !important; height: 8px !important;
+  border-right: 1px solid rgba(200,0,0,.22) !important;
+  border-bottom: 1px solid rgba(200,0,0,.22) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+
+/* ── INTEL SCORE SECTION — loading state ─────────────────────── */
+.intel-score-val {
+  font-size: 28px !important;
+  font-weight: 200 !important;
+  color: var(--r2) !important;
+  text-shadow:
+    0 0 16px rgba(200,0,0,.65),
+    0 0 32px rgba(200,0,0,.25) !important;
+  letter-spacing: 4px !important;
+  animation: scoreGlow 3s ease-in-out infinite !important;
+}
+
+@keyframes scoreGlow {
+  0%, 100% { text-shadow: 0 0 16px rgba(200,0,0,.65), 0 0 32px rgba(200,0,0,.25); }
+  50%       { text-shadow: 0 0 24px rgba(220,0,0,.9), 0 0 50px rgba(200,0,0,.4); }
+}
+
+
+/* ── SIDEBAR SG label ─────────────────────────────────────────── */
+.sg {
+  font-size: 5.5px !important;
+  letter-spacing: 4px !important;
+  color: rgba(180,0,0,.18) !important;
+  padding: 16px 16px 5px !important;
+  text-transform: uppercase !important;
+  position: relative !important;
+}
+
+.sg::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important; left: 16px !important; right: 16px !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, rgba(200,0,0,.15), transparent) !important;
+}
+
+
+/* ── FOOTER STATUS BAR — más visible ────────────────────────── */
+.footer-bar,
+#footerBar,
+.j-footer {
+  background: rgba(2,2,12,.98) !important;
+  border-top: 1px solid rgba(160,0,0,.12) !important;
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  color: rgba(150,60,60,.45) !important;
+  letter-spacing: 2px !important;
+}
+
+
+/* ── TOPBAR BUTTONS — jarvis refinados ───────────────────────── */
+.tb-btn {
+  border-radius: 4px !important;
+  font-size: 6.5px !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* VOZ button — more prominent */
+#voiceBtn,
+[id*="voz"],
+[id*="VOZ"] {
+  background: rgba(200,0,0,.1) !important;
+  border-color: rgba(200,0,0,.35) !important;
+}
+
+
+/* ── ORKIS LIST items — hover refinement ────────────────────── */
+.orki-item {
+  transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+  border-left: 2px solid transparent !important;
+  padding-left: 10px !important;
+}
+
+.orki-item.active,
+.orki-item.selected {
+  border-left-color: rgba(200,0,0,.6) !important;
+  background: linear-gradient(90deg, rgba(180,0,0,.1), transparent) !important;
+}
+
+.orki-item:hover {
+  background: rgba(180,0,0,.07) !important;
+  border-left-color: rgba(180,0,0,.35) !important;
+}
+
+
+/* ── SCROLLBAR — thin red ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 3px !important;
+  height: 3px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,.2) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(180,0,0,.35) !important;
+  border-radius: 2px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200,0,0,.6) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   N174-B — LIVE FEED, N59 STATS, PANEL DETAILS
+══════════════════════════════════════════════════════════════ */
+
+/* ── N59 LIVE FEED items ─────────────────────────────────────── */
+.n59-feed-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  padding: 5px 10px !important;
+  border-bottom: 1px solid rgba(255,255,255,.025) !important;
+  transition: background .15s ease !important;
+  position: relative !important;
+}
+
+.n59-feed-item:hover {
+  background: rgba(180,0,0,.04) !important;
+}
+
+.n59-feed-item-time {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  color: rgba(180,0,0,.35) !important;
+  letter-spacing: 1px !important;
+  flex-shrink: 0 !important;
+  padding-top: 1px !important;
+  min-width: 28px !important;
+}
+
+.n59-feed-item-text {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  color: rgba(190,185,210,.55) !important;
+  letter-spacing: .8px !important;
+  line-height: 1.5 !important;
+}
+
+/* highlighted feed items */
+.n59-feed-item:first-child .n59-feed-item-text {
+  color: rgba(220,200,200,.75) !important;
+}
+
+/* left accent line on first item */
+.n59-feed-item:first-child {
+  border-left: 2px solid rgba(200,0,0,.4) !important;
+  background: rgba(180,0,0,.03) !important;
+}
+
+/* ── N59 STAT CARDS — 4 cards top row ───────────────────────── */
+.n59-stat-card {
+  background: rgba(255,255,255,.016) !important;
+  border: 1px solid rgba(255,255,255,.05) !important;
+  border-radius: 7px !important;
+  padding: 9px 8px 7px !important;
+  text-align: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all .2s ease !important;
+  cursor: default !important;
+}
+
+.n59-stat-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent, rgba(200,0,0,.35), transparent) !important;
+}
+
+.n59-stat-card:hover {
+  background: rgba(200,0,0,.07) !important;
+  border-color: rgba(200,0,0,.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3) !important;
+}
+
+.n59-stat-val {
+  font-size: 22px !important;
+  font-weight: 200 !important;
+  color: var(--r2) !important;
+  text-shadow:
+    0 0 14px rgba(200,0,0,.65),
+    0 0 28px rgba(200,0,0,.2) !important;
+  letter-spacing: 2px !important;
+  line-height: 1 !important;
+}
+
+.n59-stat-lbl {
+  font-family: var(--mo) !important;
+  font-size: 5px !important;
+  letter-spacing: 2px !important;
+  color: rgba(160,70,70,.5) !important;
+  margin-top: 5px !important;
+  text-transform: uppercase !important;
+}
+
+/* 4th card — icon style */
+.n59-stat-card:last-child {
+  background: rgba(180,0,0,.06) !important;
+  border-color: rgba(180,0,0,.18) !important;
+}
+
+.n59-stat-card:last-child .n59-stat-val {
+  font-size: 18px !important;
+  opacity: .8 !important;
+}
+
+
+/* ── FEED header dot — blinking ──────────────────────────────── */
+.n59-feed-dot {
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 50% !important;
+  background: rgba(34,197,94,.8) !important;
+  box-shadow: 0 0 6px rgba(34,197,94,.5) !important;
+  animation: feedDotBlink 2s ease-in-out infinite !important;
+  flex-shrink: 0 !important;
+}
+
+@keyframes feedDotBlink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(34,197,94,.5); }
+  50%       { opacity: .35; box-shadow: 0 0 2px rgba(34,197,94,.2); }
+}
+
+
+/* ── GROWTH / BRIEF BUTTONS en AI panel ─────────────────────── */
+.n84-btn,
+[class*="growth-btn"],
+[class*="brief-btn"] {
+  font-family: var(--mo) !important;
+  font-size: 6.5px !important;
+  letter-spacing: 1.5px !important;
+  border-radius: 4px !important;
+  transition: all .2s ease !important;
+}
+
+
+/* ── PROGRESS / GLOBAL bar en AI panel ──────────────────────── */
+.prog-bar-wrap,
+[class*="prog-bar"] {
+  height: 2px !important;
+  background: rgba(255,255,255,.04) !important;
+  border-radius: 1px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.prog-bar-fill,
+[class*="prog-fill"] {
+  height: 100% !important;
+  background: linear-gradient(90deg, rgba(120,0,0,.7), rgba(200,0,0,.9)) !important;
+  box-shadow: 0 0 6px rgba(200,0,0,.5) !important;
+  border-radius: 1px !important;
+  transition: width 1.5s cubic-bezier(.4,0,.2,1) !important;
+}
+
+
+/* ── EOS ACTIVO status bubble (bottom right) ─────────────────── */
+#eosStatusBubble,
+.eos-status-bubble,
+[id*="eosActive"],
+[id*="eosActiv"] {
+  background: rgba(180,0,0,.12) !important;
+  border: 1px solid rgba(200,0,0,.3) !important;
+  border-radius: 20px !important;
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 2px !important;
+  color: rgba(220,80,80,.85) !important;
+  box-shadow: 0 0 12px rgba(180,0,0,.2) !important;
+}
+
+
+/* ── TOPBAR — versión e info extras ─────────────────────────── */
+.tb-ver {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  color: rgba(150,60,60,.35) !important;
+  letter-spacing: 2px !important;
+}
+
+.tb-mode {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 1.5px !important;
+  color: rgba(34,197,94,.6) !important;
+}
+
+
+/* ── SIDEBAR MIC BUTTON ──────────────────────────────────────── */
+#n59MicBtn,
+.mic-btn {
+  background: rgba(180,0,0,.1) !important;
+  border: 1px solid rgba(180,0,0,.25) !important;
+  border-radius: 50% !important;
+  color: rgba(220,80,80,.85) !important;
+  transition: all .25s ease !important;
+}
+
+#n59MicBtn:hover,
+.mic-btn:hover {
+  background: rgba(200,0,0,.22) !important;
+  border-color: rgba(220,0,0,.5) !important;
+  box-shadow: 0 0 16px rgba(200,0,0,.3) !important;
+  transform: scale(1.05) !important;
+}
+
+
+/* ── AI PANEL — progress/ideas boxes ─────────────────────────── */
+.ai-sub-box,
+.sa-sub,
+[class*="ideas-box"],
+[class*="progress-box"] {
+  background: rgba(255,255,255,.012) !important;
+  border: 1px solid rgba(255,255,255,.05) !important;
+  border-radius: 6px !important;
+  padding: 10px 12px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.ai-sub-box::before,
+.sa-sub::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    rgba(200,0,0,.2), transparent) !important;
+}
+
+
+/* ── PANEL top-left bracket corner ──────────────────────────── */
+.j-panel {
+  position: relative !important;
+}
+
+/* top-left red bracket */
+.j-panel > .j-ph::before {
+  content: '' !important;
+}
+
+/* Ensure j-orb-hero::before is the scan line, not the panel gradient */
+.j-orb-hero.j-panel::before {
+  /* The scan line animation takes priority */
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,0,0,.06) 15%,
+    rgba(220,0,0,.22) 45%,
+    rgba(240,0,0,.28) 50%,
+    rgba(220,0,0,.22) 55%,
+    rgba(200,0,0,.06) 85%,
+    transparent 100%) !important;
+  animation: scanSweep 6s ease-in-out infinite !important;
+  top: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+
+/* ── MOMENTUM hist bars — más visibles ───────────────────────── */
+.hist-bar,
+#histTimeline > div {
+  background: linear-gradient(180deg,
+    rgba(200,0,0,.7) 0%,
+    rgba(140,0,0,.4) 100%) !important;
+  border-radius: 1px 1px 0 0 !important;
+  min-height: 2px !important;
+  transition: height .3s ease !important;
+}
+
+#histTimeline > div:hover {
+  background: linear-gradient(180deg,
+    rgba(240,40,40,.9) 0%,
+    rgba(180,0,0,.6) 100%) !important;
+  box-shadow: 0 0 6px rgba(200,0,0,.4) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   N174-C — SIDEBAR HEADER, MSG STYLES, FINAL POLISH
+══════════════════════════════════════════════════════════════ */
+
+/* ── SIDEBAR AGENT HEADER — cinematic ───────────────────────── */
+.sb-agent-hd {
+  background: linear-gradient(135deg,
+    rgba(180,0,0,.08) 0%,
+    rgba(180,0,0,.02) 100%) !important;
+  border-bottom: 1px solid rgba(180,0,0,.12) !important;
+  padding: 14px 14px 12px !important;
+  position: relative !important;
+}
+
+.sb-agent-hd::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    rgba(200,0,0,.3), rgba(200,0,0,.08), transparent) !important;
+}
+
+.sb-ah-name {
+  font-family: var(--fn) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: rgba(240,235,255,.92) !important;
+  letter-spacing: .5px !important;
+  text-shadow: 0 0 12px rgba(200,0,0,.2) !important;
+}
+
+.sb-ah-status {
+  font-family: var(--mo) !important;
+  font-size: 6.5px !important;
+  color: rgba(34,197,94,.75) !important;
+  letter-spacing: 2px !important;
+  margin-top: 3px !important;
+}
+
+/* online dot — breathe */
+.sb-ah-online {
+  animation: onlinePulse 2.5s ease-in-out infinite !important;
+}
+
+@keyframes onlinePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #22c55e, 0 0 14px rgba(34,197,94,.4); }
+  50%       { opacity: .5; box-shadow: 0 0 3px #22c55e; }
+}
+
+
+/* ── BOT MESSAGES — cinematic treatment ─────────────────────── */
+.msg.bot {
+  background: rgba(255,255,255,.018) !important;
+  border: 1px solid rgba(255,255,255,.05) !important;
+  border-left: 2px solid rgba(180,0,0,.35) !important;
+  border-radius: 0 8px 8px 0 !important;
+  padding: 12px 14px !important;
+  position: relative !important;
+}
+
+.msg.bot::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    rgba(200,0,0,.3) 0%, rgba(200,0,0,.08) 40%, transparent 70%) !important;
+}
+
+.msg.user {
+  background: rgba(180,0,0,.05) !important;
+  border: 1px solid rgba(180,0,0,.12) !important;
+  border-radius: 8px 0 0 8px !important;
+  padding: 10px 14px !important;
+  text-align: right !important;
+}
+
+
+/* ── ORKI label en left column ───────────────────────────────── */
+.orki-label,
+.orki-num {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  color: rgba(180,0,0,.35) !important;
+  letter-spacing: 2px !important;
+}
+
+
+/* ── VOZ WAVE bars ───────────────────────────────────────────── */
+.svw-bar {
+  background: linear-gradient(180deg,
+    rgba(220,0,0,.8), rgba(140,0,0,.4)) !important;
+  border-radius: 1px !important;
+  box-shadow: 0 0 4px rgba(200,0,0,.3) !important;
+}
+
+
+/* ── INPUT del sidebar chat — placeholder JARVIS ────────────── */
+#sideChat::placeholder {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 2px !important;
+  color: rgba(150,60,60,.42) !important;
+}
+
+
+/* ── TOPBAR TOPLINE — red accent line at very top ───────────── */
+.topbar {
+  position: relative !important;
+}
+
+.topbar::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    rgba(200,0,0,.5) 0%,
+    rgba(200,0,0,.25) 40%,
+    rgba(200,0,0,.08) 70%,
+    transparent 100%) !important;
+  z-index: 10 !important;
+}
+
+
+/* ── N59 STATS HEADER (INTELIGENCIA EN VIVO) ─────────────────── */
+.n59-feed-title {
+  font-family: var(--mo) !important;
+  font-size: 7px !important;
+  letter-spacing: 2.5px !important;
+  color: rgba(180,60,60,.7) !important;
+  text-transform: uppercase !important;
+}
+
+
+/* ── FASE bottom bar JARVIS ──────────────────────────────────── */
+.footer-status,
+#dashFooter,
+.dash-footer {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  color: rgba(140,55,55,.45) !important;
+  letter-spacing: 2.5px !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   N175 — WAKE WORD STATES — botón micrófono JARVIS
+══════════════════════════════════════════════════════════════ */
+
+/* Botón mic base */
+#n59MicBtn {
+  font-size: 14px !important;
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 8px !important;
+  width: 32px !important; height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all .25s ease !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+}
+
+/* ESTADO PASIVO — escucha wake word en silencio */
+#n59MicBtn.wake-passive {
+  background: rgba(34,197,94,.06) !important;
+  border-color: rgba(34,197,94,.25) !important;
+  box-shadow: 0 0 10px rgba(34,197,94,.1) !important;
+  animation: passivePulse 3s ease-in-out infinite !important;
+}
+
+/* ring exterior pulsando suave en modo pasivo */
+#n59MicBtn.wake-passive::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: -3px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(34,197,94,.2) !important;
+  animation: passiveRing 3s ease-in-out infinite !important;
+}
+
+@keyframes passivePulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(34,197,94,.1); border-color: rgba(34,197,94,.2); }
+  50%       { box-shadow: 0 0 16px rgba(34,197,94,.2); border-color: rgba(34,197,94,.4); }
+}
+
+@keyframes passiveRing {
+  0%, 100% { opacity: .4; transform: scale(1); }
+  50%       { opacity: .8; transform: scale(1.05); }
+}
+
+/* ESTADO COMANDO — escuchando activamente */
+#n59MicBtn.wake-command {
+  background: rgba(200,0,0,.15) !important;
+  border-color: rgba(220,0,0,.6) !important;
+  box-shadow:
+    0 0 16px rgba(200,0,0,.4),
+    0 0 32px rgba(200,0,0,.15) !important;
+  animation: commandPulse 0.8s ease-in-out infinite !important;
+}
+
+/* onda expansiva en modo comando */
+#n59MicBtn.wake-command::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -6px !important;
+  border-radius: 14px !important;
+  border: 1.5px solid rgba(220,0,0,.5) !important;
+  animation: commandRing 0.8s ease-in-out infinite !important;
+}
+
+#n59MicBtn.wake-command::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: -12px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(200,0,0,.25) !important;
+  animation: commandRing 0.8s ease-in-out infinite .15s !important;
+}
+
+@keyframes commandPulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(200,0,0,.4), 0 0 32px rgba(200,0,0,.15); }
+  50%       { box-shadow: 0 0 26px rgba(240,0,0,.65), 0 0 50px rgba(200,0,0,.25); }
+}
+
+@keyframes commandRing {
+  0%   { opacity: .8; transform: scale(1); }
+  100% { opacity: 0;  transform: scale(1.4); }
+}
+
+
+/* Feed item highlight (wake word detected) */
+.n59-feed-item .n59-feed-item-text b {
+  color: rgba(220,80,80,.85) !important;
+  font-weight: 500 !important;
+}
+
+/* ── VOZ ACTIVADA label en sidebar ───────────────────────────── */
+.sb-voz-label {
+  font-family: var(--mo) !important;
+  font-size: 6px !important;
+  letter-spacing: 3px !important;
+  color: rgba(34,197,94,.6) !important;
+  text-align: center !important;
+  padding: 4px 0 2px !important;
+}

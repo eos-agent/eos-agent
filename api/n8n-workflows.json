@@ -1,0 +1,97 @@
+{
+  "_info": "EOS AGENT — n8n Workflows. Importa este archivo en n8n: Settings → Import workflow",
+  "_base_url": "https://eos-agent.vercel.app",
+  "_note": "Reemplaza EOS_WEBHOOK_SECRET con tu clave real antes de importar",
+
+  "workflows": [
+    {
+      "name": "EOS — Morning Brief (Diario 7am)",
+      "description": "Cada mañana a las 7am Bogotá: busca en internet, genera briefing con Claude, lo manda a Telegram",
+      "trigger": "Cron: 0 7 * * * (America/Bogota)",
+      "nodes": [
+        {
+          "type": "Schedule Trigger",
+          "config": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 12 * * *" }] } }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Call EOS Brief API",
+          "config": {
+            "method": "POST",
+            "url": "https://eos-agent.vercel.app/api/brief",
+            "headers": { "Authorization": "{{EOS_WEBHOOK_SECRET}}", "Content-Type": "application/json" },
+            "body": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "EOS — Scout Agent (Lunes y Jueves)",
+      "description": "Dos veces por semana: busca oportunidades en internet y manda reporte a Telegram",
+      "trigger": "Cron: 0 14 * * 1,4 (lunes y jueves 2pm)",
+      "nodes": [
+        {
+          "type": "Schedule Trigger",
+          "config": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 19 * * 1,4" }] } }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Call EOS Scout API",
+          "config": {
+            "method": "POST",
+            "url": "https://eos-agent.vercel.app/api/scout",
+            "headers": { "Authorization": "{{EOS_WEBHOOK_SECRET}}", "Content-Type": "application/json" },
+            "body": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "EOS — Trend Analyzer (Miércoles y Domingo)",
+      "description": "Dos veces por semana: analiza tendencias culturales y manda reporte a Telegram",
+      "trigger": "Cron: 0 16 * * 3,0 (miércoles y domingo 4pm)",
+      "nodes": [
+        {
+          "type": "Schedule Trigger",
+          "config": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 21 * * 3,0" }] } }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Call EOS Trends API",
+          "config": {
+            "method": "POST",
+            "url": "https://eos-agent.vercel.app/api/trends",
+            "headers": { "Authorization": "{{EOS_WEBHOOK_SECRET}}", "Content-Type": "application/json" },
+            "body": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "EOS — Telegram Bot (Responde mensajes)",
+      "description": "Webhook que recibe mensajes de Telegram y responde con Claude + búsqueda web",
+      "trigger": "Webhook POST (configurar en Telegram BotFather)",
+      "setup": [
+        "1. En n8n: crea webhook node — copia la URL",
+        "2. En Telegram: @BotFather → /setwebhook → pega la URL",
+        "3. Ahora cuando escribas al bot, EOS responde con Claude + internet"
+      ],
+      "nodes": [
+        {
+          "type": "Webhook",
+          "config": { "httpMethod": "POST", "path": "eos-telegram" }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Forward to EOS Chat API",
+          "config": {
+            "method": "POST",
+            "url": "https://eos-agent.vercel.app/api/chat",
+            "headers": { "Authorization": "{{EOS_WEBHOOK_SECRET}}", "Content-Type": "application/json" },
+            "body": "={{ JSON.stringify($json) }}"
+          }
+        }
+      ]
+    }
+  ]
+}

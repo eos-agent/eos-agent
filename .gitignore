@@ -1,0 +1,45 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.env
+.venv
+env/
+venv/
+
+# Node (por si acaso en el futuro)
+node_modules/
+.npm
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Scripts de utilidad (no van al repo)
+validate_syntax.py
+verify_features.py
