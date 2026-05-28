@@ -44026,6 +44026,12 @@ input:focus,textarea:focus,[class*=chat-input]:focus{border-color:rgba(255,30,30
 [class*=intel-],[class*=tip-],.intel-tip,.eos-tip{font-family:var(--f-body) !important;font-size:11px !important;line-height:1.55 !important;color:rgba(190,195,230,.65) !important}
 #eosApp,.eos-app,#app,.app-wrapper,.main-layout,[class*=main-wrap],[class*=app-shell]{background:transparent !important}
 .main-content,.content-area,[class*=main-content],[class*=content-wrap]{background:transparent !important}
+
+/* ══ v3.0 PATCH — CSS-ONLY VIEWPORT CORNERS ══ */
+html::before{content:'';position:fixed;top:16px;left:16px;width:100px;height:100px;border-top:1.5px solid rgba(200,0,0,.85);border-left:1.5px solid rgba(200,0,0,.85);box-shadow:0 0 12px rgba(200,0,0,.5);z-index:9999;pointer-events:none;animation:eos-hud-corner-pulse 4s ease-in-out infinite}
+html::after{content:'';position:fixed;bottom:16px;right:16px;width:100px;height:100px;border-bottom:1.5px solid rgba(200,0,0,.85);border-right:1.5px solid rgba(200,0,0,.85);box-shadow:0 0 12px rgba(200,0,0,.5);z-index:9999;pointer-events:none;animation:eos-hud-corner-pulse 4s ease-in-out infinite;animation-delay:2s}
+#eos-radar-sweep::before{content:'';position:fixed;top:16px;right:16px;width:100px;height:100px;border-top:1.5px solid rgba(200,0,0,.85);border-right:1.5px solid rgba(200,0,0,.85);box-shadow:0 0 12px rgba(200,0,0,.5);z-index:9999;pointer-events:none;animation:eos-hud-corner-pulse 4s ease-in-out infinite;animation-delay:1s}
+#eos-radar-sweep::after{content:'';position:fixed;bottom:16px;left:16px;width:100px;height:100px;border-bottom:1.5px solid rgba(200,0,0,.85);border-left:1.5px solid rgba(200,0,0,.85);box-shadow:0 0 12px rgba(200,0,0,.5);z-index:9999;pointer-events:none;animation:eos-hud-corner-pulse 4s ease-in-out infinite;animation-delay:3s}
 </style>
 
 <script>
