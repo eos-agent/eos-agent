@@ -43932,6 +43932,11 @@ html::after{content:''!important;position:fixed!important;bottom:12px!important;
 @keyframes eos-ring-breathe-slow{0%,100%{opacity:0.4;}50%{opacity:0.8;}}
 @keyframes eos-hud-corner-pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
 
+
+/* POINTER-EVENTS SAFETY — boot + access always clickable */
+#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,
+#accPass,#accPassInput,#accPassError,#accLogoClick,
+#accFace,#accVideo,#accActivation{pointer-events:all!important;}
 </style>
 
 <script>
