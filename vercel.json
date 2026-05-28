@@ -1,45 +1,72 @@
 {
   "version": 2,
   "name": "eos-agent",
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 60
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
     }
-  },
+  ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "/sw.js", "headers": { "Service-Worker-Allowed": "/" }, "dest": "/sw.js" },
-    { "src": "/manifest.json", "headers": { "Content-Type": "application/manifest+json" }, "dest": "/manifest.json" },
-    { "src": "/eos-ultra.css", "headers": { "Content-Type": "text/css; charset=utf-8" }, "dest": "/eos-ultra.css" },
-    { "src": "/eos-jarvis.css", "headers": { "Content-Type": "text/css; charset=utf-8" }, "dest": "/eos-jarvis.css" },
-    { "src": "/", "dest": "/eos-agent.html" },
-    { "src": "/(.*)", "dest": "/eos-agent.html" }
+    {
+      "src": "/sw.js",
+      "headers": {
+        "Service-Worker-Allowed": "/"
+      },
+      "dest": "/sw.js"
+    },
+    {
+      "src": "/manifest.json",
+      "headers": {
+        "Content-Type": "application/manifest+json"
+      },
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ],
   "headers": [
     {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, x-webhook-secret" }
-      ]
-    },
-    {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
       ]
     },
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache" },
-        { "key": "Service-Worker-Allowed", "value": "/" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
       ]
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "crons": [
+    {
+      "path": "/api/cron-brief",
+      "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron-scout",
+      "schedule": "0 14 * * 1,4"
+    }
+  ]
 }
