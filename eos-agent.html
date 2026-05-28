@@ -9689,7 +9689,7 @@ body.mode-rusia::before {
 .n92-scan-v{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(200,0,0,.5),transparent);animation:n92ScanV 1.4s ease-out forwards;}
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
 </style>
-<link id="eos-fonts-v6" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap">
+<link id="eos-fonts-v6" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap">
 </head>
 <body>
 <!-- ══ N108 JARVIS THINKING STATE — overlay elements ══ -->
@@ -41621,49 +41621,42 @@ if(!window.__n149Patched){
 
     return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n<script id="eos-ring-overlay-js">
 (function(){
-  // Minimal cinematic ring overlay — v6.0
-  var kf='@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}@keyframes eos-fog-pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}';
+  var kf='@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}@keyframes eos-fog-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}';
   var ks=document.createElement('style');ks.textContent=kf;document.head.appendChild(ks);
-
   function inject(){
     var c=document.getElementById('eosOrbCanvas');
     if(!c)return;
-    var r=c.getBoundingClientRect();
-    var cx=r.left+r.width/2, cy=r.top+r.height/2;
+    var rect=c.getBoundingClientRect();
+    var cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
     if(cx<10||cy<10)return;
-    var old=document.getElementById('eos-ring-overlay-v6');
+    var old=document.getElementById('eos-ring-overlay-v7');
     if(old)old.remove();
     var wrap=document.createElement('div');
-    wrap.id='eos-ring-overlay-v6';
+    wrap.id='eos-ring-overlay-v7';
     wrap.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;';
-
-    // 3 soft organic rings
-    [{s:210,c:'rgba(195,22,22,0.3)',b:'solid',w:'1px',d:'14s',dir:'cw'},
-     {s:300,c:'rgba(165,15,15,0.14)',b:'solid',w:'1px',d:'25s',dir:'ccw'},
-     {s:405,c:'rgba(140,10,10,0.07)',b:'solid',w:'1px',d:'44s',dir:'cw'}
-    ].forEach(function(ring){
+    // 3 rings — ultra slow, ultra soft
+    [{s:205,c:'rgba(175,16,22,0.25)',w:'1px',d:'18s',dir:'cw'},
+     {s:295,c:'rgba(145,10,15,0.11)',w:'1px',d:'32s',dir:'ccw'},
+     {s:395,c:'rgba(110,7,10,0.055)',w:'1px',d:'58s',dir:'cw'}
+    ].forEach(function(r){
       var el=document.createElement('div');
       el.style.cssText='position:fixed;border-radius:50%;background:transparent;pointer-events:none;'
-        +'width:'+ring.s+'px;height:'+ring.s+'px;'
-        +'left:'+(cx-ring.s/2)+'px;top:'+(cy-ring.s/2)+'px;'
-        +'border:'+ring.w+' '+ring.b+' '+ring.c+';'
-        +'animation:eos-fixed-spin-'+ring.dir+' '+ring.d+' linear infinite;';
+        +'width:'+r.s+'px;height:'+r.s+'px;'
+        +'left:'+(cx-r.s/2)+'px;top:'+(cy-r.s/2)+'px;'
+        +'border:'+r.w+' solid '+r.c+';'
+        +'animation:eos-fixed-spin-'+r.dir+' '+r.d+' linear infinite;';
       wrap.appendChild(el);
     });
-
-    // Atmospheric fog glow behind ORB
-    var fog=document.createElement('div');
-    var fs=500;
-    fog.style.cssText='position:fixed;border-radius:50%;pointer-events:none;'
+    // Atmospheric fog
+    var fg=document.createElement('div');var fs=520;
+    fg.style.cssText='position:fixed;border-radius:50%;pointer-events:none;'
       +'width:'+fs+'px;height:'+fs+'px;'
       +'left:'+(cx-fs/2)+'px;top:'+(cy-fs/2)+'px;'
-      +'background:radial-gradient(ellipse,rgba(140,10,10,0.1) 0%,rgba(100,6,6,0.05) 40%,transparent 70%);'
-      +'animation:eos-fog-pulse 9s ease-in-out infinite;';
-    wrap.appendChild(fog);
-
+      +'background:radial-gradient(ellipse,rgba(120,10,14,0.12) 0%,rgba(80,5,8,0.055) 45%,transparent 70%);'
+      +'animation:eos-fog-pulse 10s ease-in-out infinite;';
+    wrap.appendChild(fg);
     document.body.appendChild(wrap);
   }
-
   setTimeout(inject,600);
   window.addEventListener('resize',function(){setTimeout(inject,400);});
   var obs=new MutationObserver(function(){
@@ -43888,32 +43881,40 @@ if(!window.__n166Patched){
 .eos-achievement-toast .at-desc{font-size:8px;color:rgba(180,180,180,.4);margin-top:4px;letter-spacing:.3px;}
 </style>
 <style id="eos-ultra-v2">
-/* ═══════════════════════════════════════════════
-   EOS AGENT v6.0 — CINEMATIC MINIMAL
-   "Apple + Marvel building an OS for a futurist artist"
-   Design language: atmospheric, breathing, premium dark
-   ═══════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
+/* ═══════════════════════════════════════════════════
+   EOS AGENT v7.0 — RADICAL CINEMATIC OVERHAUL
+   Philosophy: dissolve the grid, reveal the atmosphere.
+   No boxes. No lines. Only light, depth, and intention.
+   "Apple + Marvel + A24 built an OS for a futurist artist."
+   ═══════════════════════════════════════════════════ */
 
-/* ── TOKENS ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── TOKENS ──────────────────────────────────────── */
 :root{
-  --bg:#060404;
-  --surface:rgba(14,6,6,0.48);
-  --surface-mid:rgba(10,4,4,0.65);
-  --crimson:rgba(185,28,28,0.88);
-  --crimson-dim:rgba(148,20,20,0.55);
-  --crimson-ghost:rgba(120,16,16,0.2);
-  --amber:rgba(195,88,22,0.75);
-  --text-1:rgba(252,238,234,0.88);
-  --text-2:rgba(200,172,167,0.48);
-  --text-3:rgba(160,132,128,0.28);
-  --b-ghost:rgba(175,45,45,0.065);
-  --b-soft:rgba(175,45,45,0.14);
-  --glow:rgba(160,18,18,0.14);
+  --bg:#020101;
+  --wine:rgba(110,12,18,0.92);
+  --wine-dim:rgba(88,10,15,0.6);
+  --wine-ghost:rgba(70,8,12,0.18);
+  --crimson:rgba(155,20,26,0.85);
+  --amber:rgba(185,80,18,0.7);
+  --text-1:rgba(250,238,234,0.9);
+  --text-2:rgba(195,168,162,0.44);
+  --text-3:rgba(145,118,112,0.24);
+  --panel-bg:rgba(8,3,3,0.22);
+  --panel-hover:rgba(12,5,5,0.38);
+  --b-ultra-ghost:rgba(80,8,8,0.05);
 }
 
-/* ── BASE ───────────────────────────────────── */
-*,*::before,*::after{box-sizing:border-box;}
+/* ── UNIVERSAL BORDER DISSOLUTION ───────────────────
+   This is the key: make EVERY border in the app
+   nearly invisible. Boxes disappear. Space appears. */
+*{
+  border-color:var(--b-ultra-ghost)!important;
+  box-sizing:border-box;
+}
+
+/* ── BASE ─────────────────────────────────────────── */
 body{
   background:var(--bg)!important;
   font-family:'Inter',-apple-system,sans-serif!important;
@@ -43921,221 +43922,248 @@ body{
   overflow-x:hidden!important;
 }
 
-/* ── BACKGROUND ─────────────────────────────── */
+/* ── BACKGROUND — atmospheric, not technical ─────── */
 #bg{
-  opacity:0.07!important;
-  filter:hue-rotate(345deg) saturate(1.8) brightness(0.45)!important;
+  opacity:0.06!important;
+  filter:hue-rotate(348deg) saturate(1.5) brightness(0.4)!important;
 }
 #n60ParticleCanvas{
-  opacity:0.22!important;
-  filter:hue-rotate(345deg) saturate(0.7)!important;
+  opacity:0.18!important;
+  filter:hue-rotate(348deg) saturate(0.5) brightness(1.1)!important;
 }
-/* ATMOSPHERIC VIGNETTE — replaces scan grid */
 .scan-grid{
   background-image:
-    radial-gradient(ellipse 55% 75% at 32% 50%,rgba(140,14,14,0.18) 0%,transparent 58%),
-    radial-gradient(ellipse 35% 55% at 75% 48%,rgba(90,8,8,0.09) 0%,transparent 52%),
-    radial-gradient(ellipse 80% 40% at 50% 90%,rgba(60,4,4,0.12) 0%,transparent 60%)!important;
+    radial-gradient(ellipse 60% 80% at 30% 50%,rgba(120,12,16,0.2) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 60% at 72% 48%,rgba(80,6,10,0.1) 0%,transparent 50%),
+    radial-gradient(ellipse 100% 30% at 50% 100%,rgba(60,4,6,0.16) 0%,transparent 55%)!important;
   background-size:100% 100%!important;
 }
 .scan-overlay{display:none!important;}
 
-/* ── OVERFLOW ────────────────────────────────── */
-body,.shell,.main,.content,#view-dashboard,.p,.ph,.orb-panel,#orbPanel,#eosOrbWrap{
-  overflow:visible!important;
-}
+/* ── OVERFLOW ────────────────────────────────────── */
+body,.shell,.main,.content,#view-dashboard,.p,.ph,
+.orb-panel,#orbPanel,#eosOrbWrap{overflow:visible!important;}
 .shell{background:transparent!important;}
 
-/* ── ATMOSPHERIC BODY GLOW ───────────────────── */
+/* ── ATMOSPHERIC GLOBAL GLOW ─────────────────────── */
 body::before{
   content:''!important;
   position:fixed!important;top:0!important;left:0!important;
   width:100%!important;height:100%!important;
   background:
-    radial-gradient(ellipse 45% 55% at 36% 50%,rgba(130,12,12,0.1) 0%,transparent 55%),
-    radial-gradient(ellipse 100% 20% at 50% 100%,rgba(80,5,5,0.15) 0%,transparent 60%)!important;
+    radial-gradient(ellipse 50% 60% at 33% 50%,rgba(110,10,14,0.14) 0%,transparent 58%),
+    radial-gradient(ellipse 80% 25% at 50% 100%,rgba(70,5,8,0.18) 0%,transparent 55%),
+    radial-gradient(ellipse 30% 30% at 50% 0%,rgba(40,2,4,0.1) 0%,transparent 50%)!important;
   pointer-events:none!important;z-index:0!important;
 }
 body::after{display:none!important;}
 
-/* ── SIDEBAR — ghost minimal ─────────────────── */
+/* ── SIDEBAR — invisible shell ───────────────────── */
 .sb{
-  background:rgba(5,2,2,0.94)!important;
-  border-right:1px solid var(--b-ghost)!important;
+  background:rgba(3,1,1,0.96)!important;
+  border-right-color:rgba(70,6,8,0.06)!important;
+  border-right-width:1px!important;
+  border-right-style:solid!important;
   box-shadow:none!important;
   z-index:20!important;
-  position:relative!important;
 }
-.sb::after{display:none!important;}
+.sb::after,.sb::before{display:none!important;}
 
-/* ── PANELS — cinematic glass ────────────────── */
+/* sidebar text */
+.sb *{
+  font-family:'Inter',sans-serif!important;
+  font-size:11px!important;font-weight:400!important;
+  letter-spacing:0.01em!important;
+  color:var(--text-2)!important;
+  transition:color 0.35s ease, opacity 0.35s ease!important;
+}
+.sb [class*="active"],.sb [class*="selected"],.sb .active{
+  color:var(--text-1)!important;font-weight:500!important;
+}
+.sb h1,.sb h2,.sb [class*="logo"],.sb [class*="brand"]{
+  font-family:'Space Grotesk',sans-serif!important;
+  font-weight:600!important;font-size:12px!important;
+  letter-spacing:0.05em!important;color:var(--crimson)!important;
+}
+
+/* ── PANELS — fog, not boxes ─────────────────────── */
 #view-dashboard>div{
-  background:var(--surface)!important;
-  backdrop-filter:blur(48px) saturate(1.6) brightness(1.04)!important;
-  -webkit-backdrop-filter:blur(48px) saturate(1.6) brightness(1.04)!important;
+  background:var(--panel-bg)!important;
+  backdrop-filter:blur(60px) saturate(1.4) brightness(1.06)!important;
+  -webkit-backdrop-filter:blur(60px) saturate(1.4) brightness(1.06)!important;
   border:none!important;
+  border-top:none!important;
+  border-bottom:none!important;
+  border-left:none!important;
+  border-right:none!important;
+  border-radius:12px!important;
   box-shadow:
-    0 0 0 1px var(--b-ghost),
-    0 6px 48px rgba(0,0,0,0.65),
-    0 1px 0 rgba(220,80,80,0.04),
-    inset 0 1px 0 rgba(255,210,200,0.025)!important;
-  border-radius:10px!important;
+    0 2px 60px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(80,6,8,0.04),
+    inset 0 1px 0 rgba(255,200,190,0.02)!important;
   overflow:visible!important;
   position:relative!important;
-  transition:box-shadow 0.5s ease,background 0.5s ease!important;
+  transition:background 0.6s ease,box-shadow 0.6s ease!important;
 }
 #view-dashboard>div:hover{
-  background:rgba(16,7,7,0.52)!important;
+  background:var(--panel-hover)!important;
   box-shadow:
-    0 0 0 1px var(--b-soft),
-    0 12px 70px rgba(0,0,0,0.72),
-    0 0 40px var(--glow),
-    inset 0 1px 0 rgba(255,200,190,0.04)!important;
+    0 4px 80px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(100,10,12,0.08),
+    0 0 40px rgba(90,6,10,0.08),
+    inset 0 1px 0 rgba(255,200,190,0.03)!important;
 }
 #view-dashboard>div::before,
 #view-dashboard>div::after{display:none!important;content:none!important;}
 
-/* ── ORB PANEL ──────────────────────────────── */
+/* ── ORB PANEL — pure atmosphere ────────────────── */
 #orbPanel,.orb-panel{
   background:radial-gradient(
     ellipse at 50% 50%,
-    rgba(160,14,14,0.1) 0%,
-    rgba(70,5,5,0.05) 38%,
-    transparent 68%
+    rgba(140,12,16,0.12) 0%,
+    rgba(60,4,6,0.05) 40%,
+    transparent 65%
   )!important;
   border:none!important;
   box-shadow:none!important;
 }
 
-/* ── ORB — organic living core ───────────────── */
+/* ── ORB CANVAS — living core ───────────────────── */
 #eosOrbCanvas{
   filter:
-    drop-shadow(0 0 12px rgba(210,22,22,0.85))
-    drop-shadow(0 0 35px rgba(175,16,16,0.6))
-    drop-shadow(0 0 70px rgba(140,10,10,0.35))
-    drop-shadow(0 0 120px rgba(105,7,7,0.18))
-    drop-shadow(0 0 180px rgba(80,5,5,0.09))!important;
+    drop-shadow(0 0 10px rgba(200,18,24,0.88))
+    drop-shadow(0 0 30px rgba(165,12,18,0.62))
+    drop-shadow(0 0 65px rgba(130,8,14,0.38))
+    drop-shadow(0 0 120px rgba(95,5,10,0.2))
+    drop-shadow(0 0 190px rgba(65,3,7,0.1))!important;
   transform:scale(0.86)!important;
   transform-origin:center!important;
-  animation:v60breathe 7s ease-in-out infinite!important;
+  animation:v70breathe 8s ease-in-out infinite!important;
 }
 
-/* ── ORB CSS RINGS — minimal organic ─────────── */
+/* ── ORB RINGS — slow, minimal ────────────────── */
 .orb-v-ring{
   position:absolute!important;border-radius:50%!important;
   top:50%!important;left:50%!important;
   pointer-events:none!important;background:transparent!important;
 }
 .orb-v-ring.r1{
-  width:195px!important;height:195px!important;
-  border:1px solid rgba(195,20,20,0.28)!important;
-  box-shadow:0 0 16px rgba(170,12,12,0.1)!important;
-  animation:v60cw 14s linear infinite!important;
+  width:200px!important;height:200px!important;
+  border:1px solid rgba(185,18,22,0.22)!important;
+  animation:v70cw 18s linear infinite!important;
   transform:translate(-50%,-50%)!important;
 }
 .orb-v-ring.r2{
-  width:275px!important;height:275px!important;
-  border:1px solid rgba(165,14,14,0.12)!important;
-  animation:v60ccw 24s linear infinite!important;
+  width:285px!important;height:285px!important;
+  border:1px solid rgba(155,12,16,0.1)!important;
+  animation:v70ccw 30s linear infinite!important;
   transform:translate(-50%,-50%)!important;
 }
 .orb-v-ring.r3{
-  width:365px!important;height:365px!important;
-  border:1px solid rgba(140,10,10,0.065)!important;
-  animation:v60cw 42s linear infinite!important;
+  width:380px!important;height:380px!important;
+  border:1px solid rgba(120,8,12,0.05)!important;
+  animation:v70cw 55s linear infinite!important;
   transform:translate(-50%,-50%)!important;
 }
 #eosOrbWrap::before{
   content:''!important;position:absolute!important;
-  width:480px!important;height:480px!important;
+  width:500px!important;height:500px!important;
   border-radius:50%!important;top:50%!important;left:50%!important;
   transform:translate(-50%,-50%)!important;
-  background:radial-gradient(ellipse,transparent 42%,rgba(130,9,9,0.06) 72%,transparent 100%)!important;
-  animation:v60breathe 9s ease-in-out infinite 2s!important;
+  background:radial-gradient(ellipse,transparent 38%,rgba(110,8,12,0.07) 70%,transparent 100%)!important;
+  animation:v70breathe 10s ease-in-out infinite 1.5s!important;
   pointer-events:none!important;
 }
 
-/* ── TOPBAR ─────────────────────────────────── */
+/* ── TOPBAR — near invisible ────────────────────── */
 .tb,.topbar,[class*="topbar"]{
-  background:rgba(4,1,1,0.96)!important;
-  border-bottom:1px solid var(--b-ghost)!important;
+  background:rgba(3,1,1,0.97)!important;
+  border-bottom-color:rgba(70,5,8,0.06)!important;
+  border-bottom-width:1px!important;
+  border-bottom-style:solid!important;
   box-shadow:none!important;
 }
 #viewTitle{
   font-family:'Space Grotesk',sans-serif!important;
-  font-weight:500!important;font-size:11px!important;
-  letter-spacing:0.14em!important;
-  color:var(--text-1)!important;
+  font-weight:500!important;font-size:10px!important;
+  letter-spacing:0.18em!important;text-transform:uppercase!important;
+  color:rgba(240,225,220,0.7)!important;
   text-shadow:none!important;
-  text-transform:uppercase!important;
 }
 
-/* ── TABBAR ─────────────────────────────────── */
+/* ── TABBAR ────────────────────────────────────── */
 #mainTabBar{
-  background:rgba(4,1,1,0.97)!important;
-  border-bottom:1px solid var(--b-ghost)!important;
+  background:rgba(3,1,1,0.98)!important;
+  border-bottom-color:rgba(70,5,8,0.05)!important;
+  border-bottom-width:1px!important;
+  border-bottom-style:solid!important;
 }
 #mainTabBar *{
   font-family:'Inter',sans-serif!important;
   font-size:9.5px!important;font-weight:500!important;
-  letter-spacing:0.08em!important;text-transform:uppercase!important;
+  letter-spacing:0.07em!important;text-transform:uppercase!important;
   color:var(--text-2)!important;
 }
 #mainTabBar .active,[class*="tab-active"]{
   color:var(--text-1)!important;
-  border-bottom:1px solid var(--crimson-dim)!important;
+  border-bottom-color:rgba(155,18,22,0.55)!important;
+  border-bottom-width:1px!important;
+  border-bottom-style:solid!important;
   background:transparent!important;
-  text-shadow:none!important;
 }
 
-/* ── PRESENCE BAR ────────────────────────────── */
+/* ── PRESENCE BAR ──────────────────────────────── */
 #presenceBar{
-  background:linear-gradient(90deg,transparent 0%,rgba(185,25,25,0.6) 25%,rgba(210,28,28,0.8) 50%,rgba(185,25,25,0.6) 75%,transparent 100%)!important;
+  background:linear-gradient(90deg,
+    transparent,
+    rgba(155,18,22,0.5) 20%,
+    rgba(175,22,28,0.75) 50%,
+    rgba(155,18,22,0.5) 80%,
+    transparent)!important;
   height:1px!important;
-  box-shadow:0 0 8px rgba(190,18,18,0.45),0 0 20px rgba(165,14,14,0.2)!important;
+  box-shadow:0 0 10px rgba(155,14,18,0.4),0 0 22px rgba(130,10,14,0.18)!important;
 }
 
-/* ── PANEL HEADERS ─────────────────────────── */
+/* ── PANEL HEADERS ────────────────────────────── */
 .ph,[class*="panel-h"],[class*="panelHeader"]{
   font-family:'Space Grotesk',sans-serif!important;
-  font-size:8.5px!important;font-weight:600!important;
-  letter-spacing:0.2em!important;
-  color:rgba(195,120,110,0.5)!important;
-  text-transform:uppercase!important;
+  font-size:8px!important;font-weight:600!important;
+  letter-spacing:0.22em!important;text-transform:uppercase!important;
+  color:rgba(185,110,100,0.42)!important;
 }
 
-/* ── GLOBAL TYPOGRAPHY ─────────────────────── */
+/* ── GLOBAL TYPE ──────────────────────────────── */
 h1,h2,h3,h4,h5,h6,[class*="heading"],[class*="title"]{
   font-family:'Space Grotesk',sans-serif!important;
-  font-weight:500!important;letter-spacing:0.02em!important;
+  font-weight:500!important;letter-spacing:0.015em!important;
   color:var(--text-1)!important;
 }
-.sb [class*="logo"],.sb [class*="brand"]{
-  font-family:'Space Grotesk',sans-serif!important;
-  font-weight:600!important;letter-spacing:0.06em!important;
-  color:var(--crimson)!important;
+button,[class*="btn"]{
+  font-family:'Inter',sans-serif!important;
+  font-weight:500!important;letter-spacing:0.04em!important;
 }
 
-/* ── HUD CORNERS — hidden (too technical) ────── */
+/* ── REMOVE ALL HUD DECORATIONS ────────────────── */
 html::before,html::after{display:none!important;}
 
-/* ── POINTER-EVENTS SAFETY ─────────────────── */
-#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{
+/* ── POINTER-EVENTS SAFETY ─────────────────────── */
+#eosBootScreen,#bootEnterPrompt,#bootBypass,
+#eosAccess,#accPass,#accPassInput,#accActivation{
   pointer-events:all!important;
 }
 
-/* ── KEYFRAMES ──────────────────────────────── */
-@keyframes v60cw{
+/* ── KEYFRAMES ─────────────────────────────────── */
+@keyframes v70breathe{
+  0%,100%{opacity:0.84;transform:scale(0.86);}
+  50%{opacity:1;transform:scale(0.89);}
+}
+@keyframes v70cw{
   from{transform:translate(-50%,-50%) rotate(0deg);}
   to{transform:translate(-50%,-50%) rotate(360deg);}
 }
-@keyframes v60ccw{
+@keyframes v70ccw{
   from{transform:translate(-50%,-50%) rotate(0deg);}
   to{transform:translate(-50%,-50%) rotate(-360deg);}
-}
-@keyframes v60breathe{
-  0%,100%{opacity:0.82;transform:scale(0.86);}
-  50%{opacity:1;transform:scale(0.89);}
 }
 @keyframes eos-fixed-spin-cw{
   from{transform:rotate(0deg);}to{transform:rotate(360deg);}
@@ -44143,9 +44171,8 @@ html::before,html::after{display:none!important;}
 @keyframes eos-fixed-spin-ccw{
   from{transform:rotate(0deg);}to{transform:rotate(-360deg);}
 }
-@keyframes eos-orb-fog{
-  0%,100%{opacity:0.06;transform:scale(1);}
-  50%{opacity:0.14;transform:scale(1.06);}
+@keyframes eos-fog-pulse{
+  0%,100%{opacity:0.7;}50%{opacity:1;}
 }
 </style>
 
