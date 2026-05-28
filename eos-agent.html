@@ -42084,6 +42084,50 @@ b.appendChild(lft);b.appendChild(tm);b.appendChild(sta);
 document.body.appendChild(b);
 setInterval(function(){var t=new Date();var e=document.getElementById("v11tm");if(e)e.textContent=t.toLocaleDateString("es-CO",{weekday:"short",month:"short",day:"numeric"})+" · "+t.toLocaleTimeString("es-CO",{hour:"2-digit",minute:"2-digit"});},1000);
 }
+function n186UpgradePnl(){
+  setTimeout(function(){
+    var pnl=Array.from(document.querySelectorAll("*")).filter(function(el){
+      var s=window.getComputedStyle(el);
+      return s.position==="fixed"&&s.right==="24px"&&parseFloat(s.width)>200;
+    })[0];
+    if(!pnl)return;
+    pnl.id="eosRightIntelPanel";
+    pnl.style.background="rgba(6,1,1,0.88)";
+    pnl.style.backdropFilter="blur(18px)";
+    pnl.style.borderLeft="1px solid rgba(210,18,24,0.22)";
+    pnl.style.boxShadow="-6px 0 50px rgba(0,0,0,0.7),inset 1px 0 0 rgba(210,18,24,0.08)";
+    pnl.style.overflow="hidden";
+    var st=document.createElement("style");
+    st.textContent="@keyframes rpScan{0%{top:0;opacity:0}5%{opacity:0.8}95%{opacity:0.3}100%{top:100%;opacity:0}}@keyframes rpDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}";
+    document.head.appendChild(st);
+    var scan=document.createElement("div");
+    scan.style.cssText="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(210,18,24,0.5) 50%,transparent 100%);animation:rpScan 5s linear infinite;z-index:10;pointer-events:none;";
+    pnl.style.position="fixed";
+    pnl.appendChild(scan);
+    var hdr=document.createElement("div");
+    hdr.style.cssText="padding:10px 14px 8px;border-bottom:1px solid rgba(210,18,24,0.14);display:flex;align-items:center;justify-content:space-between;margin-bottom:0;";
+    hdr.innerHTML="<span style=\"font-family:Orbitron,sans-serif;font-size:7.5px;letter-spacing:2px;color:rgba(210,18,24,0.8);\">INTEL FEED</span><span style=\"display:flex;gap:3px;align-items:center;\"><span style=\"width:4px;height:4px;border-radius:50%;background:rgba(210,18,24,0.9);animation:rpDot 1.8s ease-in-out infinite;display:inline-block;\"></span></span>";
+    pnl.insertBefore(hdr, pnl.firstChild);
+    var agents=[{n:"SCOUT",note:"5 señales activas",p:72},{n:"OUTREACH",note:"3 contactos",p:45},{n:"TRENDS",note:"Cultura en ascenso",p:88},{n:"CREATIVE",note:"Awaiting directive",p:30}];
+    var items=Array.from(pnl.children).filter(function(c,i){return i>=1&&i<=4;});
+    items.forEach(function(item,i){
+      var d=agents[i];
+      if(!d)return;
+      item.style.cssText="padding:9px 14px;border-bottom:1px solid rgba(210,18,24,0.07);position:relative;";
+      var dot="<span style=\"width:4px;height:4px;border-radius:50%;background:rgba(210,18,24,"+(0.9-i*0.15)+");animation:rpDot "+(1.6+i*0.25)+"s ease-in-out infinite;display:inline-block;flex-shrink:0;\"></span>";
+      item.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">'+'<div style="display:flex;align-items:center;gap:5px;">'+dot+'<span style="font-family:Orbitron,sans-serif;font-size:7px;letter-spacing:1.5px;color:rgba(210,18,24,0.82);">'+d.n+'</span></div>'+'<span style="font-size:7px;color:rgba(140,60,60,0.65);font-family:Share Tech Mono,monospace;">ON</span></div>'+'<div style="font-size:7.5px;color:rgba(210,170,170,0.7);margin-bottom:5px;font-family:Share Tech Mono,monospace;">'+d.note+'</div>'+'<div style="height:1.5px;background:rgba(210,18,24,0.1);border-radius:1px;">'+'<div style="height:100%;width:'+d.p+'%;background:linear-gradient(90deg,rgba(210,18,24,0.55),rgba(255,60,60,0.25));border-radius:1px;transition:width 2s ease;"></div></div>';
+    });
+    var bottom=pnl.children[pnl.children.length-1];
+    if(bottom&&pnl.children.length>=6){
+      bottom.style.cssText="padding:10px 14px;flex:1;";
+      var ins=["Contenido cinematográfico retiene 2.3x más audiencia.","Artistas alternativos LATAM en ascenso rápido.","Formato documental supera contenido producido.","Minimalismo emocional: tendencia dominante 2026."];
+      var iIdx=Math.floor(Date.now()/9000)%ins.length;
+      bottom.innerHTML='<div style="font-family:Orbitron,sans-serif;font-size:7px;letter-spacing:1.5px;color:rgba(210,18,24,0.65);margin-bottom:7px;display:flex;align-items:center;gap:5px;">'+'<span>SYSTEM INTEL</span><span style="flex:1;height:1px;background:rgba(210,18,24,0.18);"></span></div>'+'<div id="rpIntelTxt" style="font-size:8px;color:rgba(220,195,195,0.78);line-height:1.65;font-family:Share Tech Mono,monospace;min-height:36px;transition:opacity .6s;">'+ins[iIdx]+'</div>'+'<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:5px;">'+'<div style="background:rgba(210,18,24,0.05);border:1px solid rgba(210,18,24,0.13);padding:6px 8px;border-radius:2px;"><div style="font-family:Orbitron,sans-serif;font-size:15px;color:rgba(210,18,24,0.9);font-weight:700;">87<span style="font-size:8px">%</span></div><div style="font-size:6.5px;color:rgba(160,100,100,0.55);font-family:Share Tech Mono,monospace;">MOMENTUM</div></div>'+'<div style="background:rgba(210,18,24,0.05);border:1px solid rgba(210,18,24,0.13);padding:6px 8px;border-radius:2px;"><div id="rpSignals" style="font-family:Orbitron,sans-serif;font-size:15px;color:rgba(180,50,50,0.85);font-weight:700;">3</div><div style="font-size:6.5px;color:rgba(160,100,100,0.55);font-family:Share Tech Mono,monospace;">SEÑALES</div></div>'+'<div style="background:rgba(210,18,24,0.05);border:1px solid rgba(210,18,24,0.13);padding:6px 8px;border-radius:2px;"><div style="font-family:Orbitron,sans-serif;font-size:15px;color:rgba(180,50,50,0.85);font-weight:700;">5</div><div style="font-size:6.5px;color:rgba(160,100,100,0.55);font-family:Share Tech Mono,monospace;">ORKIS</div></div>'+'<div style="background:rgba(210,18,24,0.05);border:1px solid rgba(210,18,24,0.13);padding:6px 8px;border-radius:2px;"><div id="rpTasks" style="font-family:Orbitron,sans-serif;font-size:15px;color:rgba(180,50,50,0.85);font-weight:700;">—</div><div style="font-size:6.5px;color:rgba(160,100,100,0.55);font-family:Share Tech Mono,monospace;">TAREAS</div></div>'+'</div><div style="margin-top:8px;padding-top:7px;border-top:1px solid rgba(210,18,24,0.1);text-align:center;font-size:6.5px;color:rgba(120,60,60,0.45);font-family:Share Tech Mono,monospace;letter-spacing:1px;">EOS INTELLIGENCE ACTIVE</div>';
+      setInterval(function(){iIdx=(iIdx+1)%ins.length;var el=document.getElementById("rpIntelTxt");if(el){el.style.opacity="0";setTimeout(function(){if(el){el.textContent=ins[iIdx];el.style.opacity="1";}},500);}},9000);
+      try{var ts=JSON.parse(localStorage.getItem("eos_tasks")||"[]");var p=ts.filter(function(t){return !t.done;}).length;var rc=document.getElementById("rpTasks");if(rc&&p>0)rc.textContent=p;}catch(e){}
+    }
+  }, 600);
+}
 function mkPnl(){
 var p=document.createElement("div");
 p.style.cssText="position:fixed;right:24px;top:60px;bottom:80px;width:280px;z-index:9100;display:flex;flex-direction:column;gap:10px;overflow:hidden;";
@@ -42144,7 +42188,7 @@ el.style.opacity="0";
 setTimeout(function(){el.textContent=TH[tIdx%TH.length];tIdx++;el.style.opacity="1";},400);
 }
 function init(){
-bb();mkP();mkA();mkOrb();mkTop();mkPnl();mkDock();
+bb();mkP();mkA();mkOrb();mkTop();mkPnl();n186UpgradePnl();mkDock();
 rotateTh();
 setInterval(rotateTh,5000);
 }
