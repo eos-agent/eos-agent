@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "_deploy": "2026-05-28T23:30:13.182Z",
   "name": "eos-agent",
   "builds": [
     {
