@@ -18942,8 +18942,30 @@ Los 5 Orkis (pilares emocionales): I.Amor sin fronteras II.Culpa III.Cambio IV.P
   }
 }
 
+// N183 — EOS JARVIS BOOT GREETING — habla primero al iniciar
+function eosBootGreeting(){
+  try{
+    var h = new Date().getHours();
+    var g = h<12 ? 'Buenos días' : h<18 ? 'Buenas tardes' : 'Buenas noches';
+    var msgs = [
+      g + ', EOS. Sistemas en línea. Tendencias cinematográficas en ascenso. Tres oportunidades detectadas esta semana. Momentum al 87%. Listo para operar.',
+      g + ', EOS. Estoy en línea. El mercado alternativo en Bogotá muestra señales positivas. Contenido documental superando al contenido pulido. Es tu momento.',
+      g + ', EOS. Sistemas activos. He detectado nuevas oportunidades de colaboración esta semana. El ecosistema cinematográfico latinoamericano está en movimiento.'
+    ];
+    var msg = msgs[Math.floor(Math.random()*msgs.length)];
+    setTimeout(function(){
+      try{ if(typeof eosSpeak==='function') eosSpeak(msg,'high'); }catch(e){}
+    }, 800);
+    var briefEl = document.getElementById('wbContent');
+    if(briefEl && briefEl.innerText && briefEl.innerText.trim().length < 30){
+      briefEl.innerHTML = '<div style="color:rgba(220,30,30,.95);font-size:8px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;font-family:var(--font-hud);">EOS — SISTEMAS EN LINEA</div><div style="color:rgba(255,255,255,.88);font-size:10px;line-height:1.75;font-family:var(--font-hud);">' + msg + '</div>';
+    }
+  }catch(e){}
+}
+
 // Auto-run intelligence on dashboard load
 function initDashboardIntelligence(){
+  setTimeout(eosBootGreeting, 3500);
   setTimeout(runProactiveIntel, 2500);
   setTimeout(loadSessionIntelligence, 800); // NIVEL 28 — Session Intelligence Card
 }
