@@ -9688,6 +9688,29 @@ body.mode-rusia::before {
 @keyframes n92ScanH{0%{top:0%;opacity:1;}100%{top:100%;opacity:.2;}}
 .n92-scan-v{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(200,0,0,.5),transparent);animation:n92ScanV 1.4s ease-out forwards;}
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
+
+#eosMemoryPanel{position:fixed;bottom:120px;right:20px;width:290px;background:rgba(4,0,8,.97);border:1px solid rgba(200,0,0,.28);border-radius:6px;z-index:8000;overflow:hidden;backdrop-filter:blur(20px);box-shadow:0 0 40px rgba(200,0,0,.07);transform:translateY(16px);opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.4,0,.2,1);}
+#eosMemoryPanel.open{transform:translateY(0);opacity:1;pointer-events:all;}
+#eosMemPanelHdr{display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid rgba(200,0,0,.1);background:rgba(200,0,0,.03);font-family:'Courier New',monospace;font-size:7.5px;letter-spacing:3px;color:rgba(200,0,0,.65);cursor:pointer;}
+.mem-hdot{width:5px;height:5px;border-radius:50%;background:rgba(200,0,0,.8);animation:memDot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes memDot{0%,100%{box-shadow:0 0 4px rgba(200,0,0,.5);}50%{box-shadow:0 0 10px rgba(200,0,0,.95);}}
+#eosMemSync{margin-left:auto;font-size:6.5px;color:rgba(200,0,0,.3);}
+#eosMemPanelBody{padding:10px 13px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+#eosMemPanelBody::-webkit-scrollbar{width:2px;}
+#eosMemPanelBody::-webkit-scrollbar-thumb{background:rgba(200,0,0,.25);}
+.mem-sec-lbl{font-family:'Courier New',monospace;font-size:6px;letter-spacing:2.5px;color:rgba(200,0,0,.3);padding-bottom:4px;border-bottom:1px solid rgba(200,0,0,.07);margin-bottom:2px;}
+.mem-entry{font-size:9.5px;color:rgba(215,215,230,.55);line-height:1.45;padding:5px 8px;background:rgba(255,255,255,.015);border-left:2px solid rgba(200,0,0,.18);border-radius:0 3px 3px 0;}
+.mem-entry .mem-ts{font-size:6.5px;color:rgba(200,0,0,.25);margin-top:2px;}
+.mem-empty{font-size:8.5px;color:rgba(200,0,0,.18);text-align:center;padding:16px;letter-spacing:2px;font-family:'Courier New',monospace;}
+#eosMemPanelFtr{padding:8px 13px;border-top:1px solid rgba(200,0,0,.07);display:flex;gap:6px;}
+.mem-act-btn{flex:1;font-family:'Courier New',monospace;font-size:7px;letter-spacing:1.5px;padding:5px 6px;background:rgba(200,0,0,.07);border:1px solid rgba(200,0,0,.18);color:rgba(200,0,0,.55);cursor:pointer;border-radius:3px;transition:all .2s;}
+.mem-act-btn:hover{background:rgba(200,0,0,.15);color:rgba(200,0,0,.9);}
+#eosMemBtn{position:fixed;bottom:78px;right:20px;width:34px;height:34px;background:rgba(4,0,8,.92);border:1px solid rgba(200,0,0,.22);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:7999;transition:all .25s;font-size:13px;color:rgba(200,0,0,.55);}
+#eosMemBtn:hover{border-color:rgba(200,0,0,.5);color:rgba(200,0,0,.9);box-shadow:0 0 14px rgba(200,0,0,.12);}
+#eosMemCtxBar{margin:0 14px 6px;padding:7px 11px;background:rgba(200,0,0,.03);border:1px solid rgba(200,0,0,.09);border-radius:4px;font-family:'Courier New',monospace;font-size:8px;color:rgba(200,200,220,.45);line-height:1.5;display:none;}
+#eosMemCtxBar.visible{display:block;}
+.mem-ctx-lbl{font-size:6px;letter-spacing:2px;color:rgba(200,0,0,.35);margin-bottom:4px;}
+
 </style>
 
 <style id="eos-ultra-v11">*{box-sizing:border-box;}body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;}.sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar,#eos-hud,.ci-modal-badge{display:none!important;}.shell{background:transparent!important;position:absolute!important;inset:0!important;}.main{background:transparent!important;width:100vw!important;height:100vh!important;position:absolute!important;top:0!important;left:0!important;}.content,#content{background:transparent!important;width:100%!important;height:100%!important;overflow:visible!important;}#view-dashboard{background:transparent!important;position:relative!important;overflow:visible!important;}#view-dashboard>div{display:none!important;}#eosOrbCanvas{filter:drop-shadow(0 0 18px rgba(210,18,24,1)) drop-shadow(0 0 50px rgba(175,12,18,0.82)) drop-shadow(0 0 105px rgba(135,8,14,0.58)) drop-shadow(0 0 185px rgba(92,5,10,0.34)) drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;animation:v11breathe 8s ease-in-out infinite!important;display:block!important;visibility:visible!important;}#eosOrbWrap{overflow:visible!important;display:block!important;visibility:visible!important;}#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;}#eos-thought{transition:opacity 0.4s ease;}@keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}@keyframes v11cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}@keyframes v11ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}</style><style id="eos-v12-combined">
@@ -11033,6 +11056,8 @@ div[style*="bottom"]:has(button) {
         <button onclick="runGrowthIntel()" title="Growth Intelligence" style="margin-left:auto;font-family:var(--mo);font-size:8px;background:rgba(200,0,0,.1);border:1px solid rgba(200,0,0,.25);color:var(--r2);padding:3px 10px;border-radius:4px;cursor:pointer;letter-spacing:.1em;transition:all .2s;flex-shrink:0;">◈ GROWTH</button>
         <button id="voiceBriefBtn" onclick="playJarvisBrief()" title="Escuchar briefing JARVIS" style="font-family:var(--mo);font-size:8px;background:rgba(200,0,0,.15);border:1px solid rgba(200,0,0,.3);color:var(--r2);padding:3px 10px;border-radius:4px;cursor:pointer;letter-spacing:.1em;transition:all .2s;flex-shrink:0;">◉ BRIEF</button>
       </div>
+<div id="eosMemCtxBar"></div>
+
       <div id="voiceBriefBar" style="padding:5px 14px 0;display:none;">
         <div style="font-family:var(--mo);font-size:7.5px;color:var(--dim);letter-spacing:.05em;font-style:italic;line-height:1.5;" id="voiceBriefText"></div>
       </div>
@@ -42305,6 +42330,28 @@ if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded"
   window.addEventListener('load', function(){ setTimeout(centerBrackets, 400); setTimeout(centerBrackets, 1200); });
   window.addEventListener('resize', centerBrackets);
 })();
+</script>
+<div id="eosMemBtn" title="Memoria EOS" onclick="eosMemToggle()">&#9672;</div>
+<div id="eosMemoryPanel">
+<div id="eosMemPanelHdr" onclick="eosMemToggle()"><div class="mem-hdot"></div>&#9672; MEMORIA EOS<span id="eosMemSync">OFFLINE</span></div>
+<div id="eosMemPanelBody">
+<div><div class="mem-sec-lbl">&#9678; SESIONES</div><div id="eosMemSessionsList"><div class="mem-empty">SIN DATOS</div></div></div>
+<div><div class="mem-sec-lbl">&#9670; DECISIONES</div><div id="eosMemDecisionsList"><div class="mem-empty">SIN DATOS</div></div></div>
+<div><div class="mem-sec-lbl">&#10022; IDEAS</div><div id="eosMemIdeasList"><div class="mem-empty">SIN DATOS</div></div></div>
+<div><div class="mem-sec-lbl">&#9673; OPORTUNIDADES</div><div id="eosMemOppsList"><div class="mem-empty">SIN DATOS</div></div></div>
+</div>
+<div id="eosMemPanelFtr">
+<button class="mem-act-btn" onclick="eosMemSaveSession()">&#9673; GUARDAR</button>
+<button class="mem-act-btn" onclick="EOSMemory.save()">&#10175; SYNC</button>
+</div>
+</div>
+<div id="eosMemCtxBar"><div class="mem-ctx-lbl">CONTEXTO</div></div>
+<script>
+const EOSMemory={REPO:'eos-agent/eos-agent',FILE:'eos-memory.json',RAW:'https://raw.githubusercontent.com/eos-agent/eos-agent/main/eos-memory.json',_data:null,_fileSha:null,_syncing:false,_open:false,tok(){return localStorage.getItem('gh_token')||'';},async load(){try{const r=await fetch(EOSMemory.RAW+'?t='+Date.now());if(!r.ok)return;EOSMemory._data=await r.json();const api=await fetch('https://api.github.com/repos/'+EOSMemory.REPO+'/contents/'+EOSMemory.FILE,{headers:{Authorization:'Bearer '+EOSMemory.tok()}});if(api.ok){const m=await api.json();EOSMemory._fileSha=m.sha;}EOSMemory.render();EOSMemory.showCtx();const now=new Date();const el=document.getElementById('eosMemSync');if(el)el.textContent=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');}catch(e){console.warn('[MEM]',e);}},async save(){if(!EOSMemory._data||EOSMemory._syncing)return;EOSMemory._syncing=true;try{EOSMemory._data.lastSync=new Date().toISOString();const content=btoa(unescape(encodeURIComponent(JSON.stringify(EOSMemory._data,null,2))));const body={message:'memory:sync '+new Date().toISOString().slice(0,16),content:content};if(EOSMemory._fileSha)body.sha=EOSMemory._fileSha;const r=await fetch('https://api.github.com/repos/'+EOSMemory.REPO+'/contents/'+EOSMemory.FILE,{method:'PUT',headers:{Authorization:'Bearer '+EOSMemory.tok(),'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.ok){const d=await r.json();EOSMemory._fileSha=d.content?.sha;const el=document.getElementById('eosMemSync');const now=new Date();if(el)el.textContent=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');}}catch(e){console.warn('[MEM save]',e);}EOSMemory._syncing=false;},remember(type,text,meta){if(!EOSMemory._data)EOSMemory._data={sessions:[],decisions:[],opportunities:[],ideas:[],notes:[]};const k=type+'s';if(!EOSMemory._data[k])EOSMemory._data[k]=[];EOSMemory._data[k].unshift({text:text,ts:new Date().toISOString(),...(meta||{})});if(EOSMemory._data[k].length>50)EOSMemory._data[k]=EOSMemory._data[k].slice(0,50);EOSMemory.render();EOSMemory.save();},render(){const d=EOSMemory._data;if(!d)return;const rend=(id,items,empty)=>{const el=document.getElementById(id);if(!el)return;if(!items||!items.length){el.innerHTML='<div class="mem-empty">'+empty+'</div>';return;}el.innerHTML=items.slice(0,5).map(x=>{const ts=x.ts?new Date(x.ts).toLocaleDateString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';return'<div class="mem-entry">'+(x.text||'').slice(0,80)+(x.text?.length>80?'...':'')+'<div class="mem-ts">'+ts+'</div></div>';}).join('');};rend('eosMemSessionsList',d.sessions,'SIN SESIONES');rend('eosMemDecisionsList',d.decisions,'SIN DECISIONES');rend('eosMemIdeasList',d.ideas,'SIN IDEAS');rend('eosMemOppsList',d.opportunities,'SIN OPORTUNIDADES');},showCtx(){const d=EOSMemory._data;if(!d)return;const ctx=document.getElementById('eosMemCtxBar');if(!ctx)return;const s=d.sessions||[],i=d.ideas||[],o=d.opportunities||[];if(!s.length&&!i.length&&!o.length)return;let msg='';if(s.length){const ago=s[0].ts?Math.round((Date.now()-new Date(s[0].ts))/3600000):null;if(ago!==null)msg+='Ultima sesion hace '+(ago<24?ago+'h':Math.round(ago/24)+' dias')+'. ';}if(i.length)msg+=i.length+' ideas. ';if(o.length)msg+=o.length+' oportunidades.';if(msg){ctx.innerHTML='<div class="mem-ctx-lbl">MEMORIA ACTIVA</div>'+msg.trim();ctx.classList.add('visible');}},toggle(){EOSMemory._open=!EOSMemory._open;const p=document.getElementById('eosMemoryPanel');if(p)p.classList.toggle('open',EOSMemory._open);}};
+function eosMemToggle(){EOSMemory.toggle();}
+function eosMemSaveSession(){const area=document.getElementById('mainChatArea');const msgs=area?area.querySelectorAll('[class*="msg"]'):[];const last=msgs.length?msgs[msgs.length-1]?.textContent?.slice(0,100):'Sesion activa';EOSMemory.remember('session',last||'Sesion EOS');if(typeof eosSpeak==='function')eosSpeak('Sesion guardada en memoria');}
+function eosRemember(type,text){EOSMemory.remember(type,text);}
+setTimeout(()=>{EOSMemory.load();},3000);
 </script>
 </body>\n</html>';
   }
