@@ -12707,12 +12707,7 @@ body.mode-rusia::before {
 try {
   localStorage.setItem('eos_elevenlabs_key', 'sk_1a0e5518af066e943ecf48df12bcda83d1cd997e52526f83');
 } catch(e) {}
-// Auto-configure Claude API key for EOS JARVIS
-try {
-  if (!localStorage.getItem('eos_apikey')) {
-    localStorage.setItem('eos_apikey', 'sk-ant-api03-axgbq5v5ruqc8-bzQGkTrBZS3ku1S2987xiB9VlrUPyh1fLtEYOHtnoVAaMpDq10pGJQXF4y8npEozGCBSY7rA-EPiatwAA');
-  }
-} catch(e) {}
+// EOS JARVIS — API key se configura via Ajustes/APIs en el dashboard
 
 // ══ GLOBAL BOOT ACTIVATE — defined first, always available ══
 var __eosBootDone = false;
@@ -38638,7 +38633,37 @@ if(document.readyState === 'loading'){
   window.N179 = N179;
 
   /* Init after DOM + existing modules settle */
-  function doInit() { setTimeout(function () { try { N179.init(); } catch (e) {} }, 1000); }
+    /* Init after DOM + existing modules settle */
+  function doInit() {
+    setTimeout(function () {
+      try {
+        N179.init();
+        /* Auto-open JARVIS panel on load */
+        setTimeout(function () {
+          try {
+            var vp = document.getElementById('j179VoicePanel');
+            if (!vp || vp.style.display !== 'flex') { N179.togglePanel(); }
+            var hasKey = false;
+            try { hasKey = !!(localStorage.getItem('eos_apikey')); } catch(e) {}
+            if (!hasKey) {
+              setTimeout(function () {
+                try {
+                  N179.addMsg('jarvis',
+                    '⚙ <strong>API Key requerida</strong><br><br>' +
+                    'Para activar JARVIS completo:<br><br>' +
+                    '1. Ve a <strong>Ajustes / APIs</strong> en el menú lateral<br>' +
+                    '2. Pega tu <strong>Claude API Key</strong> (sk-ant-...)<br>' +
+                    '3. Haz clic en GUARDAR<br><br>' +
+                    '<em>Obtén una key en console.anthropic.com</em>'
+                  );
+                } catch(e) {}
+              }, 600);
+            }
+          } catch(e) {}
+        }, 1200);
+      } catch (e) {}
+    }, 1000);
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', doInit);
   else doInit();
 
@@ -39045,12 +39070,7 @@ if(document.readyState === 'loading'){
         );
       }
 
-      /* Check API key */
-      var hasKey = false;
-      try { hasKey = !!(localStorage.getItem('eos_apikey')); } catch (e) {}
-      if (!hasKey) {
-        this._showApiKeySetup();
-      }
+      /* API key check — handled inside JARVIS panel (N179 auto-opens with setup guide) */
     },
 
     _showBanner: function (html, color) {
