@@ -41618,47 +41618,39 @@ if(!window.__n149Patched){
       return '<div class="msg '+cls+'"><span class="lbl">'+role+'</span><p>'+content+'</p></div>';
     }).join('\n');
 
-    return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n
-<script id="eos-ring-overlay-js">
+    return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n<script id="eos-ring-overlay-js">
 (function(){
-  function injectRings(){
-    var canvas = document.getElementById('eosOrbCanvas');
-    if(!canvas) return;
-    var rect = canvas.getBoundingClientRect();
-    var cx = rect.left + rect.width/2;
-    var cy = rect.top + rect.height/2;
-    if(cx < 10) return;
-    var old = document.getElementById('eos-ring-overlay');
-    if(old) old.remove();
-    var wrap = document.createElement('div');
-    wrap.id = 'eos-ring-overlay';
-    wrap.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:100;overflow:visible;';
-    [{size:260,color:'rgba(200,0,0,0.75)',bs:'solid',bw:'1.5px',dur:'6s',dir:'cw',shadow:'0 0 14px rgba(200,0,0,0.45)'},
-     {size:350,color:'rgba(200,0,0,0.46)',bs:'dashed',bw:'1px',dur:'11s',dir:'ccw',shadow:'0 0 8px rgba(200,0,0,0.15)'},
-     {size:450,color:'rgba(200,0,0,0.22)',bs:'solid',bw:'1px',dur:'19s',dir:'cw',shadow:'0 0 20px rgba(200,0,0,0.07)'},
-     {size:540,color:'rgba(180,0,0,0.11)',bs:'dashed',bw:'1px',dur:'30s',dir:'ccw',shadow:''}
+  function inject(){
+    var c=document.getElementById('eosOrbCanvas');
+    if(!c)return;
+    var r=c.getBoundingClientRect();
+    var cx=r.left+r.width/2, cy=r.top+r.height/2;
+    if(cx<10)return;
+    var old=document.getElementById('eos-ring-overlay');
+    if(old)old.remove();
+    var wrap=document.createElement('div');
+    wrap.id='eos-ring-overlay';
+    wrap.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;';
+    [{size:240,color:'rgba(220,0,0,0.82)',bs:'solid',bw:'1.5px',dur:'5s',dir:'cw',sh:'0 0 12px rgba(200,0,0,0.5)'},
+     {size:320,color:'rgba(200,0,0,0.52)',bs:'dashed',bw:'1px',dur:'10s',dir:'ccw',sh:'0 0 8px rgba(200,0,0,0.2)'},
+     {size:420,color:'rgba(200,0,0,0.26)',bs:'solid',bw:'1px',dur:'18s',dir:'cw',sh:'0 0 16px rgba(200,0,0,0.08)'},
+     {size:520,color:'rgba(180,0,0,0.12)',bs:'dashed',bw:'1px',dur:'28s',dir:'ccw',sh:''}
     ].forEach(function(ring){
-      var r = document.createElement('div');
-      var parts = ['position:fixed','border-radius:50%',
-        'width:'+ring.size+'px','height:'+ring.size+'px',
-        'left:'+(cx-ring.size/2)+'px','top:'+(cy-ring.size/2)+'px',
-        'border:'+ring.bw+' '+ring.bs+' '+ring.color,
-        'animation:eos-fixed-spin-'+ring.dir+' '+ring.dur+' linear infinite',
-        'pointer-events:none','background:transparent'];
-      if(ring.shadow) parts.push('box-shadow:'+ring.shadow);
-      r.style.cssText = parts.join(';');
-      wrap.appendChild(r);
+      var d=document.createElement('div');
+      d.style.cssText='position:fixed;border-radius:50%;background:transparent;pointer-events:none;'
+        +'width:'+ring.size+'px;height:'+ring.size+'px;'
+        +'left:'+(cx-ring.size/2)+'px;top:'+(cy-ring.size/2)+'px;'
+        +'border:'+ring.bw+' '+ring.bs+' '+ring.color+';'
+        +(ring.sh?'box-shadow:'+ring.sh+';':'')
+        +'animation:eos-fixed-spin-'+ring.dir+' '+ring.dur+' linear infinite;';
+      wrap.appendChild(d);
     });
     document.body.appendChild(wrap);
   }
-  // Try immediately and also observe for login completion
-  setTimeout(injectRings, 500);
-  var obs = new MutationObserver(function(){
-    var canvas = document.getElementById('eosOrbCanvas');
-    if(canvas){
-      var r = canvas.getBoundingClientRect();
-      if(r && r.width > 0){ setTimeout(injectRings,300); obs.disconnect(); }
-    }
+  setTimeout(inject,400);
+  var obs=new MutationObserver(function(){
+    var c=document.getElementById('eosOrbCanvas');
+    if(c){var r=c.getBoundingClientRect();if(r&&r.width>0){setTimeout(inject,300);obs.disconnect();}}
   });
   obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style']});
 })();
@@ -43879,105 +43871,67 @@ if(!window.__n166Patched){
 </style>
 <style id="eos-ultra-v2">
 
-/* ═══════════════════════════════════════════
-   EOS AGENT — N185 ULTRA VISUAL v4.0
-   COMPLETE AESTHETIC OVERHAUL
-   ═══════════════════════════════════════════ */
+/* ═══ EOS AGENT — N185 ULTRA VISUAL v4.1 — JARVIS REAL ═══ */
 
-/* 1. OVERFLOW FIX */
-.p,.ph,#view-dashboard,.content,.main,.shell{overflow:visible!important;}
-
-/* 2. BACKGROUND */
-body{background:#030003!important;}
-#bg{opacity:0.2!important;filter:hue-rotate(340deg) saturate(2.5)!important;}
-#n60ParticleCanvas{opacity:0.45!important;}
+body{background:#000000!important;}
+#bg{opacity:0.15!important;filter:hue-rotate(330deg) saturate(3)!important;}
+#n60ParticleCanvas{opacity:0.3!important;}
 
 .scan-grid{
   background-image:
-    radial-gradient(ellipse 55% 100% at 20% 50%,rgba(160,0,0,0.14) 0%,transparent 65%),
-    radial-gradient(ellipse 30% 50% at 20% 50%,rgba(200,0,0,0.06) 0%,transparent 40%),
-    linear-gradient(rgba(180,0,0,0.055) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(180,0,0,0.055) 1px,transparent 1px),
-    linear-gradient(rgba(180,0,0,0.022) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(180,0,0,0.022) 1px,transparent 1px)!important;
-  background-size:100% 100%,100% 100%,120px 120px,120px 120px,20px 20px,20px 20px!important;
+    radial-gradient(ellipse 70% 120% at 22% 45%,rgba(180,0,0,0.18) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 22% 45%,rgba(220,0,0,0.08) 0%,transparent 35%),
+    linear-gradient(rgba(200,0,0,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,0,0,0.04) 1px,transparent 1px)!important;
+  background-size:100% 100%,100% 100%,80px 80px,80px 80px!important;
 }
-.scan-overlay{background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,0.12) 3px,rgba(0,0,0,0.12) 4px)!important;}
+.scan-overlay{background:repeating-linear-gradient(0deg,transparent 0px,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 3px)!important;opacity:0.8!important;}
 
-/* 3. SIDEBAR */
-.sb{
-  background:linear-gradient(180deg,rgba(8,0,3,0.99),rgba(3,0,1,1))!important;
-  border-right:1px solid rgba(200,0,0,0.5)!important;
-  box-shadow:4px 0 50px rgba(180,0,0,0.22),8px 0 100px rgba(180,0,0,0.08)!important;
-  width:200px!important;overflow:visible!important;z-index:10!important;
-}
+body,.shell,.main,.content,#view-dashboard,.p,.ph{overflow:visible!important;}
 
-/* 4. ORB */
-#orbPanel{background:transparent!important;border:none!important;box-shadow:none!important;overflow:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;}
-#eosOrbWrap{position:relative!important;overflow:visible!important;width:180px!important;height:180px!important;}
-#eosOrbCanvas{
-  filter:drop-shadow(0 0 20px rgba(220,0,0,1)) drop-shadow(0 0 45px rgba(200,0,0,0.85)) drop-shadow(0 0 90px rgba(180,0,0,0.6)) drop-shadow(0 0 150px rgba(150,0,0,0.3))!important;
-  transform:scale(0.75)!important;transform-origin:center!important;
-}
+.sb{background:rgba(5,0,2,0.97)!important;border-right:1px solid rgba(200,0,0,0.6)!important;box-shadow:3px 0 60px rgba(180,0,0,0.25),6px 0 120px rgba(180,0,0,0.1)!important;overflow:visible!important;z-index:20!important;}
 
+#view-dashboard>div{background:rgba(180,0,0,0.04)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;border:1px solid rgba(200,0,0,0.22)!important;box-shadow:0 0 0 1px rgba(200,0,0,0.06) inset,0 8px 32px rgba(0,0,0,0.7)!important;border-radius:4px!important;overflow:visible!important;}
+
+#orbPanel,.orb-panel{background:transparent!important;border:1px solid rgba(200,0,0,0.15)!important;box-shadow:0 0 40px rgba(180,0,0,0.1)!important;overflow:visible!important;}
+
+#eosOrbCanvas{filter:drop-shadow(0 0 18px rgba(220,0,0,1)) drop-shadow(0 0 40px rgba(200,0,0,0.9)) drop-shadow(0 0 80px rgba(180,0,0,0.7)) drop-shadow(0 0 140px rgba(150,0,0,0.4))!important;transform:scale(0.85)!important;transform-origin:center!important;}
+
+#eosOrbWrap{overflow:visible!important;position:relative!important;}
 .orb-v-ring{position:absolute!important;border-radius:50%!important;top:50%!important;left:50%!important;pointer-events:none!important;background:transparent!important;}
-.orb-v-ring.r1{width:260px!important;height:260px!important;border:1.5px solid rgba(200,0,0,0.75)!important;box-shadow:0 0 14px rgba(200,0,0,0.45),inset 0 0 14px rgba(200,0,0,0.1)!important;animation:eos-spin-cw 6s linear infinite!important;transform:translate(-50%,-50%)!important;}
-.orb-v-ring.r2{width:340px!important;height:340px!important;border:1px dashed rgba(200,0,0,0.48)!important;box-shadow:0 0 8px rgba(200,0,0,0.15)!important;animation:eos-spin-ccw 11s linear infinite!important;transform:translate(-50%,-50%)!important;}
-.orb-v-ring.r3{width:430px!important;height:430px!important;border:1px solid rgba(200,0,0,0.22)!important;box-shadow:0 0 25px rgba(200,0,0,0.07)!important;animation:eos-spin-cw 19s linear infinite!important;transform:translate(-50%,-50%)!important;}
-#eosOrbWrap::before{content:''!important;position:absolute!important;width:520px!important;height:520px!important;border-radius:50%!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;border:1px dashed rgba(180,0,0,0.13)!important;animation:eos-breathe 9s ease-in-out infinite!important;pointer-events:none!important;}
-#orbLabel{font-family:'Courier New',monospace!important;font-size:8px!important;letter-spacing:0.45em!important;color:rgba(200,0,0,0.85)!important;text-shadow:0 0 8px rgba(200,0,0,0.8)!important;text-transform:uppercase!important;margin-top:42px!important;}
+.orb-v-ring.r1{width:240px!important;height:240px!important;border:1.5px solid rgba(220,0,0,0.8)!important;box-shadow:0 0 10px rgba(200,0,0,0.5),inset 0 0 10px rgba(200,0,0,0.08)!important;animation:v4spin-cw 5s linear infinite!important;transform:translate(-50%,-50%)!important;}
+.orb-v-ring.r2{width:320px!important;height:320px!important;border:1px dashed rgba(200,0,0,0.5)!important;box-shadow:0 0 8px rgba(200,0,0,0.18)!important;animation:v4spin-ccw 10s linear infinite!important;transform:translate(-50%,-50%)!important;}
+.orb-v-ring.r3{width:410px!important;height:410px!important;border:1px solid rgba(200,0,0,0.25)!important;box-shadow:0 0 15px rgba(200,0,0,0.08)!important;animation:v4spin-cw 18s linear infinite!important;transform:translate(-50%,-50%)!important;}
+#eosOrbWrap::before{content:''!important;position:absolute!important;width:500px!important;height:500px!important;border-radius:50%!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;border:1px dashed rgba(180,0,0,0.12)!important;animation:v4breathe 8s ease-in-out infinite!important;pointer-events:none!important;}
+#orbLabel{font-family:'Courier New',monospace!important;font-size:8px!important;letter-spacing:0.45em!important;color:rgba(200,0,0,0.85)!important;text-shadow:0 0 8px rgba(200,0,0,0.8)!important;text-transform:uppercase!important;}
 
-/* 5. PANELS GLASSMORPHISM */
-#view-dashboard>div,.orb-panel{
-  background:rgba(5,0,2,0.88)!important;
-  backdrop-filter:blur(18px) saturate(1.4)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(1.4)!important;
-  border:1px solid rgba(200,0,0,0.24)!important;
-  box-shadow:0 0 0 1px rgba(200,0,0,0.07) inset,0 4px 28px rgba(0,0,0,0.88),0 0 50px rgba(0,0,0,0.5)!important;
-  border-radius:6px!important;
-}
+.tb,.topbar,[class*="topbar"]{background:rgba(2,0,1,0.97)!important;border-bottom:1px solid rgba(200,0,0,0.5)!important;box-shadow:0 1px 40px rgba(180,0,0,0.22)!important;}
+#mainTabBar{background:rgba(3,0,1,0.98)!important;border-bottom:1px solid rgba(200,0,0,0.3)!important;}
+#presenceBar{background:linear-gradient(90deg,rgba(160,0,0,0.7),rgba(255,20,0,1),rgba(160,0,0,0.7))!important;height:2px!important;box-shadow:0 0 10px rgba(220,0,0,1),0 0 22px rgba(200,0,0,0.6)!important;}
+#n60ScanSweep{background:linear-gradient(90deg,transparent,rgba(200,0,0,0.6),transparent)!important;box-shadow:0 0 25px rgba(200,0,0,0.5)!important;}
 
-/* 6. TOPBAR */
-.topbar,.tb,[class*="topbar"],[class*="top-bar"]{background:rgba(3,0,1,0.98)!important;border-bottom:1px solid rgba(200,0,0,0.45)!important;box-shadow:0 2px 35px rgba(180,0,0,0.2)!important;}
+[id*="Fill"],[id*="fill"]:not(input),[class*="fill"]:not(input),[class*="bar-fill"]{background:linear-gradient(90deg,rgba(140,0,0,0.9),rgba(220,30,0,1))!important;box-shadow:0 0 8px rgba(200,40,0,0.8)!important;}
 
-/* 7. TABBAR */
-#mainTabBar{background:rgba(4,0,1,0.97)!important;border-top:1px solid rgba(200,0,0,0.25)!important;}
-#mainTabBar .active,[class*="tab-active"]{background:rgba(200,0,0,0.13)!important;border-bottom:2px solid rgba(220,0,0,0.9)!important;color:rgba(230,80,80,1)!important;text-shadow:0 0 10px rgba(220,0,0,0.5)!important;}
+#eosHeartbeat{filter:drop-shadow(0 0 5px rgba(200,0,0,1)) drop-shadow(0 0 12px rgba(200,0,0,0.6))!important;}
+#hbLine{stroke:#ff2222!important;stroke-width:2!important;}
 
-/* 8. PRESENCE BAR */
-#presenceBar{background:linear-gradient(90deg,rgba(180,0,0,0.85),rgba(255,30,0,1),rgba(180,0,0,0.85))!important;height:2px!important;box-shadow:0 0 12px rgba(200,0,0,0.9),0 0 25px rgba(200,0,0,0.5)!important;}
+[id^="orki-"]{border:1px solid rgba(200,0,0,0.5)!important;background:rgba(200,0,0,0.08)!important;box-shadow:0 0 10px rgba(200,0,0,0.2)!important;}
 
-/* 9. FILLS */
-[id*="Fill"],[id*="fill"],[class*="fill"]:not(input),[class*="bar-fill"]{background:linear-gradient(90deg,rgba(150,0,0,0.85),rgba(220,40,0,1))!important;box-shadow:0 0 8px rgba(200,40,0,0.7)!important;}
+html::before{content:''!important;position:fixed!important;top:12px!important;left:12px!important;width:60px!important;height:60px!important;border-top:2px solid rgba(200,0,0,1)!important;border-left:2px solid rgba(200,0,0,1)!important;box-shadow:-2px -2px 12px rgba(200,0,0,0.6)!important;z-index:9999!important;pointer-events:none!important;animation:v4corner 3s ease-in-out infinite!important;}
+html::after{content:''!important;position:fixed!important;bottom:12px!important;right:12px!important;width:60px!important;height:60px!important;border-bottom:2px solid rgba(200,0,0,1)!important;border-right:2px solid rgba(200,0,0,1)!important;box-shadow:2px 2px 12px rgba(200,0,0,0.6)!important;z-index:9999!important;pointer-events:none!important;animation:v4corner 3s ease-in-out infinite!important;animation-delay:1.5s!important;}
+#eos-radar-sweep::before{content:''!important;position:fixed!important;top:12px!important;right:12px!important;width:60px!important;height:60px!important;border-top:2px solid rgba(200,0,0,1)!important;border-right:2px solid rgba(200,0,0,1)!important;box-shadow:2px -2px 12px rgba(200,0,0,0.6)!important;z-index:9999!important;pointer-events:none!important;animation:v4corner 3s ease-in-out infinite!important;animation-delay:0.75s!important;}
+#eos-radar-sweep::after{content:''!important;position:fixed!important;bottom:12px!important;left:12px!important;width:60px!important;height:60px!important;border-bottom:2px solid rgba(200,0,0,1)!important;border-left:2px solid rgba(200,0,0,1)!important;box-shadow:-2px 2px 12px rgba(200,0,0,0.6)!important;z-index:9999!important;pointer-events:none!important;animation:v4corner 3s ease-in-out infinite!important;animation-delay:2.25s!important;}
 
-/* 10. HEARTBEAT */
-#eosHeartbeat{filter:drop-shadow(0 0 6px rgba(200,0,0,0.9)) drop-shadow(0 0 14px rgba(200,0,0,0.5))!important;}
-#hbLine{stroke:rgba(220,40,40,1)!important;stroke-width:2.5!important;}
-
-/* 11. SCAN SWEEP */
-#n60ScanSweep{background:linear-gradient(90deg,transparent,rgba(200,0,0,0.5),transparent)!important;box-shadow:0 0 20px rgba(200,0,0,0.4)!important;}
-
-/* 12. ORKI PILLS */
-[id^="orki-"]{border:1px solid rgba(200,0,0,0.45)!important;background:rgba(200,0,0,0.1)!important;box-shadow:0 0 12px rgba(200,0,0,0.25)!important;}
-
-/* 13. HUD CORNERS */
-html::before{content:''!important;position:fixed!important;top:14px!important;left:14px!important;width:70px!important;height:70px!important;border-top:2px solid rgba(200,0,0,0.95)!important;border-left:2px solid rgba(200,0,0,0.95)!important;box-shadow:-3px -3px 16px rgba(200,0,0,0.5)!important;z-index:9999!important;pointer-events:none!important;animation:eos-corner-pulse 3s ease-in-out infinite!important;}
-html::after{content:''!important;position:fixed!important;bottom:14px!important;right:14px!important;width:70px!important;height:70px!important;border-bottom:2px solid rgba(200,0,0,0.95)!important;border-right:2px solid rgba(200,0,0,0.95)!important;box-shadow:3px 3px 16px rgba(200,0,0,0.5)!important;z-index:9999!important;pointer-events:none!important;animation:eos-corner-pulse 3s ease-in-out infinite!important;animation-delay:1.5s!important;}
-#eos-radar-sweep::before{content:''!important;position:fixed!important;top:14px!important;right:14px!important;width:70px!important;height:70px!important;border-top:2px solid rgba(200,0,0,0.95)!important;border-right:2px solid rgba(200,0,0,0.95)!important;box-shadow:3px -3px 16px rgba(200,0,0,0.5)!important;z-index:9999!important;pointer-events:none!important;animation:eos-corner-pulse 3s ease-in-out infinite!important;animation-delay:0.75s!important;}
-#eos-radar-sweep::after{content:''!important;position:fixed!important;bottom:14px!important;left:14px!important;width:70px!important;height:70px!important;border-bottom:2px solid rgba(200,0,0,0.95)!important;border-left:2px solid rgba(200,0,0,0.95)!important;box-shadow:-3px 3px 16px rgba(200,0,0,0.5)!important;z-index:9999!important;pointer-events:none!important;animation:eos-corner-pulse 3s ease-in-out infinite!important;animation-delay:2.25s!important;}
-
-/* 14. KEYFRAMES */
-@keyframes eos-spin-cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
-@keyframes eos-spin-ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
-@keyframes eos-breathe{0%,100%{opacity:0.3;transform:translate(-50%,-50%) scale(1);}50%{opacity:0.7;transform:translate(-50%,-50%) scale(1.02);}}
-@keyframes eos-corner-pulse{0%,100%{opacity:0.55;}50%{opacity:1;}}
+@keyframes v4spin-cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+@keyframes v4spin-ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
+@keyframes v4breathe{0%,100%{opacity:0.25;transform:translate(-50%,-50%) scale(1);}50%{opacity:0.6;transform:translate(-50%,-50%) scale(1.02);}}
+@keyframes v4corner{0%,100%{opacity:0.5;}50%{opacity:1;}}
 @keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 @keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
 @keyframes eos-arc-spin{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
 @keyframes eos-arc-spin-rev{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
-@keyframes eos-ring-breathe-slow{0%,100%{opacity:0.4;transform:translate(-50%,-50%) scale(1);}50%{opacity:0.8;transform:translate(-50%,-50%) scale(1.02);}}
+@keyframes eos-ring-breathe-slow{0%,100%{opacity:0.4;}50%{opacity:0.8;}}
 @keyframes eos-hud-corner-pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
-@keyframes eos-viewport-blink{0%,100%{opacity:0.5;}50%{opacity:1;}}
 
 </style>
 
