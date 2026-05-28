@@ -9690,31 +9690,7 @@ body.mode-rusia::before {
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
 </style>
 
-<style id="eos-ultra-v11">
-*{box-sizing:border-box;}
-body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;}
-.sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar{display:none!important;}
-.shell{background:transparent!important;position:absolute!important;inset:0!important;}
-.main{background:transparent!important;width:100vw!important;height:100vh!important;position:absolute!important;top:0!important;left:0!important;}
-.content,#content{background:transparent!important;width:100%!important;height:100%!important;overflow:visible!important;}
-#view-dashboard{background:transparent!important;position:relative!important;overflow:visible!important;}
-#view-dashboard>div{visibility:hidden!important;pointer-events:none!important;}
-#eosOrbCanvas{
-  filter:drop-shadow(0 0 18px rgba(210,18,24,1)) drop-shadow(0 0 50px rgba(175,12,18,0.82))
-          drop-shadow(0 0 105px rgba(135,8,14,0.58)) drop-shadow(0 0 185px rgba(92,5,10,0.34))
-          drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;
-  animation:v11breathe 8s ease-in-out infinite!important;
-  display:block!important;visibility:visible!important;
-}
-#eosOrbWrap{overflow:visible!important;display:block!important;visibility:visible!important;}
-#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{
-  display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;
-}
-#eos-thought{transition:opacity 0.4s ease;}
-@keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
-@keyframes v11cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
-@keyframes v11ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
-</style></head>
+<style id="eos-ultra-v11">undefined</style></head>
 <body>
 <!-- ══ N108 JARVIS THINKING STATE — overlay elements ══ -->
 <span id="eosMoodTag"></span>
@@ -41648,11 +41624,33 @@ if(!window.__n149Patched){
 (function(){
 'use strict';
 
+// ── BLACKOUT (kills all original content) ───────────────────────
+function buildBlackout(){
+  // Main kill style
+  var s=document.createElement('style');
+  s.textContent='*:not(#eos-blackout):not(canvas):not([id^="eos-"]):not([id^="eosOrb"]){--eos-kill:1;}'
+    +'#app,#eosApp,.shell,.main,.content,#content,'
+    +'#view-dashboard,#view-dashboard>*,'
+    +'[class*="sidebar"],[class*="column"],[class*="widget"],'
+    +'[class*="panel"]:not(#eos-right-panel),'
+    +'[class*="grid"],[class*="topbar"],'
+    +'.sb,.tb,#mainTabBar,#presenceBar,'
+    +'.n8n-widget,.agent-widget,.momentum-widget,'
+    +'[data-module],[data-panel]{'
+    +'visibility:hidden!important;pointer-events:none!important;}';
+  document.head.appendChild(s);
+  // Blackout cover div
+  var el=document.createElement('div');
+  el.id='eos-blackout';
+  el.style.cssText='position:fixed;inset:0;z-index:15;background:#020101;pointer-events:none;';
+  document.body.insertBefore(el,document.body.firstChild);
+}
+
 // ── PARTICLES ───────────────────────────────────────────────────
 function buildParticles(){
   var cv=document.createElement('canvas');
   cv.id='eos-particles';
-  cv.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;z-index:8;pointer-events:none;';
+  cv.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;z-index:18;pointer-events:none;';
   document.body.appendChild(cv);
   var W=cv.width=window.innerWidth, H=cv.height=window.innerHeight;
   var ctx=cv.getContext('2d');
@@ -41681,11 +41679,12 @@ function buildParticles(){
   loop();
 }
 
-// ── ATMOSPHERE GLOW ─────────────────────────────────────────────
+// ── ATMOSPHERE ──────────────────────────────────────────────────
 function buildAtmosphere(){
   var el=document.createElement('div');
   el.id='eos-atmo';
-  el.style.cssText='position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(ellipse 60% 55% at 50% 48%,rgba(140,8,14,0.09) 0%,transparent 70%);';
+  el.style.cssText='position:fixed;inset:0;z-index:16;pointer-events:none;'
+    +'background:radial-gradient(ellipse 60% 55% at 50% 48%,rgba(140,8,14,0.09) 0%,transparent 70%);';
   document.body.appendChild(el);
 }
 
@@ -41693,7 +41692,8 @@ function buildAtmosphere(){
 function buildTop(){
   var el=document.createElement('div');
   el.id='eos-top';
-  el.style.cssText='position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:9100;display:flex;align-items:center;gap:24px;pointer-events:none;';
+  el.style.cssText='position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:9100;'
+    +'display:flex;align-items:center;gap:24px;pointer-events:none;';
   el.innerHTML='<span style="font-family:Space Grotesk,Inter,sans-serif;font-size:11px;letter-spacing:0.18em;color:rgba(220,200,200,0.35);font-weight:300;">EOS AGENT</span>'
     +'<span style="width:4px;height:4px;border-radius:50%;background:rgba(190,18,24,0.7);box-shadow:0 0 8px rgba(190,18,24,0.8);display:inline-block;animation:v11breathe 2s ease-in-out infinite;"></span>'
     +'<span style="font-family:Inter,sans-serif;font-size:10px;letter-spacing:0.12em;color:rgba(180,160,160,0.25);font-weight:300;">SISTEMA ACTIVO</span>';
@@ -41723,24 +41723,23 @@ function buildRightPanel(){
     +'background:rgba(9,4,4,0.42);border:1px solid rgba(160,12,18,0.1);border-radius:16px;'
     +'padding:20px 18px;font-family:Inter,sans-serif;pointer-events:none;';
 
-  var agentsHTML='<div style="font-size:9px;letter-spacing:0.16em;color:rgba(180,140,140,0.4);margin-bottom:14px;font-weight:400;">AGENTES</div>';
+  var html='<div style="font-size:9px;letter-spacing:0.16em;color:rgba(180,140,140,0.4);margin-bottom:14px;font-weight:400;">AGENTES</div>';
   agents.forEach(function(a){
     var col=a.state==='ACTIVE'||a.state==='MONITORING'?'rgba(120,220,140,0.7)':
             a.state==='SCANNING'?'rgba(190,18,24,0.8)':'rgba(140,120,120,0.4)';
-    agentsHTML+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
       +'<span style="font-size:11px;color:rgba(210,190,190,0.65);font-weight:300;">'+a.name+'</span>'
       +'<div style="display:flex;align-items:center;gap:6px;">'
       +'<div style="width:5px;height:5px;border-radius:50%;background:'+col+';box-shadow:0 0 6px '+col+';"></div>'
       +'<span style="font-size:9px;color:'+col+';letter-spacing:0.1em;">'+a.state+'</span>'
       +'</div></div>';
   });
-
-  var thoughtsDiv='<div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(120,8,12,0.12);">'
+  html+='<div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(120,8,12,0.12);">'
     +'<div style="font-size:9px;letter-spacing:0.16em;color:rgba(180,140,140,0.35);margin-bottom:10px;">PROCESANDO</div>'
-    +'<div id="eos-thought" style="font-size:10.5px;color:rgba(200,170,170,0.55);line-height:1.6;font-weight:300;min-height:50px;">'+thoughts[0]+'</div>'
+    +'<div id="eos-thought" style="font-size:10.5px;color:rgba(200,170,170,0.55);line-height:1.6;font-weight:300;min-height:50px;transition:opacity 0.4s;">'+thoughts[0]+'</div>'
     +'</div>';
 
-  panel.innerHTML=agentsHTML+thoughtsDiv;
+  panel.innerHTML=html;
   document.body.appendChild(panel);
 
   var ti=0;
@@ -41757,7 +41756,7 @@ function buildDock(){
     {icon:'◉',label:'Central'},
     {icon:'◈',label:'Memoria'},
     {icon:'◎',label:'Scout'},
-    {icon:'┊',label:'',sep:true},
+    {sep:true},
     {icon:'◇',label:'Outreach'},
     {icon:'◆',label:'Lab'},
     {icon:'◉',label:'Trends'},
@@ -41775,8 +41774,7 @@ function buildDock(){
     if(item.sep){
       var sep=document.createElement('div');
       sep.style.cssText='width:1px;height:22px;background:rgba(120,8,12,0.2);margin:0 6px;';
-      dock.appendChild(sep);
-      return;
+      dock.appendChild(sep);return;
     }
     var btn=document.createElement('div');
     btn.style.cssText='display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;'
@@ -41787,7 +41785,6 @@ function buildDock(){
     btn.addEventListener('mouseleave',function(){this.style.background='transparent';});
     dock.appendChild(btn);
   });
-
   document.body.appendChild(dock);
 }
 
@@ -41795,14 +41792,13 @@ function buildDock(){
 function extractOrb(){
   var wrap=document.getElementById('eosOrbWrap');
   if(!wrap||!wrap.getBoundingClientRect().width){setTimeout(extractOrb,500);return;}
-
+  var existing=document.getElementById('eos-orb-center');
+  if(existing) existing.parentElement.removeChild(existing);
   var host=document.createElement('div');
   host.id='eos-orb-center';
   host.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-55%);z-index:50;overflow:visible;';
   document.body.appendChild(host);
   host.appendChild(wrap);
-
-  // orbital rings
   [{s:215,dur:'18s',dir:1},{s:302,dur:'32s',dir:-1},{s:402,dur:'56s',dir:1}].forEach(function(r){
     var ring=document.createElement('div');
     ring.style.cssText='position:absolute;top:50%;left:50%;'
@@ -41813,8 +41809,6 @@ function extractOrb(){
       +'animation:v11'+(r.dir===1?'cw':'ccw')+' '+r.dur+' linear infinite;';
     host.appendChild(ring);
   });
-
-  // nucleus label
   var lbl=document.createElement('div');
   lbl.style.cssText='position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);'
     +'font-family:Space Grotesk,sans-serif;font-size:9px;letter-spacing:0.22em;'
@@ -41825,6 +41819,7 @@ function extractOrb(){
 
 // ── INIT ────────────────────────────────────────────────────────
 function init(){
+  buildBlackout();
   buildParticles();
   buildAtmosphere();
   buildTop();
