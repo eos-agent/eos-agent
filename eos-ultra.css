@@ -191,3 +191,52 @@ input:focus,textarea:focus,[class*=chat-input]:focus{border-color:rgba(255,30,30
 [class*=intel-],[class*=tip-],.intel-tip,.eos-tip{font-family:var(--f-body) !important;font-size:11px !important;line-height:1.55 !important;color:rgba(190,195,230,.65) !important}
 #eosApp,.eos-app,#app,.app-wrapper,.main-layout,[class*=main-wrap],[class*=app-shell]{background:transparent !important}
 .main-content,.content-area,[class*=main-content],[class*=content-wrap]{background:transparent !important}
+/* ══════════════════════════════════════════════════════════════════════
+   v3.0 PATCH — CSS-ONLY VIEWPORT CORNERS (no DOM injection needed)
+   html::before = top-left   html::after = bottom-right
+   #eos-radar-sweep::before = top-right  ::after = bottom-left
+══════════════════════════════════════════════════════════════════════ */
+
+html::before{
+  content:'' !important;position:fixed !important;
+  top:16px !important;left:16px !important;
+  width:100px !important;height:100px !important;
+  border-top:1.5px solid rgba(200,0,0,.8) !important;
+  border-left:1.5px solid rgba(200,0,0,.8) !important;
+  box-shadow:0 0 10px rgba(200,0,0,.5) !important;
+  z-index:9999 !important;pointer-events:none !important;
+  animation:eos-hud-corner-pulse 4s ease-in-out infinite !important;
+}
+html::after{
+  content:'' !important;position:fixed !important;
+  bottom:16px !important;right:16px !important;
+  width:100px !important;height:100px !important;
+  border-bottom:1.5px solid rgba(200,0,0,.8) !important;
+  border-right:1.5px solid rgba(200,0,0,.8) !important;
+  box-shadow:0 0 10px rgba(200,0,0,.5) !important;
+  z-index:9999 !important;pointer-events:none !important;
+  animation:eos-hud-corner-pulse 4s ease-in-out infinite !important;
+  animation-delay:2s !important;
+}
+#eos-radar-sweep::before{
+  content:'' !important;position:fixed !important;
+  top:16px !important;right:16px !important;
+  width:100px !important;height:100px !important;
+  border-top:1.5px solid rgba(200,0,0,.8) !important;
+  border-right:1.5px solid rgba(200,0,0,.8) !important;
+  box-shadow:0 0 10px rgba(200,0,0,.5) !important;
+  z-index:9999 !important;pointer-events:none !important;
+  animation:eos-hud-corner-pulse 4s ease-in-out infinite !important;
+  animation-delay:1s !important;
+}
+#eos-radar-sweep::after{
+  content:'' !important;position:fixed !important;
+  bottom:16px !important;left:16px !important;
+  width:100px !important;height:100px !important;
+  border-bottom:1.5px solid rgba(200,0,0,.8) !important;
+  border-left:1.5px solid rgba(200,0,0,.8) !important;
+  box-shadow:0 0 10px rgba(200,0,0,.5) !important;
+  z-index:9999 !important;pointer-events:none !important;
+  animation:eos-hud-corner-pulse 4s ease-in-out infinite !important;
+  animation-delay:3s !important;
+}
