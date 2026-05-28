@@ -1,80 +1,42 @@
-// ═══════════════════════════════════════════════════════
-//  EOS AGENT — /api/scout
-//  Scout Agent autónomo. n8n lo llama cada semana.
-//  Busca oportunidades reales en internet y alerta.
-// ═══════════════════════════════════════════════════════
-
-const { searchWeb, formatSearch, callClaude, sendTelegram, handleCors, checkAuth } = require('./_utils');
-
+// EOS AGENT — /api/scout v2.0
+const { searchWeb, formatSearch, callClaude, sendTelegram, handleCors } = require('./_utils');
 module.exports = async function handler(req, res) {
   if (handleCors(req, res)) return;
-  if (!checkAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
-
+  const body = req.body || {};
+  const claudeKey = body.claude_key || process.env.CLAUDE_API_KEY;
+  const tavilyKey = body.tavily_key || process.env.TAVILY_API_KEY;
+  const category = body.category || 'all';
+  if (!claudeKey) return res.status(400).json({ error: 'claude_key required' });
   try {
-    // ── Búsquedas paralelas de oportunidades (top 3) ─────
-    const queries = [
-      { q: 'festivales showcases música independiente Colombia LATAM convocatoria open call 2025 2026', label: 'FESTIVAL/SHOWCASE' },
-      { q: 'sync licensing playlists spotify curadores música indie español LATAM submissions 2025', label: 'SYNC/PLAYLIST' },
-      { q: 'becas residencias grants música emergente alternativa Colombia 2025', label: 'BECA/RESIDENCIA' }
+    const allQueries = [
+      { q: 'festivales showcases música independiente Colombia LATAM convocatoria open call 2026', label: 'FESTIVAL', type: 'festival' },
+      { q: 'sync licensing playlists spotify curadores música indie español LATAM submissions 2026', label: 'SYNC', type: 'sync' },
+      { q: 'becas residencias grants música emergente alternativa Colombia LATAM 2026', label: 'BECA', type: 'beca' },
+      { q: 'concursos premios música independiente cinematic documental LATAM 2026', label: 'CONCURSO', type: 'concurso' }
     ];
-
-    const results = await Promise.allSettled(
-      queries.map(q => searchWeb(q.q, { maxResults: 3, includeAnswer: true, topic: 'general' }))
-    );
-
-    // Construir contexto
+    const queries = category === 'all' ? allQueries : allQueries.filter(q => q.type === category);
     let webCtx = '';
-    results.forEach((res, i) => {
-      if (res.status === 'fulfilled' && res.value) {
-        webCtx += `\n[${queries[i].label}]\n`;
-        webCtx += formatSearch(res.value, queries[i].q);
-      }
-    });
-
-    // ── Claude analiza y prioriza ─────────────────────────
-    const prompt = `Eres el Scout Agent de EOS. Analiza estos datos web y genera un reporte de oportunidades REALES.
-
-DATOS WEB EN TIEMPO REAL:
-${webCtx || 'No hay datos disponibles — usa conocimiento del ecosistema LATAM.'}
-
-Genera:
-
-🔍 *EOS SCOUT REPORT*
-
-*🔴 OPORTUNIDAD CRÍTICA* (actuar esta semana)
-[La más urgente — nombre, qué es, por qué EOS encaja, fecha límite]
-
-*◈ OPORTUNIDADES DETECTADAS*
-[3-4 oportunidades concretas con:
-• Nombre del evento/convocatoria
-• Fecha límite aproximada
-• Por qué es relevante para EOS
-• Acción inmediata]
-
-*◎ ESTRATEGIA RECOMENDADA*
-[Cómo EOS debe posicionarse esta semana para aprovechar estas oportunidades]
-
-*▲ RADAR PRÓXIMAS 4 SEMANAS*
-[Qué monitorear en el siguiente mes]
-
-Solo información verificable de los datos web. Sé específico.`;
-
-    const report = await callClaude(prompt, '', 700);
-
-    // ── Enviar a Telegram ─────────────────────────────────
-    const sent = await sendTelegram(report);
-
-    return res.status(200).json({
-      success: true,
-      report,
-      telegram: sent,
-      opportunitiesSearched: queries.length,
-      timestamp: new Date().toISOString()
-    });
-
-  } catch (err) {
-    console.error('[EOS Scout Error]', err);
-    await sendTelegram(`⚠️ *EOS Scout* — Error\n\`${err.message}\``).catch(() => {});
+    const rawResults = [];
+    if (tavilyKey) {
+      const results = await Promise.allSettled(queries.map(q => searchWeb(q.q, { maxResults: 3, includeAnswer: true }, tavilyKey)));
+      results.forEach((r, i) => {
+        if (r.status === 'fulfilled' && r.value) {
+          webCtx += '[' + queries[i].label + ']\n' + formatSearch(r.value, queries[i].q);
+          (r.value.results || []).slice(0,3).forEach(item => rawResults.push({ type: queries[i].type, title: item.title, url: item.url, snippet: (item.content||'').slice(0,200) }));
+        }
+      });
+    }
+    const prompt = 'Eres el Scout Agent de EOS (Nea Archi), proyecto musical cinematic de Bogota, Colombia.\n\n' + (webCtx ? 'DATOS WEB:\n' + webCtx : 'Usa conocimiento del ecosistema LATAM 2026.') + '\n\nGenera JSON de oportunidades:{\n"critical":{"title":"...","why":"...","deadline":"...","action":"..."},\n"opportunities":[{"title":"...","type":"festival|sync|beca|concurso","deadline":"...","why":"...","action":"...","priority":"high|medium|low"}],\n"strategy":"...","radar":"..."}\nSolo JSON, sin markdown.';
+    const raw = await callClaude(prompt, '', 900, claudeKey);
+    let analysis = null;
+    try { const m = raw.match(/\{[\s\S]*\}/); if (m) analysis = JSON.parse(m[0]); } catch(e) { analysis = { strategy: raw, opportunities: [], radar: '' }; }
+    if (analysis?.critical && process.env.TELEGRAM_TOKEN) {
+      const msg = '🔴 *EOS SCOUT*\n*' + analysis.critical.title + '*\n' + analysis.critical.why + '\n⏰ ' + analysis.critical.deadline + '\n▶️ ' + analysis.critical.action;
+      await sendTelegram(msg).catch(() => {});
+    }
+    return res.status(200).json({ success: true, analysis, rawResults, queriesRan: queries.length, tavilyUsed: !!tavilyKey, timestamp: new Date().toISOString() });
+  } catch(err) {
+    console.error('[Scout]', err);
     return res.status(500).json({ error: err.message });
   }
 };

@@ -14741,99 +14741,165 @@ const AS_QUERIES = [
 ];
 
 async function runAutoScout(manual=false){
-  const btn=document.getElementById('autoScoutBtn');
-  const asDot=document.getElementById('asDot');
-  const card=document.getElementById('autoScoutCard');
-  if(btn){ btn.textContent='◉ ESCANEANDO...'; btn.disabled=true; }
-  if(asDot){ asDot.style.background='#f59e0b'; asDot.style.animation='pulse-orb 1s infinite'; }
-  if(card) card.style.display='block';
-  addLog('[AUTO-SCOUT] Iniciando escaneo de oportunidades...');
-  if(manual) _eosSpeak('Auto-Scout activado. Escaneando el ecosistema musical en busca de oportunidades.');
+  // ── EOS Scout Agent v2.0 — with memory auto-save ─────
+  const claudeKey = localStorage.getItem('eos_claude_key') || localStorage.getItem('claude_key') || localStorage.getItem('CLAUDE_API_KEY') || '';
+  const tavilyKey = localStorage.getItem('eos_tavily_key') || localStorage.getItem('tavily_key') || localStorage.getItem('TAVILY_API_KEY') || '';
 
-  const existing=getScout();
-  let found=0;
-  const newOpps=[];
+  if (!claudeKey) {
+    // Show key input UI
+    eosScoutShowKeyPrompt();
+    return;
+  }
 
-  // iTunes Search — find rising artists and genres for collaboration intelligence
-  const genres=['latin alternative','colombia indie','bogota music','latin cinematic'];
-  for(const genre of genres.slice(0,2)){
-    try{
-      const r=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(genre)}&entity=musicArtist&limit=5&country=co`);
-      const d=await r.json();
-      (d.results||[]).forEach(a=>{
-        // Convert to Scout opportunity
-        const title=`Artista iTunes: ${a.artistName} — ${a.primaryGenreName}`;
-        const alreadyExists=existing.some(e=>e.name&&e.name.includes(a.artistName));
-        if(!alreadyExists && a.artistName){
-          newOpps.push({
-            id: Date.now()+Math.random(),
-            name: `Colaboración: ${a.artistName}`,
-            type: 'Artista',
-            deadline: '',
-            priority: 'Media',
-            notes: `Detectado via iTunes · Género: ${a.primaryGenreName||'Música'} · Potencial colaboración EOS`,
-            date: new Date().toLocaleDateString('es'),
-            source: 'auto-scout-itunes'
-          });
-          found++;
+  const btn = document.getElementById('autoScoutBtn');
+  if (btn) { btn.textContent = '◉ ESCANEANDO...'; btn.disabled = true; }
+  if (typeof addFeedItem === 'function') addFeedItem('Scout Agent activado — buscando en internet...', 'info');
+
+  const payload = {
+    claude_key: claudeKey,
+    category: 'all'
+  };
+  if (tavilyKey) payload.tavily_key = tavilyKey;
+
+  fetch('/api/scout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (btn) { btn.textContent = '◉ AUTO-SCAN ECOSISTEMA'; btn.disabled = false; }
+
+    if (data.error) {
+      if (typeof addFeedItem === 'function') addFeedItem('Scout: ' + data.error, 'alert');
+      return;
+    }
+
+    const analysis = data.analysis || {};
+    const opps = analysis.opportunities || [];
+    const critical = analysis.critical;
+
+    // ── Render in UI ────────────────────────────────────
+    eosScoutRenderResults(analysis, data);
+
+    // ── AUTO-SAVE TO MEMORY ─────────────────────────────
+    if (typeof EOSMemory !== 'undefined') {
+      // Save each opportunity
+      opps.forEach(opp => {
+        if (opp.title) {
+          EOSMemory.remember('opportunity',
+            opp.title + (opp.deadline ? ' — deadline: ' + opp.deadline : '') + (opp.action ? ' | ' + opp.action : ''),
+            { type: opp.type, priority: opp.priority, why: opp.why }
+          );
         }
       });
-    }catch(e){}
-    if(newOpps.length>=3) break;
-  }
-
-  // Spotify search for curators/playlists if connected
-  if(newOpps.length<5){
-    try{
-      const spToken=await getSpotifyToken();
-      if(spToken){
-        const plQ='latin alternative colombia cinematic';
-        const r=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(plQ)}&type=playlist&limit=8&market=CO`,{headers:{Authorization:'Bearer '+spToken}});
-        const d=await r.json();
-        (d.playlists?.items||[]).filter(p=>p).slice(0,4).forEach(p=>{
-          const alreadyEx=existing.some(e=>e.name&&e.name.includes(p.name?.substring(0,15)));
-          if(!alreadyEx && p.name && (p.followers?.total||0)>100){
-            newOpps.push({
-              id: Date.now()+Math.random(),
-              name: `Playlist: ${p.name}`,
-              type: 'Playlist',
-              deadline: '',
-              priority: (p.followers?.total||0)>10000?'Alta':'Media',
-              notes: `${(p.followers?.total||0).toLocaleString()} seguidores · Curador: ${p.owner?.display_name||'--'} · Detectado Auto-Scout`,
-              date: new Date().toLocaleDateString('es'),
-              source: 'auto-scout-spotify'
-            });
-            found++;
-          }
-        });
+      // Save critical if exists
+      if (critical?.title) {
+        EOSMemory.remember('opportunity',
+          '[CRÍTICO] ' + critical.title + ' — ' + critical.action,
+          { priority: 'critical', deadline: critical.deadline }
+        );
       }
-    }catch(e){}
+      // Save strategy as decision
+      if (analysis.strategy) {
+        EOSMemory.remember('decision', 'Scout ' + new Date().toLocaleDateString('es') + ': ' + analysis.strategy.slice(0, 120));
+      }
+      if (typeof addFeedItem === 'function') addFeedItem('✓ ' + opps.length + ' oportunidades guardadas en memoria', 'success');
+    }
+
+    // ── Update opp counter ──────────────────────────────
+    const oOpp = document.getElementById('oOpp');
+    if (oOpp) oOpp.textContent = (parseInt(oOpp.textContent)||0) + opps.length;
+
+    if (typeof eosSpeak === 'function' && manual) {
+      const msg = critical ? critical.title + '. ' + critical.action : (opps.length + ' oportunidades detectadas y guardadas en memoria.');
+      eosSpeak(msg);
+    }
+  })
+  .catch(err => {
+    if (btn) { btn.textContent = '◉ AUTO-SCAN ECOSISTEMA'; btn.disabled = false; }
+    if (typeof addFeedItem === 'function') addFeedItem('Scout error: ' + err.message, 'alert');
+    console.error('[Scout]', err);
+  });
+}
+
+function eosScoutShowKeyPrompt() {
+  const existing = document.getElementById('eosScoutKeyModal');
+  if (existing) { existing.style.display = 'flex'; return; }
+  const modal = document.createElement('div');
+  modal.id = 'eosScoutKeyModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:99000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);';
+  modal.innerHTML = `<div style="background:rgba(4,0,8,.98);border:1px solid rgba(200,0,0,.3);border-radius:8px;padding:28px 24px;width:360px;font-family:'Courier New',monospace;">
+    <div style="font-size:9px;letter-spacing:3px;color:rgba(200,0,0,.7);margin-bottom:16px;">◈ EOS SCOUT — CONFIGURAR API KEYS</div>
+    <div style="font-size:8px;color:rgba(200,200,220,.4);margin-bottom:18px;line-height:1.6;">Para buscar oportunidades en internet, EOS necesita tu Claude API key. Tavily (opcional) activa búsqueda web en tiempo real.</div>
+    <div style="margin-bottom:12px;">
+      <div style="font-size:7px;letter-spacing:2px;color:rgba(200,0,0,.4);margin-bottom:5px;">CLAUDE API KEY *</div>
+      <input id="scoutClaudeInput" type="password" placeholder="sk-ant-..." style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(200,0,0,.2);color:rgba(220,220,240,.8);padding:7px 10px;font-family:'Courier New',monospace;font-size:9px;border-radius:3px;outline:none;box-sizing:border-box;" />
+    </div>
+    <div style="margin-bottom:20px;">
+      <div style="font-size:7px;letter-spacing:2px;color:rgba(200,0,0,.4);margin-bottom:5px;">TAVILY API KEY (opcional — búsqueda web real)</div>
+      <input id="scoutTavilyInput" type="password" placeholder="tvly-..." style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(200,0,0,.2);color:rgba(220,220,240,.8);padding:7px 10px;font-family:'Courier New',monospace;font-size:9px;border-radius:3px;outline:none;box-sizing:border-box;" />
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="eosScoutSaveKeys()" style="flex:1;font-family:'Courier New',monospace;font-size:8px;letter-spacing:2px;padding:9px;background:rgba(200,0,0,.15);border:1px solid rgba(200,0,0,.4);color:rgba(200,0,0,.9);cursor:pointer;border-radius:3px;">◉ GUARDAR Y ESCANEAR</button>
+      <button onclick="document.getElementById('eosScoutKeyModal').style.display='none'" style="font-family:'Courier New',monospace;font-size:8px;padding:9px 14px;background:transparent;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);cursor:pointer;border-radius:3px;">✕</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+function eosScoutSaveKeys() {
+  const ck = document.getElementById('scoutClaudeInput')?.value?.trim();
+  const tk = document.getElementById('scoutTavilyInput')?.value?.trim();
+  if (!ck) { alert('Claude API key requerida'); return; }
+  localStorage.setItem('eos_claude_key', ck);
+  if (tk) localStorage.setItem('eos_tavily_key', tk);
+  document.getElementById('eosScoutKeyModal').style.display = 'none';
+  runAutoScout(true);
+}
+
+function eosScoutRenderResults(analysis, data) {
+  const opps = analysis.opportunities || [];
+  const critical = analysis.critical;
+  if (!opps.length && !critical) return;
+
+  // Find or create scout results panel
+  let panel = document.getElementById('eosScoutResults');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'eosScoutResults';
+    panel.style.cssText = 'margin:8px 0;padding:12px 14px;background:rgba(200,0,0,.04);border:1px solid rgba(200,0,0,.14);border-radius:5px;';
+    const scanBtn = document.getElementById('autoScoutBtn');
+    if (scanBtn?.parentNode) scanBtn.parentNode.insertBefore(panel, scanBtn.nextSibling);
   }
 
-  // Save found opportunities to Scout
-  if(newOpps.length){
-    const allScout=[...existing, ...newOpps.slice(0,6)];
-    saveScoutData(allScout);
-    addLog(`[AUTO-SCOUT] ✓ ${newOpps.length} nuevas oportunidades encontradas y agregadas al Scout`);
-    if(manual||newOpps.length>=3) _eosSpeak(`Auto-Scout completado. ${newOpps.length} nuevas oportunidades detectadas y agregadas al módulo Scout.`);
-  } else {
-    addLog('[AUTO-SCOUT] Escaneo completo — sin nuevas oportunidades únicas');
-    if(manual) _eosSpeak('Escaneo completado. El ecosistema está siendo monitoreado.');
+  let html = '<div style="font-family:\'Courier New\',monospace;font-size:6.5px;letter-spacing:2.5px;color:rgba(200,0,0,.5);margin-bottom:10px;">◉ SCOUT REPORT — ' + new Date().toLocaleString('es') + (data.tavilyUsed ? ' — WEB REAL' : ' — IA ANÁLISIS') + '</div>';
+
+  if (critical) {
+    html += '<div style="padding:8px 10px;background:rgba(200,0,0,.07);border-left:3px solid rgba(200,0,0,.6);margin-bottom:8px;border-radius:0 3px 3px 0;">';
+    html += '<div style="font-size:7px;letter-spacing:2px;color:rgba(200,0,0,.7);margin-bottom:3px;">🔴 CRÍTICO</div>';
+    html += '<div style="font-size:10px;color:rgba(230,230,245,.8);font-family:\'Courier New\',monospace;font-weight:700;">' + (critical.title||'') + '</div>';
+    if (critical.deadline) html += '<div style="font-size:8px;color:rgba(200,0,0,.5);margin-top:2px;">⏰ ' + critical.deadline + '</div>';
+    if (critical.action) html += '<div style="font-size:8.5px;color:rgba(200,200,220,.5);margin-top:4px;">▶ ' + critical.action + '</div>';
+    html += '</div>';
   }
 
-  // Update pulse data
-  const p=_loadPulse();
-  p.lastScan=Date.now();
-  p.todayFound=(p.todayFound||0)+newOpps.length;
-  _savePulse(p);
+  opps.slice(0, 4).forEach(opp => {
+    const c = opp.priority === 'high' ? 'rgba(200,0,0,.5)' : opp.priority === 'medium' ? 'rgba(180,120,0,.5)' : 'rgba(100,100,140,.4)';
+    html += '<div style="padding:6px 10px;border-left:2px solid ' + c + ';margin-bottom:5px;background:rgba(255,255,255,.015);">';
+    html += '<div style="font-size:9.5px;color:rgba(215,215,230,.7);font-family:\'Courier New\',monospace;">' + (opp.title||'') + '</div>';
+    if (opp.deadline) html += '<div style="font-size:7.5px;color:rgba(200,0,0,.35);margin-top:1px;">⏰ ' + opp.deadline + '</div>';
+    if (opp.action) html += '<div style="font-size:8px;color:rgba(180,180,200,.4);margin-top:2px;">▶ ' + opp.action.slice(0,80) + '</div>';
+    html += '</div>';
+  });
 
-  // Update UI
-  _renderAutoScoutResults();
-  updateEosPulse();
-  if(btn){ btn.textContent='◉ AUTO-SCAN'; btn.disabled=false; }
-  if(asDot){ asDot.style.background=newOpps.length?'#22c55e':'var(--dim)'; asDot.style.animation='none'; }
-  const asLabel=document.getElementById('asLastScan');
-  if(asLabel) asLabel.textContent='Último: '+new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+  if (analysis.strategy) {
+    html += '<div style="margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.02);border-radius:3px;font-size:8.5px;color:rgba(180,180,210,.4);font-family:\'Courier New\',monospace;line-height:1.5;">';
+    html += '<span style="font-size:6.5px;letter-spacing:2px;color:rgba(200,0,0,.35);">ESTRATEGIA: </span>' + analysis.strategy.slice(0,150);
+    html += '</div>';
+  }
+
+  panel.innerHTML = html;
 }
 
 function _renderAutoScoutResults(){

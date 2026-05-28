@@ -27,14 +27,15 @@ Hablas en español. Tono cinematográfico, directo y preciso.
 Ecosistema: indie alternativo LATAM, mercado global emergente.`;
 
 // ── Tavily web search ──────────────────────────────────
-async function searchWeb(query, options = {}) {
-  if (!TAVILY_KEY) return null;
+async function searchWeb(query, options = {}, tavilyKeyOverride = null) {
+  const key = tavilyKeyOverride || TAVILY_KEY;
+  if (!key) return null;
   const { maxResults = 5, searchDepth = 'basic', includeAnswer = true, topic = 'general' } = options;
   const res = await fetch('https://api.tavily.com/search', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      api_key: TAVILY_KEY,
+      api_key: key,
       query,
       search_depth: searchDepth,
       include_answer: includeAnswer,
@@ -59,13 +60,14 @@ function formatSearch(data, query) {
 }
 
 // ── Call Claude ─────────────────────────────────────────
-async function callClaude(prompt, systemExtra = '', maxTokens = 800) {
-  if (!CLAUDE_KEY) throw new Error('CLAUDE_API_KEY not configured');
+async function callClaude(prompt, systemExtra = '', maxTokens = 800, claudeKeyOverride = null) {
+  const key = claudeKeyOverride || CLAUDE_KEY;
+  if (!key) throw new Error('CLAUDE_API_KEY not configured');
   const system = EOS_SYSTEM + (systemExtra ? '\n\n' + systemExtra : '');
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
-      'x-api-key': CLAUDE_KEY,
+      'x-api-key': key,
       'anthropic-version': '2023-06-01',
       'content-type': 'application/json'
     },
