@@ -36705,9 +36705,42 @@ window.n57MultiAction = function(preset){
 /* ═══════════════════════════════════════════
    N57.O — BOOT
 ═══════════════════════════════════════════ */
+function n57ProactiveGreet(){
+  var h=new Date().getHours();
+  var sal=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
+  var tasks=[];try{tasks=JSON.parse(localStorage.getItem('eos_tasks')||'[]');}catch(e){}
+  var pending=tasks.filter(function(t){return !t.done;}).length;
+  var gt=document.getElementById('greetingText');
+  var gc=document.getElementById('greetingContext');
+  if(gt) gt.textContent=sal+'. Sistema EOS operativo.';
+  if(gc){
+    var parts=['Radar activo'];
+    if(pending>0) parts.push(pending+' tareas');
+    parts.push('3 señales detectadas');
+    gc.textContent=parts.join(' · ');
+  }
+  var gb=document.getElementById('greetingBar');
+  if(gb){
+    gb.style.transition='all .6s ease';
+    gb.style.borderColor='rgba(210,18,24,0.75)';
+    gb.style.boxShadow='0 0 32px rgba(210,18,24,0.28), inset 0 0 20px rgba(210,18,24,0.06)';
+    setTimeout(function(){gb.style.borderColor='';gb.style.boxShadow='';},4500);
+  }
+  var msgs=[
+    sal+'. Sistema EOS en línea. Todos los módulos operativos. Radar activo. Listo para operar.',
+    sal+'. EOS operativo.'+(pending>0?' '+pending+' tareas pendientes.':'')+' Señales detectadas. Awaiting directive.',
+    sal+'. Protocolo de inicio completado. Momentum estable. EOS listo.'
+  ];
+  var msg=msgs[Math.floor(Math.random()*msgs.length)];
+  if(typeof n57Speak==='function'){setTimeout(function(){n57Speak(msg);},900);}
+  var siJ=document.getElementById('siJarvis');
+  if(siJ) siJ.textContent=sal+'. Todos los sistemas operativos. Awaiting directive.';
+  if(typeof n57Log==='function') n57Log('JARVIS :: Boot proactivo ejecutado');
+}
 function n57Boot(){
   n57StartTimer();
   n57Log('Sistema EOS iniciado');
+  setTimeout(function(){n57ProactiveGreet();},3000);
   /* Check habit suggestion on boot */
   setTimeout(n57AnticipateMode, 5000);
   /* Keyboard shortcut: Ctrl+M opens mode panel */
