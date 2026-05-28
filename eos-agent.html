@@ -9689,7 +9689,7 @@ body.mode-rusia::before {
 .n92-scan-v{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(200,0,0,.5),transparent);animation:n92ScanV 1.4s ease-out forwards;}
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
 </style>
-<link id="eos-fonts-v8" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap">
+<link id="eos-fonts-v9" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap">
 </head>
 <body>
 <!-- ══ N108 JARVIS THINKING STATE — overlay elements ══ -->
@@ -41619,162 +41619,237 @@ if(!window.__n149Patched){
       return '<div class="msg '+cls+'"><span class="lbl">'+role+'</span><p>'+content+'</p></div>';
     }).join('\n');
 
-    return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n<script id="eos-v8-injection">
+    return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n<script id="eos-v9-cinematic">
 (function(){
-  // ── FONTS ──────────────────────────────────────────────
-  if(!document.getElementById('eos-fonts-v8')){
-    var l=document.createElement('link');l.id='eos-fonts-v8';l.rel='stylesheet';
+  // Fonts
+  if(!document.getElementById('eos-f9')){
+    var l=document.createElement('link');l.id='eos-f9';l.rel='stylesheet';
     l.href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap';
     document.head.appendChild(l);
   }
 
-  // ── KEYFRAMES ──────────────────────────────────────────
-  var kf=document.createElement('style');
-  kf.textContent=[
-    '@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}',
-    '@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}',
-    '@keyframes eos-fog-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}',
-    '@keyframes eos-dock-in{from{opacity:0;transform:translateX(-50%) translateY(16px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}',
-    '@keyframes eos-dot-blink{0%,100%{opacity:0.35;}50%{opacity:0.9;}}',
-    '@keyframes eos-dock-hover{to{transform:translateY(-3px);}}',
-    '.eos-dock-btn{transition:color 0.3s ease,opacity 0.3s ease;}',
-    '.eos-dock-btn:hover{opacity:1!important;color:rgba(245,230,225,0.95)!important;}',
-    '.eos-dock-btn.active{color:rgba(245,230,225,0.92)!important;}',
-    '.eos-dock-btn.active .eos-dock-dot{animation:eos-dot-blink 2.5s ease-in-out infinite!important;}'
-  ].join('');
-  document.head.appendChild(kf);
+  // Extra keyframes + overlay styles
+  var st=document.createElement('style');
+  st.textContent=`
+    #eos-overlay-v9{animation:v90fadein 1.2s ease forwards;}
+    #eos-status-line{animation:v90fadeup 1s ease 0.3s both;}
+    #eos-context{animation:v90fadeup 1s ease 0.5s both;}
+    #eos-dock-v9{animation:v90dockslide 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s both;}
+    @keyframes v90fadein{from{opacity:0;}to{opacity:1;}}
+    @keyframes v90fadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes v90dockslide{from{opacity:0;transform:translateX(-50%) translateY(14px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+    @keyframes v90dot{0%,100%{opacity:0.3;}50%{opacity:1;}}
+    @keyframes eos-fog-pulse{0%,100%{opacity:0.4;}50%{opacity:0.9;}}
+    @keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+    @keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+    .eos-dock-item:hover .eos-di-label{opacity:0.9!important;}
+    .eos-dock-item:hover .eos-di-icon{color:rgba(245,230,225,0.9)!important;}
+    .eos-dock-item{transition:transform 0.2s ease;}
+    .eos-dock-item:hover{transform:translateY(-2px);}
+  `;
+  document.head.appendChild(st);
 
-  // ── DOCK ───────────────────────────────────────────────
-  function buildDock(){
-    if(document.getElementById('eos-dock-v8'))return;
-    var items=[
-      {id:'dashboard',icon:'◈',label:'Central'},
-      {id:'memo',icon:'◎',label:'Memoria'},
-      {id:'scout',icon:'◉',label:'Scout'},
-      {id:'outreach',icon:'◌',label:'Outreach'},
-      {id:'lab',icon:'◆',label:'Lab'},
-      {id:'trends',icon:'◇',label:'Trends'},
-      {id:'agenda',icon:'◫',label:'Agenda'}
-    ];
+  function getTime(){
+    var d=new Date();
+    return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);
+  }
+
+  function buildOverlay(){
+    if(document.getElementById('eos-overlay-v9'))return;
+
+    // ── MAIN OVERLAY ────────────────────────────────────────
+    var ov=document.createElement('div');
+    ov.id='eos-overlay-v9';
+    ov.style.cssText='position:fixed;inset:0;z-index:9000;pointer-events:none;overflow:hidden;';
+
+    // Atmospheric background — dark void with ORB-centered glow
+    var bg=document.createElement('div');
+    bg.style.cssText='position:absolute;inset:0;background:'
+      +'radial-gradient(ellipse 55% 70% at 50% 48%,rgba(105,9,13,0.2) 0%,transparent 55%),'
+      +'radial-gradient(ellipse 80% 25% at 50% 100%,rgba(60,4,7,0.22) 0%,transparent 50%),'
+      +'radial-gradient(ellipse 40% 40% at 50% 0%,rgba(30,2,4,0.12) 0%,transparent 50%);'
+      +'pointer-events:none;';
+    ov.appendChild(bg);
+
+    // Atmospheric fog around ORB area (will be repositioned after ORB is found)
+    var fog=document.createElement('div');
+    fog.id='eos-orb-fog';
+    fog.style.cssText='position:absolute;border-radius:50%;pointer-events:none;'
+      +'width:580px;height:580px;'
+      +'left:calc(50% - 290px);top:calc(50% - 290px);'
+      +'background:radial-gradient(ellipse,rgba(115,10,14,0.14) 0%,rgba(75,5,8,0.06) 42%,transparent 68%);'
+      +'animation:eos-fog-pulse 10s ease-in-out infinite;';
+    ov.appendChild(fog);
+
+    // Orbital rings (will be repositioned)
+    [{s:230,c:'rgba(178,14,20,0.2)',d:'18s',dir:'cw'},
+     {s:325,c:'rgba(148,10,15,0.09)',d:'30s',dir:'ccw'},
+     {s:435,c:'rgba(112,7,11,0.045)',d:'54s',dir:'cw'}
+    ].forEach(function(r){
+      var el=document.createElement('div');
+      el.className='eos-ring-v9';
+      el.style.cssText='position:absolute;border-radius:50%;background:transparent;pointer-events:none;'
+        +'width:'+r.s+'px;height:'+r.s+'px;'
+        +'left:calc(50% - '+Math.round(r.s/2)+'px);top:calc(50% - '+Math.round(r.s/2)+'px);'
+        +'border:1px solid '+r.c+';'
+        +'animation:eos-fixed-spin-'+r.dir+' '+r.d+' linear infinite;';
+      ov.appendChild(el);
+    });
+
+    document.body.appendChild(ov);
+
+    // ── STATUS LINE — top, ultra minimal ─────────────────────
+    var status=document.createElement('div');
+    status.id='eos-status-line';
+    status.style.cssText='position:fixed;top:0;left:0;right:0;height:36px;'
+      +'z-index:9100;pointer-events:none;'
+      +'display:flex;align-items:center;justify-content:space-between;'
+      +'padding:0 28px;'
+      +'background:linear-gradient(180deg,rgba(2,1,1,0.85) 0%,transparent 100%);';
+
+    status.innerHTML='<div style="display:flex;align-items:center;gap:10px;">'
+      +'<span style="font-family:Space Grotesk,sans-serif;font-size:10px;font-weight:600;'
+      +'letter-spacing:0.28em;color:rgba(235,220,215,0.75);text-transform:uppercase;">E O S</span>'
+      +'<span style="width:4px;height:4px;border-radius:50%;background:rgba(155,16,20,0.8);'
+      +'animation:v90dot 2.5s ease-in-out infinite;display:inline-block;"></span>'
+      +'<span style="font-family:Inter,sans-serif;font-size:8.5px;font-weight:400;'
+      +'letter-spacing:0.1em;color:rgba(175,148,143,0.45);text-transform:uppercase;">Sistema Activo</span>'
+      +'</div>'
+      +'<div id="eos-clock" style="font-family:Inter,monospace;font-size:9px;font-weight:300;'
+      +'letter-spacing:0.14em;color:rgba(165,138,132,0.38);">'+getTime()+'</div>';
+
+    document.body.appendChild(status);
+    setInterval(function(){
+      var c=document.getElementById('eos-clock');
+      if(c)c.textContent=getTime();
+    },1000);
+
+    // ── CONTEXT PANEL — right side, floating glass ─────────
+    var ctx=document.createElement('div');
+    ctx.id='eos-context';
+    ctx.style.cssText='position:fixed;right:28px;top:50%;transform:translateY(-50%);'
+      +'z-index:9100;pointer-events:all;'
+      +'width:220px;'
+      +'background:rgba(10,4,4,0.52);'
+      +'backdrop-filter:blur(40px) saturate(1.4);'
+      +'-webkit-backdrop-filter:blur(40px) saturate(1.4);'
+      +'border:1px solid rgba(70,7,10,0.1);'
+      +'border-radius:14px;'
+      +'padding:20px 18px;'
+      +'box-shadow:0 8px 50px rgba(0,0,0,0.7),0 0 0 1px rgba(50,4,7,0.06);';
+
+    // get live data from DOM
+    var sessions=document.querySelector('[id*="session"],[class*="session"]');
+    var tasks=document.querySelector('[id*="task"],[class*="task"]');
+
+    ctx.innerHTML='<div style="font-family:Space Grotesk,sans-serif;font-size:7.5px;font-weight:600;'
+      +'letter-spacing:0.26em;color:rgba(175,100,90,0.42);text-transform:uppercase;margin-bottom:16px;">Status</div>'
+      +'<div style="display:flex;flex-direction:column;gap:12px;">'
+      +ctxItem('◈','Scout Agent','Operativo')
+      +ctxItem('◎','Outreach','Standby')
+      +ctxItem('◉','Trends','Analizando')
+      +ctxItem('◌','Creative Lab','Activo')
+      +'</div>'
+      +'<div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(70,6,9,0.1);">'
+      +'<div style="font-family:Inter,sans-serif;font-size:8px;letter-spacing:0.06em;'
+      +'color:rgba(155,128,122,0.35);line-height:1.6;">EOS · v8.0<br>Bogotá · LATAM<br>'+new Date().toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'})+'</div>'
+      +'</div>';
+
+    document.body.appendChild(ctx);
+
+    // ── DOCK — bottom center ────────────────────────────────
     var dock=document.createElement('nav');
-    dock.id='eos-dock-v8';
-    dock.style.cssText=[
-      'position:fixed','bottom:20px','left:50%','transform:translateX(-50%)',
-      'z-index:9500','display:flex','align-items:center','gap:4px',
-      'background:rgba(8,3,3,0.72)',
-      'backdrop-filter:blur(32px) saturate(1.5)',
-      '-webkit-backdrop-filter:blur(32px) saturate(1.5)',
-      'border:1px solid rgba(70,7,10,0.12)',
-      'border-radius:20px','padding:8px 14px',
-      'box-shadow:0 8px 40px rgba(0,0,0,0.7),0 0 0 1px rgba(50,5,7,0.08),0 0 30px rgba(100,8,12,0.12)',
-      'animation:eos-dock-in 0.8s cubic-bezier(0.22,1,0.36,1) forwards'
-    ].join(';');
+    dock.id='eos-dock-v9';
+    dock.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%);'
+      +'z-index:9200;pointer-events:all;'
+      +'display:flex;align-items:center;gap:2px;'
+      +'background:rgba(7,3,3,0.7);'
+      +'backdrop-filter:blur(36px) saturate(1.5);'
+      +'-webkit-backdrop-filter:blur(36px) saturate(1.5);'
+      +'border:1px solid rgba(65,6,9,0.1);'
+      +'border-radius:18px;padding:8px 12px;'
+      +'box-shadow:0 8px 40px rgba(0,0,0,0.72),0 0 0 1px rgba(40,3,5,0.06),0 0 28px rgba(90,7,11,0.1);';
 
-    items.forEach(function(item,i){
+    var navItems=[
+      {id:'dashboard',i:'◈',l:'Central'},
+      {id:'memo',i:'◎',l:'Memoria'},
+      {id:'scout',i:'◉',l:'Scout'},
+      {id:'outreach',i:'◌',l:'Outreach'},
+      {id:'lab',i:'◆',l:'Lab'},
+      {id:'trends',i:'◇',l:'Trends'},
+      {id:'agenda',i:'◫',l:'Agenda'}
+    ];
+    navItems.forEach(function(item,idx){
       var btn=document.createElement('button');
-      btn.className='eos-dock-btn'+(i===0?' active':'');
-      btn.dataset.eosDock=item.id;
-      btn.style.cssText=[
-        'background:none','border:none','cursor:pointer','outline:none',
-        'display:flex','flex-direction:column','align-items:center','gap:2px',
-        'padding:6px 10px','border-radius:12px',
-        'color:rgba(185,158,152,0.42)',
-        'font-family:Inter,sans-serif',
-        'transition:all 0.25s ease',
-        'position:relative'
-      ].join(';');
-      btn.innerHTML='<span style="font-size:13px;line-height:1">'+item.icon+'</span>'
-        +'<span class="eos-dock-dot" style="'
-        +'font-family:Inter,sans-serif;font-size:7px;letter-spacing:0.12em;'
-        +'text-transform:uppercase;display:block;margin-top:1px;'+(i===0?'opacity:0.9':'opacity:0.35')
-        +'">'+item.label+'</span>'
-        +(i===0?'<span style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:rgba(155,16,20,0.7);"></span>':'');
-
+      btn.className='eos-dock-item';
+      btn.style.cssText='background:none;border:none;cursor:pointer;outline:none;'
+        +'display:flex;flex-direction:column;align-items:center;gap:2px;'
+        +'padding:5px 9px;border-radius:10px;position:relative;';
+      btn.innerHTML='<span class="eos-di-icon" style="font-size:12px;line-height:1;'
+        +'color:rgba(175,148,142,'+(idx===0?'0.85':'0.38')+');">'+(item.i)+'</span>'
+        +'<span class="eos-di-label" style="font-family:Inter,sans-serif;font-size:7px;'
+        +'letter-spacing:0.1em;text-transform:uppercase;'
+        +'color:rgba(165,138,132,'+(idx===0?'0.7':'0.3')+');">'+(item.l)+'</span>'
+        +(idx===0?'<span style="position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);'
+          +'width:2px;height:2px;border-radius:50%;background:rgba(155,16,20,0.75);"></span>':'');
       btn.addEventListener('click',function(){
-        // route to the right view
-        document.querySelectorAll('.eos-dock-btn').forEach(function(b){
-          b.classList.remove('active');
-          b.style.color='rgba(185,158,152,0.42)';
-          var dot=b.querySelector('.eos-dock-dot');
-          if(dot)dot.style.opacity='0.35';
-          var indicator=b.querySelector('span:last-child[style*="border-radius:50%"]');
-          if(indicator)indicator.remove();
+        document.querySelectorAll('.eos-dock-item').forEach(function(b){
+          b.querySelector('.eos-di-icon').style.color='rgba(175,148,142,0.38)';
+          b.querySelector('.eos-di-label').style.color='rgba(165,138,132,0.3)';
+          var dot=b.querySelector('span:last-child');
+          if(dot&&dot.style.position==='absolute')dot.remove();
         });
-        btn.classList.add('active');
-        btn.style.color='rgba(245,230,225,0.92)';
-        var dot=btn.querySelector('.eos-dock-dot');
-        if(dot)dot.style.opacity='0.9';
-        // add active indicator
+        btn.querySelector('.eos-di-icon').style.color='rgba(245,228,222,0.88)';
+        btn.querySelector('.eos-di-label').style.color='rgba(225,208,202,0.72)';
         var ind=document.createElement('span');
-        ind.style.cssText='position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:rgba(155,16,20,0.7);';
+        ind.style.cssText='position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:2px;height:2px;border-radius:50%;background:rgba(155,16,20,0.75);';
         btn.appendChild(ind);
-        // trigger navigation
-        var navItem=document.querySelector('[data-view="'+item.id+'"]')
-          ||document.querySelector('[href="#'+item.id+'"]')
-          ||document.querySelector('.nav-item[data-id="'+item.id+'"]');
-        if(navItem)navItem.click();
+        var nav=document.querySelector('[data-view="'+item.id+'"]')
+          ||document.querySelector('.nav-item[data-id="'+item.id+'"]')
+          ||document.querySelector('a[href*="'+item.id+'"]');
+        if(nav)nav.click();
       });
       dock.appendChild(btn);
+      if(idx===2){var sep=document.createElement('div');sep.style.cssText='width:1px;height:24px;background:rgba(65,6,9,0.15);margin:0 4px;';dock.appendChild(sep);}
     });
-
-    // separator
-    var sep=document.createElement('div');
-    sep.style.cssText='width:1px;height:28px;background:rgba(70,7,10,0.18);margin:0 6px;';
-    dock.insertBefore(sep,dock.children[3]);
-
     document.body.appendChild(dock);
+
+    // Reposition rings/fog after ORB is found
+    setTimeout(positionAroundOrb,800);
   }
 
-  // ── RING + FOG OVERLAY ─────────────────────────────────
-  function injectRings(){
+  function ctxItem(icon,label,status){
+    var color=status==='Operativo'?'rgba(155,195,140,0.7)':status==='Analizando'?'rgba(195,155,90,0.7)':'rgba(155,148,142,0.45)';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;">'
+      +'<div style="display:flex;align-items:center;gap:7px;">'
+      +'<span style="font-size:10px;color:rgba(175,148,142,0.5);">'+icon+'</span>'
+      +'<span style="font-family:Inter,sans-serif;font-size:9px;color:rgba(210,188,183,0.6);letter-spacing:0.03em;">'+label+'</span>'
+      +'</div>'
+      +'<span style="font-family:Inter,sans-serif;font-size:7.5px;letter-spacing:0.06em;color:'+color+';text-transform:uppercase;">'+status+'</span>'
+      +'</div>';
+  }
+
+  function positionAroundOrb(){
     var c=document.getElementById('eosOrbCanvas');
-    if(!c)return;
+    if(!c){setTimeout(positionAroundOrb,500);return;}
     var r=c.getBoundingClientRect();
-    var cx=r.left+r.width/2,cy=r.top+r.height/2;
-    if(cx<10||cy<10)return;
-    var old=document.getElementById('eos-ring-overlay-v8');
-    if(old)old.remove();
-    var wrap=document.createElement('div');
-    wrap.id='eos-ring-overlay-v8';
-    wrap.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;';
-    // rings
-    [{s:208,c:'rgba(172,14,20,0.22)',d:'16s',dir:'cw'},
-     {s:298,c:'rgba(142,10,15,0.10)',d:'30s',dir:'ccw'},
-     {s:398,c:'rgba(108,7,11,0.05)',d:'55s',dir:'cw'}
-    ].forEach(function(ring){
-      var el=document.createElement('div');
-      el.style.cssText='position:fixed;border-radius:50%;background:transparent;pointer-events:none;'
-        +'width:'+ring.s+'px;height:'+ring.s+'px;'
-        +'left:'+(cx-ring.s/2)+'px;top:'+(cy-ring.s/2)+'px;'
-        +'border:1px solid '+ring.c+';'
-        +'animation:eos-fixed-spin-'+ring.dir+' '+ring.d+' linear infinite;';
-      wrap.appendChild(el);
+    var cx=r.left+r.width/2, cy=r.top+r.height/2;
+    if(cx<10){setTimeout(positionAroundOrb,500);return;}
+
+    // reposition fog
+    var fg=document.getElementById('eos-orb-fog');
+    if(fg){fg.style.left=(cx-290)+'px';fg.style.top=(cy-290)+'px';}
+
+    // reposition rings
+    document.querySelectorAll('.eos-ring-v9').forEach(function(el){
+      var s=parseInt(el.style.width);
+      el.style.left=(cx-s/2)+'px';
+      el.style.top=(cy-s/2)+'px';
     });
-    // atmospheric fog
-    var fg=document.createElement('div');var fs=540;
-    fg.style.cssText='position:fixed;border-radius:50%;pointer-events:none;'
-      +'width:'+fs+'px;height:'+fs+'px;'
-      +'left:'+(cx-fs/2)+'px;top:'+(cy-fs/2)+'px;'
-      +'background:radial-gradient(ellipse,rgba(112,9,13,0.13) 0%,rgba(72,5,8,0.055) 44%,transparent 70%);'
-      +'animation:eos-fog-pulse 10s ease-in-out infinite;';
-    wrap.appendChild(fg);
-    document.body.appendChild(wrap);
   }
 
-  // ── INIT ───────────────────────────────────────────────
-  function init(){
-    buildDock();
-    setTimeout(injectRings,700);
-    window.addEventListener('resize',function(){setTimeout(injectRings,400);});
-    var obs=new MutationObserver(function(){
-      var c=document.getElementById('eosOrbCanvas');
-      if(c){var r=c.getBoundingClientRect();if(r&&r.width>0){setTimeout(injectRings,400);obs.disconnect();}}
-    });
-    obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style']});
-  }
-
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
-  else{setTimeout(init,300);}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(buildOverlay,600);});}
+  else{setTimeout(buildOverlay,400);}
 })();
 </script>
 </body>\n</html>';
@@ -43992,256 +44067,116 @@ if(!window.__n166Patched){
 .eos-achievement-toast .at-desc{font-size:8px;color:rgba(180,180,180,.4);margin-top:4px;letter-spacing:.3px;}
 </style>
 <style id="eos-ultra-v2">
-/* ═══════════════════════════════════════════════════════
-   EOS AGENT v8.0 — STRUCTURAL DECONSTRUCTION
-   Strategy: kill sidebar → inject dock → expand ORB →
-   dissolve all panel boundaries → only content floats
-   ═══════════════════════════════════════════════════════ */
-
+/* EOS AGENT v9.0 — CINEMATIC OVERLAY */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
 
-:root{
-  --bg:#020101;
-  --wine:rgba(105,11,16,0.9);
-  --crimson:rgba(150,18,24,0.82);
-  --amber:rgba(178,76,16,0.72);
-  --text-1:rgba(248,235,230,0.88);
-  --text-2:rgba(190,162,156,0.42);
-  --text-3:rgba(140,112,106,0.22);
-  --ghost:rgba(70,7,10,0.04);
-}
+*{ box-sizing:border-box; }
 
-/* ── UNIVERSAL DISSOLUTION ─────────────────────────────
-   Every border in the app becomes near-invisible.
-   Boxes stop existing. Only content remains. */
-*{ border-color:rgba(65,6,9,0.04)!important; box-sizing:border-box; }
-
-/* ── BASE ─────────────────────────────────────────────── */
 body{
-  background:var(--bg)!important;
+  background:#020101!important;
   font-family:'Inter',-apple-system,sans-serif!important;
-  color:var(--text-1)!important;
-  overflow-x:hidden!important;
-  overflow-y:hidden!important;
-}
-
-/* ── KILL THE SIDEBAR ─────────────────────────────────── */
-.sb{ display:none!important; }
-
-/* ── MAIN TAKES FULL CANVAS ───────────────────────────── */
-.shell{ flex-direction:column!important; background:transparent!important; }
-.main{
-  width:100vw!important;
-  max-width:100vw!important;
-  flex:1!important;
-  height:calc(100vh - 80px)!important;
-}
-.content,#content{
-  width:100%!important;
-  height:100%!important;
   overflow:hidden!important;
+  margin:0!important;padding:0!important;
 }
 
-/* ── GRID: ORB BECOMES THE HERO ──────────────────────────
-   Old: 188px 275px 364px 198px 215px (5 cramped columns)
-   New: ORB column gets 340px, IA central expands, rest minimal */
-#view-dashboard{
-  grid-template-columns:130px 340px 1fr 150px 150px!important;
-  height:100%!important;
-  gap:0!important;
-}
+/* ── HIDE THE ENTIRE ORIGINAL UI ─────────────────────────
+   The app still RUNS underneath — we just don't see it.
+   Only the ORB canvas needs to stay alive and visible. */
+.sb{ display:none!important; }
+.tb,.topbar,[class*="topbar"]{ visibility:hidden!important; height:0!important; min-height:0!important; overflow:hidden!important; }
+#mainTabBar{ visibility:hidden!important; height:0!important; min-height:0!important; overflow:hidden!important; }
+#presenceBar{ display:none!important; }
+.main{ position:absolute!important; top:0!important; left:0!important; width:100vw!important; height:100vh!important; }
+.content,#content{ width:100%!important; height:100%!important; overflow:hidden!important; }
 
-/* ── DISSOLVE ALL PANELS — content floats in void ─────── */
-#view-dashboard>div{
-  background:transparent!important;
-  backdrop-filter:none!important;
-  -webkit-backdrop-filter:none!important;
-  border:none!important;
-  border-top:none!important;
-  border-bottom:none!important;
-  border-left:none!important;
-  border-right:none!important;
-  box-shadow:none!important;
-  border-radius:0!important;
-  overflow:visible!important;
-  padding:20px 16px!important;
-  transition:none!important;
+/* Dashboard: hide all panels EXCEPT the ORB */
+#view-dashboard>div:not(#orbPanel):not(.orb-panel){
+  visibility:hidden!important;
+  pointer-events:none!important;
 }
-#view-dashboard>div::before,
-#view-dashboard>div::after{ display:none!important; content:none!important; }
-
-/* ── ORB PANEL — dominant, atmospheric ───────────────────
-   This panel IS the heart of EOS. Give it full vertical space. */
+/* ORB panel: expand to fill column */
 #orbPanel,.orb-panel{
-  background:radial-gradient(
-    ellipse at 50% 48%,
-    rgba(130,12,16,0.14) 0%,
-    rgba(75,6,9,0.06) 38%,
-    transparent 65%
-  )!important;
+  position:absolute!important;
+  top:0!important; left:0!important;
+  width:100%!important; height:100%!important;
+  visibility:visible!important;
+  background:transparent!important;
+  border:none!important;
+  box-shadow:none!important;
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
   overflow:visible!important;
+  z-index:1!important;
+}
+#view-dashboard{
+  position:relative!important;
+  width:100vw!important;
+  height:100vh!important;
 }
 
-/* ── ORB — living core, maximum presence ─────────────────── */
-#eosOrbCanvas{
-  filter:
-    drop-shadow(0 0 12px rgba(195,16,22,0.92))
-    drop-shadow(0 0 32px rgba(160,12,18,0.68))
-    drop-shadow(0 0 70px rgba(125,8,14,0.44))
-    drop-shadow(0 0 130px rgba(88,5,10,0.24))
-    drop-shadow(0 0 200px rgba(60,3,7,0.12))!important;
-  transform:scale(0.95)!important;
-  transform-origin:center!important;
-  animation:v80breathe 7s ease-in-out infinite!important;
-}
+/* ORB — scale up, breathe */
 #eosOrbWrap{
   overflow:visible!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
+  position:relative!important;
+}
+#eosOrbCanvas{
+  transform:scale(1.35)!important;
+  transform-origin:center!important;
+  animation:v90breathe 8s ease-in-out infinite!important;
+  filter:
+    drop-shadow(0 0 14px rgba(200,16,22,0.95))
+    drop-shadow(0 0 40px rgba(165,12,18,0.72))
+    drop-shadow(0 0 85px rgba(125,8,14,0.48))
+    drop-shadow(0 0 150px rgba(85,5,10,0.28))
+    drop-shadow(0 0 230px rgba(55,3,6,0.14))!important;
 }
 
-/* ── ORB CSS RINGS ────────────────────────────────────── */
+/* ORB rings */
 .orb-v-ring{
   position:absolute!important;border-radius:50%!important;
   top:50%!important;left:50%!important;
   pointer-events:none!important;background:transparent!important;
 }
-.orb-v-ring.r1{
-  width:200px!important;height:200px!important;
-  border:1px solid rgba(180,16,20,0.2)!important;
-  animation:v80cw 16s linear infinite!important;
-  transform:translate(-50%,-50%)!important;
-}
-.orb-v-ring.r2{
-  width:284px!important;height:284px!important;
-  border:1px solid rgba(150,12,16,0.09)!important;
-  animation:v80ccw 28s linear infinite!important;
-  transform:translate(-50%,-50%)!important;
-}
-.orb-v-ring.r3{
-  width:375px!important;height:375px!important;
-  border:1px solid rgba(115,8,12,0.045)!important;
-  animation:v80cw 50s linear infinite!important;
-  transform:translate(-50%,-50%)!important;
-}
+.orb-v-ring.r1{ width:210px!important;height:210px!important;border:1px solid rgba(185,16,20,0.18)!important;animation:v90cw 18s linear infinite!important;transform:translate(-50%,-50%)!important; }
+.orb-v-ring.r2{ width:296px!important;height:296px!important;border:1px solid rgba(155,12,16,0.08)!important;animation:v90ccw 32s linear infinite!important;transform:translate(-50%,-50%)!important; }
+.orb-v-ring.r3{ width:395px!important;height:395px!important;border:1px solid rgba(115,8,12,0.04)!important;animation:v90cw 58s linear infinite!important;transform:translate(-50%,-50%)!important; }
 
-/* ── TOPBAR — razor thin ──────────────────────────────── */
-.tb,.topbar,[class*="topbar"]{
-  background:rgba(2,0,0,0.98)!important;
-  border-bottom-color:rgba(60,5,7,0.06)!important;
-  border-bottom-width:1px!important;border-bottom-style:solid!important;
-  box-shadow:none!important;
-  height:38px!important;
-  min-height:38px!important;
-}
-#viewTitle{
-  font-family:'Space Grotesk',sans-serif!important;
-  font-weight:500!important;font-size:10px!important;
-  letter-spacing:0.2em!important;text-transform:uppercase!important;
-  color:rgba(235,220,216,0.65)!important;text-shadow:none!important;
-}
-
-/* ── TABBAR ───────────────────────────────────────────── */
-#mainTabBar{
-  background:rgba(2,0,0,0.98)!important;
-  border-bottom-color:rgba(60,5,7,0.05)!important;
-  border-bottom-width:1px!important;border-bottom-style:solid!important;
-  height:34px!important;
-}
-#mainTabBar *{
-  font-family:'Inter',sans-serif!important;
-  font-size:9px!important;font-weight:500!important;
-  letter-spacing:0.08em!important;text-transform:uppercase!important;
-  color:var(--text-2)!important;
-}
-#mainTabBar .active,[class*="tab-active"]{
-  color:var(--text-1)!important;
-  border-bottom:1px solid rgba(145,16,20,0.5)!important;
-  background:transparent!important;
-}
-
-/* ── PRESENCE BAR ─────────────────────────────────────── */
-#presenceBar{
-  background:linear-gradient(90deg,transparent,rgba(150,16,20,0.55) 25%,rgba(170,20,24,0.78) 50%,rgba(150,16,20,0.55) 75%,transparent)!important;
-  height:1px!important;
-  box-shadow:0 0 10px rgba(148,12,18,0.42),0 0 24px rgba(120,8,14,0.2)!important;
-}
-
-/* ── PANEL TEXT ────────────────────────────────────────── */
-.ph,[class*="panel-h"],[class*="panelHeader"]{
-  font-family:'Space Grotesk',sans-serif!important;
-  font-size:7.5px!important;font-weight:600!important;
-  letter-spacing:0.24em!important;text-transform:uppercase!important;
-  color:rgba(178,100,90,0.38)!important;
-}
-h1,h2,h3,h4,h5,h6{
-  font-family:'Space Grotesk',sans-serif!important;
-  font-weight:500!important;color:var(--text-1)!important;
-}
-
-/* ── BOTTOM PADDING for dock ──────────────────────────── */
-.main,#content,#view-dashboard{
-  padding-bottom:80px!important;
-}
-
-/* ── BACKGROUND ──────────────────────────────────────── */
-#bg{ opacity:0.055!important;filter:hue-rotate(350deg) saturate(1.4) brightness(0.38)!important; }
-#n60ParticleCanvas{ opacity:0.16!important;filter:hue-rotate(350deg) saturate(0.45)!important; }
+/* Background */
+#bg{ opacity:0.05!important;filter:hue-rotate(350deg) saturate(1.3) brightness(0.35)!important; }
+#n60ParticleCanvas{ opacity:0.14!important;filter:hue-rotate(350deg) saturate(0.4)!important; }
 .scan-grid{
   background-image:
-    radial-gradient(ellipse 55% 80% at 28% 50%,rgba(115,10,14,0.2) 0%,transparent 56%),
-    radial-gradient(ellipse 35% 50% at 72% 48%,rgba(75,5,8,0.1) 0%,transparent 50%),
-    radial-gradient(ellipse 90% 28% at 50% 100%,rgba(50,3,5,0.18) 0%,transparent 52%)!important;
+    radial-gradient(ellipse 60% 80% at 50% 50%,rgba(110,9,13,0.18) 0%,transparent 55%),
+    radial-gradient(ellipse 100% 30% at 50% 100%,rgba(55,3,6,0.2) 0%,transparent 50%)!important;
   background-size:100% 100%!important;
 }
 .scan-overlay{ display:none!important; }
-body::before{
-  content:''!important;position:fixed!important;inset:0!important;
-  background:
-    radial-gradient(ellipse 48% 62% at 30% 50%,rgba(105,9,13,0.16) 0%,transparent 55%),
-    radial-gradient(ellipse 75% 22% at 50% 100%,rgba(65,4,7,0.2) 0%,transparent 52%)!important;
-  pointer-events:none!important;z-index:0!important;
-}
-body::after{ display:none!important; }
-
-/* ── NO HUD CLUTTER ───────────────────────────────────── */
 html::before,html::after{ display:none!important; }
+body::before,body::after{ display:none!important; }
 
-/* ── SAFETY ────────────────────────────────────────────── */
+/* Boot screen safety */
 #eosBootScreen,#bootEnterPrompt,#bootBypass,
 #eosAccess,#accPass,#accPassInput,#accActivation{
   pointer-events:all!important;
+  visibility:visible!important;
+  z-index:99999!important;
 }
-body,.shell,.main,.content,#view-dashboard,.p,.ph,
-.orb-panel,#orbPanel,#eosOrbWrap{ overflow:visible!important; }
 
-/* ── KEYFRAMES ─────────────────────────────────────────── */
-@keyframes v80breathe{
-  0%,100%{ opacity:0.86;transform:scale(0.95); }
-  50%{ opacity:1;transform:scale(0.99); }
+/* Keyframes */
+@keyframes v90breathe{
+  0%,100%{ opacity:0.88;transform:scale(1.35); }
+  50%{ opacity:1;transform:scale(1.4); }
 }
-@keyframes v80cw{
-  from{ transform:translate(-50%,-50%) rotate(0deg); }
-  to{ transform:translate(-50%,-50%) rotate(360deg); }
-}
-@keyframes v80ccw{
-  from{ transform:translate(-50%,-50%) rotate(0deg); }
-  to{ transform:translate(-50%,-50%) rotate(-360deg); }
-}
+@keyframes v90cw{ from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);} }
+@keyframes v90ccw{ from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);} }
 @keyframes eos-fixed-spin-cw{ from{transform:rotate(0deg);}to{transform:rotate(360deg);} }
 @keyframes eos-fixed-spin-ccw{ from{transform:rotate(0deg);}to{transform:rotate(-360deg);} }
-@keyframes eos-fog-pulse{ 0%,100%{opacity:0.55;}50%{opacity:1;} }
-@keyframes eos-dock-in{
-  from{ opacity:0;transform:translateX(-50%) translateY(20px); }
-  to{ opacity:1;transform:translateX(-50%) translateY(0); }
-}
-@keyframes eos-dock-dot{
-  0%,100%{ opacity:0.4; }50%{ opacity:1; }
-}
+@keyframes eos-fog-pulse{ 0%,100%{opacity:0.5;}50%{opacity:1;} }
+@keyframes v90fadeup{ from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);} }
+@keyframes v90fadein{ from{opacity:0;}to{opacity:1;} }
+@keyframes v90dot{ 0%,100%{opacity:0.3;transform:scale(1);}50%{opacity:1;transform:scale(1.5);} }
+@keyframes v90dockslide{ from{opacity:0;transform:translateX(-50%) translateY(12px);}to{opacity:1;transform:translateX(-50%) translateY(0);} }
 </style>
 
 <script>
