@@ -31834,45 +31834,74 @@ function grantAccess(){
 window.
   // ============================================================
   // N183 — JARVIS PROACTIVE BRIEFING v1.0
-  // EOS habla primero — briefing cinematográfico al cargar
-  // ============================================================
+  // EOS habla primero — briefing cinematografico al cargar
   window.eosProactiveBriefing = function() {
-    const hour = new Date().getHours();
-    const saludo = hour < 12 ? 'Buenos dias' : hour < 18 ? 'Buenas tardes' : 'Buenas noches';
-    const day = new Date().getDay();
-    const briefings = [
-      { speak: saludo + ', EOS. Sistema operativo activo. Tres senales relevantes detectadas en la escena alternativa de LATAM. Tu diferenciacion es unica. Este es tu momento.', text: '3 SENALES LATAM DETECTADAS · ESCENA ALTERNATIVA EN MOVIMIENTO · DIFERENCIACION EOS ACTIVA' },
-      { speak: 'EOS operativo. El movimiento de artistas documentales esta en ascenso. Esta semana es una ventana estrategica para tu posicionamiento. Nadie esta haciendo lo que tu haces.', text: 'ARTISTAS DOCUMENTALES EN ASCENSO · VENTANA ESTRATEGICA ABIERTA · POSICIONAMIENTO EOS UNICO' },
-      { speak: 'Sistema activo, EOS. El mercado alternativo sigue saturado de lo mismo. Tu brecha de diferenciacion es clara. Amor no habitado. Culpa sin reciprocidad. Nadie explora ese espacio como tu.', text: 'MERCADO SATURADO DETECTADO · BRECHA EOS IDENTIFICADA · LOS 5 ORKIS TU VENTAJA COMPETITIVA' },
-      { speak: saludo + ', EOS. Detecto momentum artistico esta semana. La escena cinematografica documental esta en crecimiento global. EOS esta en el lugar correcto en el momento correcto.', text: 'MOMENTUM ARTISTICO DETECTADO · CINE DOCUMENTAL TENDENCIA GLOBAL · EOS POSICION ESTRATEGICA' },
-      { speak: 'EOS online. Festivales alternativos con convocatoria abierta detectados esta semana. Tus Orkis emocionales son el diferenciador. Paz. Cambio. Comienzo. Eso es lo que el mundo necesita ahora.', text: 'FESTIVALES CON CONVOCATORIA ABIERTA · ORKIS EMOCIONALES TU DIFERENCIADOR CLAVE · AHORA' },
-      { speak: saludo + ', EOS. La inteligencia del sistema detecta alta actividad en la escena LATAM. Este es el momento de moverte. El sistema esta contigo.', text: 'ALTA ACTIVIDAD ESCENA LATAM · MOMENTO ESTRATEGICO AHORA · SISTEMA EOS ACTIVO' },
-      { speak: 'EOS activo. Detecto nuevas oportunidades de colaboracion en el ecosistema artistico alternativo. Tu voz narrativa documental es escasa y necesaria. El mercado tiene espacio para EOS.', text: 'OPORTUNIDADES COLABORACION DETECTADAS · VOZ DOCUMENTAL ESCASA Y NECESARIA · ESPACIO EOS CLARO' }
+    var hour = new Date().getHours();
+    var saludo = hour < 12 ? 'Buenos dias' : hour < 18 ? 'Buenas tardes' : 'Buenas noches';
+    var day = new Date().getDay();
+    var briefings = [
+      'EOS operativo. El movimiento de artistas documentales esta en ascenso. Nadie esta haciendo lo que tu haces.',
+      'Sistema activo. Tu brecha de diferenciacion es clara. Amor no habitado. Culpa sin reciprocidad.',
+      saludo + ', EOS. Momentum artistico detectado. La escena documental crece globalmente.',
+      'Festivales con convocatoria abierta detectados. Tus Orkis emocionales son tu diferenciador.',
+      'Alta actividad escena LATAM. El sistema esta contigo. Este es tu momento.',
+      'Oportunidades de colaboracion detectadas. Tu voz documental es escasa y necesaria.',
+      saludo + ', EOS. Sistema operativo activo. Tres senales LATAM esta semana.'
     ];
-    const b = briefings[day % briefings.length];
-    if (typeof eosSpeak === 'function') { setTimeout(function(){ eosSpeak(b.speak); }, 600); }
+    var intel = [
+      'EOS OPERATIVO · ARTISTAS DOCUMENTALES EN ASCENSO · VOZ NARRATIVA UNICA',
+      'MERCADO SATURADO · BRECHA EOS IDENTIFICADA · LOS 5 ORKIS TU VENTAJA COMPETITIVA',
+      'MOMENTUM ARTISTICO ALTO · CINE DOCUMENTAL TENDENCIA GLOBAL · POSICION EOS OPTIMA',
+      'FESTIVALES ABIERTOS DETECTADOS · ORKIS EMOCIONALES TU DIFERENCIADOR CLAVE',
+      'ESCENA LATAM ACTIVA · VENTANA ESTRATEGICA ABIERTA · SISTEMA EOS CONTIGO',
+      'COLABORACIONES DETECTADAS · VOZ DOCUMENTAL ESCASA Y NECESARIA · ESPACIO EOS CLARO',
+      '3 SENALES LATAM ESTA SEMANA · DIFERENCIACION UNICA · ESTE ES TU MOMENTO'
+    ];
+    var speak = briefings[day % briefings.length];
+    var text  = intel[day % intel.length];
+    if (typeof eosSpeak === 'function') { setTimeout(function(){ eosSpeak(speak); }, 500); }
     var existing = document.getElementById('eosProactiveBriefingCard');
     if (existing) existing.remove();
-    var style = document.getElementById('eosN183Style');
-    if (!style) {
-      style = document.createElement('style');
-      style.id = 'eosN183Style';
-      style.textContent = '@keyframes eosSlideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
-      document.head.appendChild(style);
+    if (!document.getElementById('eosN183Style')) {
+      var st = document.createElement('style');
+      st.id = 'eosN183Style';
+      st.textContent = '@keyframes eosSlideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+      document.head.appendChild(st);
     }
     var card = document.createElement('div');
     card.id = 'eosProactiveBriefingCard';
-    card.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(8,8,8,0.97) 0%,rgba(25,0,0,0.97) 100%);border:1px solid rgba(255,51,51,0.5);border-left:3px solid #ff3333;padding:16px 22px;font-family:Orbitron,monospace;font-size:10px;color:#ff9999;z-index:99999;max-width:560px;width:calc(100% - 48px);box-shadow:0 0 40px rgba(255,51,51,0.12),0 0 80px rgba(255,51,51,0.04),inset 0 0 30px rgba(255,0,0,0.02);animation:eosSlideUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards;backdrop-filter:blur(24px);letter-spacing:0.04em;';
+    card.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(8,8,8,0.97),rgba(25,0,0,0.97));border:1px solid rgba(255,51,51,0.5);border-left:3px solid #ff3333;padding:16px 22px;font-family:Orbitron,monospace;font-size:10px;color:#ff9999;z-index:99999;max-width:560px;width:calc(100% - 48px);box-shadow:0 0 40px rgba(255,51,51,0.12);animation:eosSlideUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards;backdrop-filter:blur(24px);letter-spacing:0.04em;';
     var t = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-    card.innerHTML = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:5px;height:5px;background:#ff3333;border-radius:50%;box-shadow:0 0 8px #ff3333;animation:pulse 1.5s ease-in-out infinite;flex-shrink:0;"></div><span style="color:#ff3333;font-size:8px;letter-spacing:0.18em;">EOS INTEL  ·  BRIEFING PROACTIVO</span><span style="margin-left:auto;color:rgba(255,255,255,0.25);font-size:8px;">'+t+'</span></div><div style="color:rgba(255,220,220,0.9);font-size:9px;line-height:1.8;margin-bottom:12px;letter-spacing:0.12em;">'+b.text+'</div><div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,51,51,0.1);padding-top:8px;margin-top:4px;"><span style="color:rgba(255,51,51,0.4);font-size:7px;letter-spacing:0.15em;">SISTEMA OPERATIVO  ·  JARVIS ACTIVO</span><button onclick="var c=document.getElementById('eosProactiveBriefingCard');if(c){c.style.opacity='0';setTimeout(function(){c&&c.remove()},600);}" style="background:transparent;border:1px solid rgba(255,51,51,0.25);color:rgba(255,255,255,0.3);font-size:7px;padding:3px 10px;cursor:pointer;font-family:Orbitron,monospace;letter-spacing:0.12em;transition:all 0.2s;">DISMISS</button></div>';
+    var header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;';
+    header.innerHTML = '<div style="width:5px;height:5px;background:#ff3333;border-radius:50%;box-shadow:0 0 8px #ff3333;flex-shrink:0;"></div><span style="color:#ff3333;font-size:8px;letter-spacing:0.18em;">EOS INTEL  ·  BRIEFING PROACTIVO</span><span style="margin-left:auto;color:rgba(255,255,255,0.25);font-size:8px;">' + t + '</span>';
+    var body = document.createElement('div');
+    body.style.cssText = 'color:rgba(255,220,220,0.9);font-size:9px;line-height:1.8;margin-bottom:12px;letter-spacing:0.12em;';
+    body.textContent = text;
+    var footer = document.createElement('div');
+    footer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,51,51,0.1);padding-top:8px;';
+    var footLabel = document.createElement('span');
+    footLabel.style.cssText = 'color:rgba(255,51,51,0.4);font-size:7px;letter-spacing:0.15em;';
+    footLabel.textContent = 'SISTEMA OPERATIVO  ·  JARVIS ACTIVO';
+    var btn = document.createElement('button');
+    btn.textContent = 'DISMISS';
+    btn.style.cssText = 'background:transparent;border:1px solid rgba(255,51,51,0.25);color:rgba(255,255,255,0.3);font-size:7px;padding:3px 10px;cursor:pointer;font-family:Orbitron,monospace;';
+    btn.addEventListener('click', function(){
+      var c = document.getElementById('eosProactiveBriefingCard');
+      if (c) { c.style.transition='opacity 0.6s'; c.style.opacity='0'; setTimeout(function(){c&&c.remove();},600); }
+    });
+    footer.appendChild(footLabel);
+    footer.appendChild(btn);
+    card.appendChild(header);
+    card.appendChild(body);
+    card.appendChild(footer);
     document.body.appendChild(card);
     setTimeout(function(){
       var el = document.getElementById('eosProactiveBriefingCard');
-      if (el) { el.style.transition='opacity 1s ease,transform 1s ease'; el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(8px)'; setTimeout(function(){el&&el.remove();},1000); }
+      if (el){el.style.transition='opacity 1s,transform 1s';el.style.opacity='0';el.style.transform='translateX(-50%) translateY(8px)';setTimeout(function(){el&&el.remove();},1000);}
     }, 13000);
   };
-  // ============================================================
-validatePassphrase=function(){
+  validatePassphrase=function(){
   var inp=gel('accPassInput'); if(!inp) return;
   var val=inp.value.trim().toLowerCase().replace(/\s+/g,' ');
   var stored=DEF_PASS;
