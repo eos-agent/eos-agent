@@ -41620,25 +41620,88 @@ if(!window.__n149Patched){
 
     return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n<script id="eos-ring-overlay-js">
 (function(){
-  if(!document.getElementById('eos-fonts')){var l=document.createElement('link');l.id='eos-fonts';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap';document.head.appendChild(l);}
+  if(!document.getElementById('eos-fonts-v5')){
+    var l=document.createElement('link');l.id='eos-fonts-v5';l.rel='stylesheet';
+    l.href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap';
+    document.head.appendChild(l);
+  }
+  var keyframes='@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}@keyframes eos-arc-pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}@keyframes eos-data-blink{0%,100%{opacity:0.3;}50%{opacity:0.9;}}';
+  var ks=document.createElement('style');ks.textContent=keyframes;document.head.appendChild(ks);
+
   function inject(){
-    var c=document.getElementById('eosOrbCanvas');if(!c)return;
-    var r=c.getBoundingClientRect();var cx=r.left+r.width/2,cy=r.top+r.height/2;if(cx<10)return;
-    var old=document.getElementById('eos-ring-overlay');if(old)old.remove();
-    var wrap=document.createElement('div');wrap.id='eos-ring-overlay';wrap.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;';
-    [{s:220,c:'rgba(220,0,0,0.82)',b:'solid',w:'1.5px',d:'5s',dir:'cw'},
-     {s:300,c:'rgba(200,0,0,0.52)',b:'dashed',w:'1px',d:'9s',dir:'ccw'},
-     {s:400,c:'rgba(200,0,0,0.26)',b:'solid',w:'1px',d:'17s',dir:'cw'},
-     {s:490,c:'rgba(180,0,0,0.12)',b:'dashed',w:'1px',d:'27s',dir:'ccw'}
-    ].forEach(function(ring){
+    var c=document.getElementById('eosOrbCanvas');
+    if(!c)return;
+    var r=c.getBoundingClientRect();
+    var cx=r.left+r.width/2, cy=r.top+r.height/2;
+    if(cx<10||cy<10)return;
+
+    var old=document.getElementById('eos-ring-overlay-v5');
+    if(old)old.remove();
+
+    var wrap=document.createElement('div');
+    wrap.id='eos-ring-overlay-v5';
+    wrap.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;';
+
+    // 6 rings
+    var rings=[
+      {s:170, c:'rgba(255,20,0,0.6)',  b:'solid',  w:'1px',   d:'3s',  dir:'cw'},
+      {s:230, c:'rgba(240,0,0,0.85)',  b:'solid',  w:'1.5px', d:'5s',  dir:'cw'},
+      {s:305, c:'rgba(210,0,0,0.5)',   b:'dashed', w:'1px',   d:'9s',  dir:'ccw'},
+      {s:395, c:'rgba(190,0,0,0.28)',  b:'solid',  w:'1px',   d:'16s', dir:'cw'},
+      {s:490, c:'rgba(170,0,0,0.14)',  b:'dashed', w:'1px',   d:'25s', dir:'ccw'},
+      {s:595, c:'rgba(140,0,0,0.07)',  b:'solid',  w:'1px',   d:'40s', dir:'cw'}
+    ];
+    rings.forEach(function(ring){
       var el=document.createElement('div');
-      el.style.cssText='position:fixed;border-radius:50%;background:transparent;pointer-events:none;width:'+ring.s+'px;height:'+ring.s+'px;left:'+(cx-ring.s/2)+'px;top:'+(cy-ring.s/2)+'px;border:'+ring.w+' '+ring.b+' '+ring.c+';animation:eos-fixed-spin-'+ring.dir+' '+ring.d+' linear infinite;';
+      el.style.cssText='position:fixed;border-radius:50%;background:transparent;pointer-events:none;'
+        +'width:'+ring.s+'px;height:'+ring.s+'px;'
+        +'left:'+(cx-ring.s/2)+'px;top:'+(cy-ring.s/2)+'px;'
+        +'border:'+ring.w+' '+ring.b+' '+ring.c+';'
+        +'animation:eos-fixed-spin-'+ring.dir+' '+ring.d+' linear infinite;';
       wrap.appendChild(el);
     });
+
+    // ARC SEGMENT on ring 2 (230px) — a glowing partial arc using conic-gradient
+    var arc=document.createElement('div');
+    var as=235;
+    arc.style.cssText='position:fixed;border-radius:50%;pointer-events:none;'
+      +'width:'+as+'px;height:'+as+'px;'
+      +'left:'+(cx-as/2)+'px;top:'+(cy-as/2)+'px;'
+      +'background:conic-gradient(rgba(255,40,0,0.7) 0deg, rgba(255,40,0,0.4) 20deg, transparent 20deg, transparent 360deg);'
+      +'animation:eos-fixed-spin-cw 5s linear infinite, eos-arc-pulse 3s ease-in-out infinite;';
+    wrap.appendChild(arc);
+
+    // DATA LABELS around outer ring
+    var labels=[
+      {angle:15,  txt:'SYS.OK',   dist:320},
+      {angle:95,  txt:'CLK:'+new Date().getHours().toString().padStart(2,'0')+':'+new Date().getMinutes().toString().padStart(2,'0'), dist:320},
+      {angle:175, txt:'EOS.v5',   dist:320},
+      {angle:255, txt:'ONLINE',   dist:320},
+      {angle:335, txt:'ACTV',     dist:320}
+    ];
+    labels.forEach(function(l){
+      var rad=(l.angle*Math.PI)/180;
+      var lx=cx+Math.cos(rad)*l.dist;
+      var ly=cy+Math.sin(rad)*l.dist;
+      var span=document.createElement('span');
+      span.textContent=l.txt;
+      span.style.cssText='position:fixed;font-family:"Share Tech Mono",monospace;font-size:8px;'
+        +'color:rgba(200,60,60,0.7);letter-spacing:0.15em;pointer-events:none;'
+        +'left:'+lx+'px;top:'+ly+'px;transform:translate(-50%,-50%);'
+        +'text-shadow:0 0 6px rgba(200,0,0,0.5);'
+        +'animation:eos-data-blink '+(3+Math.random()*2).toFixed(1)+'s ease-in-out infinite;';
+      wrap.appendChild(span);
+    });
+
     document.body.appendChild(wrap);
   }
-  setTimeout(inject,400);
-  var obs=new MutationObserver(function(){var c=document.getElementById('eosOrbCanvas');if(c){var r=c.getBoundingClientRect();if(r&&r.width>0){setTimeout(inject,300);obs.disconnect();}}});
+
+  setTimeout(inject, 500);
+  window.addEventListener('resize', function(){setTimeout(inject,300);});
+  var obs=new MutationObserver(function(){
+    var c=document.getElementById('eosOrbCanvas');
+    if(c){var r=c.getBoundingClientRect();if(r&&r.width>0){setTimeout(inject,300);obs.disconnect();}}
+  });
   obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style']});
 })();
 </script>
@@ -43857,60 +43920,283 @@ if(!window.__n166Patched){
 .eos-achievement-toast .at-desc{font-size:8px;color:rgba(180,180,180,.4);margin-top:4px;letter-spacing:.3px;}
 </style>
 <style id="eos-ultra-v2">
-/* ═══ EOS AGENT — v4.3 CLEAN PRO ═══ */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
-body{background:#000!important;}
-#bg{opacity:0.15!important;filter:hue-rotate(330deg) saturate(2.5)!important;}
-#n60ParticleCanvas{opacity:0.3!important;}
-.scan-grid{background-image:radial-gradient(ellipse 90% 160% at 20% 50%,rgba(160,0,0,0.16) 0%,transparent 55%),linear-gradient(rgba(180,0,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(180,0,0,0.03) 1px,transparent 1px)!important;background-size:100% 100%,100px 100px,100px 100px!important;}
-.scan-overlay{background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 3px)!important;}
-body,.shell,.main,.content,#view-dashboard,.p,.ph,.orb-panel,#orbPanel,#eosOrbWrap{overflow:visible!important;}
-.sb{background:rgba(4,0,1,0.98)!important;border-right:1px solid rgba(180,0,0,0.4)!important;box-shadow:2px 0 30px rgba(150,0,0,0.18)!important;z-index:20!important;}
-.sb *{font-family:'Share Tech Mono','Courier New',monospace!important;}
-#view-dashboard>div{background:rgba(5,0,2,0.75)!important;backdrop-filter:blur(20px) saturate(1.5)!important;-webkit-backdrop-filter:blur(20px) saturate(1.5)!important;border:none!important;border-top:1px solid rgba(200,0,0,0.35)!important;border-left:1px solid rgba(200,0,0,0.1)!important;border-right:1px solid rgba(200,0,0,0.08)!important;border-bottom:1px solid rgba(200,0,0,0.06)!important;box-shadow:0 -1px 0 rgba(200,0,0,0.2),0 0 30px rgba(0,0,0,0.8),inset 0 1px 0 rgba(200,0,0,0.08)!important;border-radius:2px!important;overflow:visible!important;}
-#view-dashboard>div::before,#view-dashboard>div::after{display:none!important;content:none!important;}
-#orbPanel,.orb-panel{background:radial-gradient(ellipse at 50% 45%,rgba(180,0,0,0.08) 0%,rgba(0,0,0,0.7) 60%)!important;border-top:1px solid rgba(200,0,0,0.4)!important;box-shadow:0 0 80px rgba(150,0,0,0.12),inset 0 0 40px rgba(200,0,0,0.03)!important;}
-#eosOrbCanvas{filter:drop-shadow(0 0 12px rgba(230,0,0,1)) drop-shadow(0 0 30px rgba(200,0,0,0.95)) drop-shadow(0 0 60px rgba(180,0,0,0.8)) drop-shadow(0 0 100px rgba(150,0,0,0.55)) drop-shadow(0 0 160px rgba(120,0,0,0.3))!important;transform:scale(0.85)!important;transform-origin:center!important;}
-.orb-v-ring{position:absolute!important;border-radius:50%!important;top:50%!important;left:50%!important;pointer-events:none!important;background:transparent!important;}
-.orb-v-ring.r1{width:220px!important;height:220px!important;border:1.5px solid rgba(220,0,0,0.8)!important;box-shadow:0 0 10px rgba(200,0,0,0.5)!important;animation:v43cw 5s linear infinite!important;transform:translate(-50%,-50%)!important;}
-.orb-v-ring.r2{width:300px!important;height:300px!important;border:1px dashed rgba(200,0,0,0.5)!important;animation:v43ccw 9s linear infinite!important;transform:translate(-50%,-50%)!important;}
-.orb-v-ring.r3{width:390px!important;height:390px!important;border:1px solid rgba(200,0,0,0.25)!important;animation:v43cw 17s linear infinite!important;transform:translate(-50%,-50%)!important;}
-#eosOrbWrap::before{content:''!important;position:absolute!important;width:480px!important;height:480px!important;border-radius:50%!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;border:1px dashed rgba(180,0,0,0.12)!important;animation:v43breathe 8s ease-in-out infinite!important;pointer-events:none!important;}
-.tb,.topbar,[class*="topbar"]{background:rgba(2,0,0,0.98)!important;border-bottom:1px solid rgba(180,0,0,0.45)!important;box-shadow:0 2px 20px rgba(150,0,0,0.15)!important;}
-.tb *,.topbar *{font-family:'Share Tech Mono','Courier New',monospace!important;}
-#viewTitle{font-family:'Orbitron',sans-serif!important;font-weight:700!important;font-size:10px!important;letter-spacing:0.3em!important;color:rgba(220,70,70,0.95)!important;text-shadow:0 0 10px rgba(200,0,0,0.6)!important;text-transform:uppercase!important;}
-#clock,#n60Clock,#tbDateLbl{font-family:'Share Tech Mono',monospace!important;letter-spacing:0.08em!important;color:rgba(180,100,100,0.8)!important;}
-#systemStatus{color:rgba(80,220,80,0.85)!important;text-shadow:0 0 6px rgba(0,200,0,0.4)!important;}
-#mainTabBar{background:rgba(3,0,1,0.97)!important;border-bottom:1px solid rgba(160,0,0,0.3)!important;}
-#mainTabBar *{font-family:'Share Tech Mono',monospace!important;font-size:9px!important;letter-spacing:0.18em!important;text-transform:uppercase!important;color:rgba(160,60,60,0.7)!important;transition:all 0.2s!important;}
-#mainTabBar .active,#tab-dashboard.active,[class*="tab-active"]{color:rgba(230,80,80,1)!important;border-bottom:2px solid rgba(210,0,0,0.9)!important;background:rgba(200,0,0,0.08)!important;text-shadow:0 0 8px rgba(200,0,0,0.5)!important;}
-#presenceBar{background:linear-gradient(90deg,rgba(130,0,0,0.6),rgba(240,10,0,1),rgba(130,0,0,0.6))!important;height:2px!important;box-shadow:0 0 8px rgba(220,0,0,0.9),0 0 18px rgba(200,0,0,0.5),0 0 35px rgba(180,0,0,0.25)!important;}
-[id*="Fill"],[id*="fill"]:not(input),[class*="fill"]:not(input),[class*="bar-fill"]{background:linear-gradient(90deg,rgba(120,0,0,0.9),rgba(210,20,0,1))!important;box-shadow:0 0 7px rgba(200,20,0,0.7)!important;}
-[id*="Val"],[id*="Score"],[class*="big-num"],[class*="stat-val"],#n75OrkiVal,#n75FocusVal,#n75MetasVal,#n75IdeasVal,#n75TareasVal{font-family:'Share Tech Mono',monospace!important;color:rgba(220,70,70,0.95)!important;text-shadow:0 0 7px rgba(200,0,0,0.7)!important;}
-#eosHeartbeat{filter:drop-shadow(0 0 4px rgba(200,0,0,0.9)) drop-shadow(0 0 10px rgba(200,0,0,0.5))!important;}
-#hbLine{stroke:#ff1515!important;stroke-width:1.8!important;}
-#n60ScanSweep{background:linear-gradient(90deg,transparent,rgba(200,0,0,0.5),transparent)!important;box-shadow:0 0 20px rgba(200,0,0,0.4)!important;height:2px!important;}
-[id^="orki-"]{border:1px solid rgba(190,0,0,0.4)!important;background:rgba(180,0,0,0.06)!important;box-shadow:0 0 8px rgba(180,0,0,0.15)!important;font-family:'Share Tech Mono',monospace!important;}
-#orbLabel{font-family:'Orbitron',sans-serif!important;font-size:7px!important;font-weight:700!important;letter-spacing:0.55em!important;text-transform:uppercase!important;color:rgba(190,0,0,0.85)!important;text-shadow:0 0 7px rgba(200,0,0,0.7)!important;}
-#n64StatusStrip{background:rgba(2,0,0,0.98)!important;border-top:1px solid rgba(160,0,0,0.25)!important;font-family:'Share Tech Mono',monospace!important;font-size:8px!important;letter-spacing:0.08em!important;}
-button:not([id*="boot"]):not([id*="acc"]){font-family:'Share Tech Mono',monospace!important;font-size:9px!important;letter-spacing:0.12em!important;text-transform:uppercase!important;border:1px solid rgba(180,0,0,0.3)!important;background:rgba(180,0,0,0.05)!important;color:rgba(190,70,70,0.85)!important;transition:all 0.15s ease!important;}
-button:not([id*="boot"]):not([id*="acc"]):hover{background:rgba(180,0,0,0.12)!important;border-color:rgba(200,0,0,0.55)!important;box-shadow:0 0 10px rgba(180,0,0,0.25)!important;}
-input,textarea{font-family:'Share Tech Mono',monospace!important;background:rgba(180,0,0,0.04)!important;border:1px solid rgba(180,0,0,0.22)!important;color:rgba(210,160,160,0.9)!important;}
-#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{pointer-events:all!important;}
-html::before{content:''!important;position:fixed!important;top:10px!important;left:10px!important;width:40px!important;height:40px!important;border-top:1.5px solid rgba(200,0,0,0.85)!important;border-left:1.5px solid rgba(200,0,0,0.85)!important;z-index:9999!important;pointer-events:none!important;animation:v43corner 4s ease-in-out infinite!important;}
-html::after{content:''!important;position:fixed!important;bottom:10px!important;right:10px!important;width:40px!important;height:40px!important;border-bottom:1.5px solid rgba(200,0,0,0.85)!important;border-right:1.5px solid rgba(200,0,0,0.85)!important;z-index:9999!important;pointer-events:none!important;animation:v43corner 4s ease-in-out infinite!important;animation-delay:2s!important;}
-#eos-radar-sweep::before{content:''!important;position:fixed!important;top:10px!important;right:10px!important;width:40px!important;height:40px!important;border-top:1.5px solid rgba(200,0,0,0.85)!important;border-right:1.5px solid rgba(200,0,0,0.85)!important;z-index:9999!important;pointer-events:none!important;animation:v43corner 4s ease-in-out infinite!important;animation-delay:1s!important;}
-#eos-radar-sweep::after{content:''!important;position:fixed!important;bottom:10px!important;left:10px!important;width:40px!important;height:40px!important;border-bottom:1.5px solid rgba(200,0,0,0.85)!important;border-left:1.5px solid rgba(200,0,0,0.85)!important;z-index:9999!important;pointer-events:none!important;animation:v43corner 4s ease-in-out infinite!important;animation-delay:3s!important;}
-@keyframes v43cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
-@keyframes v43ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
-@keyframes v43breathe{0%,100%{opacity:0.2;transform:translate(-50%,-50%) scale(1);}50%{opacity:0.55;transform:translate(-50%,-50%) scale(1.015);}}
-@keyframes v43corner{0%,100%{opacity:0.4;}50%{opacity:0.85;}}
-@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
-@keyframes eos-arc-spin{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
-@keyframes eos-arc-spin-rev{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
-@keyframes eos-ring-breathe-slow{0%,100%{opacity:0.4;}50%{opacity:0.8;}}
-@keyframes eos-hud-corner-pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+
+/* ═══ EOS AGENT v5.0 MAXIMUM JARVIS ═══ */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&display=swap');
+
+/* ── BASE ─────────────────────────────── */
+*{box-sizing:border-box;}
+body{background:#000!important;overflow-x:hidden!important;}
+
+/* ── BACKGROUND LAYERS ────────────────── */
+#bg{opacity:0.18!important;filter:hue-rotate(330deg) saturate(3)!important;}
+#n60ParticleCanvas{opacity:0.45!important;}
+
+/* SCAN GRID — hex-inspired + radial */
+.scan-grid{
+  background-image:
+    radial-gradient(ellipse 70% 120% at 18% 50%, rgba(180,0,0,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 60% at 82% 50%, rgba(120,0,0,0.12) 0%, transparent 45%),
+    linear-gradient(rgba(180,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(rgba(180,0,0,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,0,0,0.015) 1px, transparent 1px)!important;
+  background-size:100% 100%, 100% 100%, 80px 80px, 80px 80px, 20px 20px, 20px 20px!important;
+}
+
+/* SCAN OVERLAY — CRT scanlines */
+.scan-overlay{
+  background:repeating-linear-gradient(
+    0deg, transparent 0, transparent 2px,
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 3px
+  )!important;
+  animation:v50scanmove 8s linear infinite!important;
+}
+
+/* GLOBAL SCANLINE SWEEP */
+body::after{
+  content:''!important;
+  position:fixed!important;
+  top:-100vh!important;left:0!important;width:100%!important;height:200px!important;
+  background:linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(200,0,0,0.015) 40%,
+    rgba(220,30,0,0.04) 50%,
+    rgba(200,0,0,0.015) 60%,
+    transparent 100%
+  )!important;
+  animation:v50sweep 12s linear infinite!important;
+  pointer-events:none!important;
+  z-index:9999!important;
+}
+
+/* ── OVERFLOW RESET ───────────────────── */
+body,.shell,.main,.content,#view-dashboard,.p,.ph,.orb-panel,#orbPanel,#eosOrbWrap{
+  overflow:visible!important;
+}
+
+/* ── SIDEBAR ──────────────────────────── */
+.sb{
+  background:rgba(3,0,1,0.97)!important;
+  border-right:1px solid rgba(200,0,0,0.35)!important;
+  box-shadow:2px 0 40px rgba(150,0,0,0.2), inset -1px 0 20px rgba(100,0,0,0.08)!important;
+  z-index:20!important;
+  position:relative!important;
+}
+.sb::after{
+  content:''!important;position:absolute!important;
+  top:0!important;right:0!important;width:1px!important;height:100%!important;
+  background:linear-gradient(180deg,transparent,rgba(220,0,0,0.7) 30%,rgba(220,0,0,0.7) 70%,transparent)!important;
+}
+
+/* ── PANELS — glass with bracket corners ─ */
+#view-dashboard>div{
+  background:rgba(4,0,1,0.55)!important;
+  backdrop-filter:blur(28px) saturate(1.8)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(1.8)!important;
+  border:none!important;
+  border-top:1px solid rgba(220,0,0,0.45)!important;
+  border-left:1px solid rgba(220,0,0,0.12)!important;
+  border-right:1px solid rgba(220,0,0,0.08)!important;
+  border-bottom:1px solid rgba(220,0,0,0.07)!important;
+  box-shadow:
+    0 -2px 0 rgba(220,0,0,0.25),
+    0 0 40px rgba(0,0,0,0.85),
+    inset 0 0 60px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(220,0,0,0.1)!important;
+  border-radius:1px!important;
+  overflow:visible!important;
+  position:relative!important;
+}
+
+/* Bracket corners — top-left TL */
+#view-dashboard>div::before{
+  content:''!important;
+  display:block!important;
+  position:absolute!important;
+  top:-1px!important;left:-1px!important;
+  width:12px!important;height:12px!important;
+  border-top:2px solid rgba(240,20,0,0.9)!important;
+  border-left:2px solid rgba(240,20,0,0.9)!important;
+  background:none!important;
+  pointer-events:none!important;
+  z-index:5!important;
+  animation:v50corner 4s ease-in-out infinite!important;
+}
+/* Bracket corner — bottom-right BR */
+#view-dashboard>div::after{
+  content:''!important;
+  display:block!important;
+  position:absolute!important;
+  bottom:-1px!important;right:-1px!important;
+  width:12px!important;height:12px!important;
+  border-bottom:2px solid rgba(240,20,0,0.6)!important;
+  border-right:2px solid rgba(240,20,0,0.6)!important;
+  background:none!important;
+  pointer-events:none!important;
+  z-index:5!important;
+  animation:v50corner 4s ease-in-out infinite 2s!important;
+}
+
+/* ── ORB PANEL ─────────────────────────── */
+#orbPanel,.orb-panel{
+  background:radial-gradient(
+    ellipse at 50% 48%,
+    rgba(200,0,0,0.1) 0%,
+    rgba(120,0,0,0.05) 30%,
+    rgba(0,0,0,0.5) 65%,
+    rgba(0,0,0,0.75) 100%
+  )!important;
+  border-top:1px solid rgba(220,0,0,0.5)!important;
+  box-shadow:
+    0 0 100px rgba(160,0,0,0.15),
+    inset 0 0 60px rgba(180,0,0,0.04)!important;
+}
+
+/* ── ORB CANVAS ────────────────────────── */
+#eosOrbCanvas{
+  filter:
+    drop-shadow(0 0 8px rgba(255,30,0,1))
+    drop-shadow(0 0 20px rgba(220,0,0,1))
+    drop-shadow(0 0 45px rgba(200,0,0,0.9))
+    drop-shadow(0 0 80px rgba(180,0,0,0.7))
+    drop-shadow(0 0 130px rgba(150,0,0,0.45))
+    drop-shadow(0 0 200px rgba(120,0,0,0.25))!important;
+  transform:scale(0.88)!important;
+  transform-origin:center!important;
+}
+
+/* ── ORB RINGS (CSS fallback) ──────────── */
+.orb-v-ring{
+  position:absolute!important;border-radius:50%!important;
+  top:50%!important;left:50%!important;
+  pointer-events:none!important;background:transparent!important;
+}
+.orb-v-ring.r1{
+  width:230px!important;height:230px!important;
+  border:1.5px solid rgba(240,0,0,0.85)!important;
+  box-shadow:0 0 12px rgba(220,0,0,0.6),inset 0 0 12px rgba(220,0,0,0.2)!important;
+  animation:v50cw 4.5s linear infinite!important;
+  transform:translate(-50%,-50%)!important;
+}
+.orb-v-ring.r2{
+  width:310px!important;height:310px!important;
+  border:1px dashed rgba(210,0,0,0.55)!important;
+  animation:v50ccw 8s linear infinite!important;
+  transform:translate(-50%,-50%)!important;
+}
+.orb-v-ring.r3{
+  width:400px!important;height:400px!important;
+  border:1px solid rgba(190,0,0,0.28)!important;
+  animation:v50cw 16s linear infinite!important;
+  transform:translate(-50%,-50%)!important;
+}
+#eosOrbWrap::before{
+  content:''!important;position:absolute!important;
+  width:510px!important;height:510px!important;
+  border-radius:50%!important;top:50%!important;left:50%!important;
+  transform:translate(-50%,-50%)!important;
+  border:1px dashed rgba(160,0,0,0.13)!important;
+  animation:v50breathe 9s ease-in-out infinite!important;
+  pointer-events:none!important;
+}
+
+/* ── TOPBAR ─────────────────────────────── */
+.tb,.topbar,[class*="topbar"]{
+  background:rgba(2,0,0,0.97)!important;
+  border-bottom:1px solid rgba(200,0,0,0.5)!important;
+  box-shadow:0 2px 30px rgba(150,0,0,0.2),0 1px 0 rgba(200,0,0,0.15)!important;
+}
+#viewTitle{
+  font-family:'Orbitron',sans-serif!important;
+  font-weight:700!important;font-size:11px!important;
+  letter-spacing:0.35em!important;
+  color:rgba(240,60,60,0.98)!important;
+  text-shadow:0 0 8px rgba(220,0,0,0.7),0 0 20px rgba(200,0,0,0.4)!important;
+  text-transform:uppercase!important;
+}
+
+/* ── TABBAR ─────────────────────────────── */
+#mainTabBar{
+  background:rgba(3,0,1,0.97)!important;
+  border-bottom:1px solid rgba(170,0,0,0.3)!important;
+}
+#mainTabBar *{
+  font-family:'Share Tech Mono',monospace!important;
+  font-size:9px!important;letter-spacing:0.2em!important;
+  text-transform:uppercase!important;color:rgba(160,60,60,0.65)!important;
+}
+#mainTabBar .active,[class*="tab-active"]{
+  color:rgba(240,80,80,1)!important;
+  border-bottom:2px solid rgba(220,0,0,0.95)!important;
+  background:rgba(200,0,0,0.07)!important;
+  text-shadow:0 0 10px rgba(210,0,0,0.6)!important;
+}
+
+/* ── PRESENCE BAR ─────────────────────── */
+#presenceBar{
+  background:linear-gradient(90deg,rgba(100,0,0,0.4),rgba(255,10,0,1) 20%,rgba(255,40,0,1) 50%,rgba(255,10,0,1) 80%,rgba(100,0,0,0.4))!important;
+  height:2px!important;
+  box-shadow:0 0 6px rgba(255,0,0,1),0 0 15px rgba(220,0,0,0.8),0 0 30px rgba(200,0,0,0.5),0 0 60px rgba(180,0,0,0.25)!important;
+}
+
+/* ── HUD CORNER BRACKETS (global) ─────── */
+html::before{
+  content:''!important;position:fixed!important;
+  top:8px!important;left:8px!important;
+  width:36px!important;height:36px!important;
+  border-top:1.5px solid rgba(220,0,0,0.9)!important;
+  border-left:1.5px solid rgba(220,0,0,0.9)!important;
+  pointer-events:none!important;z-index:10000!important;
+  animation:v50corner 5s ease-in-out infinite!important;
+}
+html::after{
+  content:''!important;position:fixed!important;
+  bottom:8px!important;right:8px!important;
+  width:36px!important;height:36px!important;
+  border-bottom:1.5px solid rgba(220,0,0,0.6)!important;
+  border-right:1.5px solid rgba(220,0,0,0.6)!important;
+  pointer-events:none!important;z-index:10000!important;
+  animation:v50corner 5s ease-in-out infinite 2.5s!important;
+}
+
+/* ── POINTER-EVENTS SAFETY ────────────── */
+#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{
+  pointer-events:all!important;
+}
+
+/* ── KEYFRAMES ────────────────────────── */
+@keyframes v50cw{
+  from{transform:translate(-50%,-50%) rotate(0deg);}
+  to{transform:translate(-50%,-50%) rotate(360deg);}
+}
+@keyframes v50ccw{
+  from{transform:translate(-50%,-50%) rotate(0deg);}
+  to{transform:translate(-50%,-50%) rotate(-360deg);}
+}
+@keyframes v50breathe{
+  0%,100%{opacity:0.18;transform:translate(-50%,-50%) scale(1);}
+  50%{opacity:0.55;transform:translate(-50%,-50%) scale(1.04);}
+}
+@keyframes v50corner{
+  0%,100%{opacity:0.4;}
+  50%{opacity:1;}
+}
+@keyframes v50sweep{
+  0%{top:-200px;}
+  100%{top:110vh;}
+}
+@keyframes v50scanmove{
+  0%{background-position:0 0;}
+  100%{background-position:0 100px;}
+}
+@keyframes eos-fixed-spin-cw{
+  from{transform:rotate(0deg);}to{transform:rotate(360deg);}
+}
+@keyframes eos-fixed-spin-ccw{
+  from{transform:rotate(0deg);}to{transform:rotate(-360deg);}
+}
 
 </style>
 
