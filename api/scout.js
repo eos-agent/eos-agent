@@ -11,14 +11,11 @@ module.exports = async function handler(req, res) {
   if (!checkAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
 
   try {
-    // ── Búsquedas paralelas de oportunidades ─────────────
+    // ── Búsquedas paralelas de oportunidades (top 3) ─────
     const queries = [
-      { q: 'festivales música independiente Colombia convocatoria open call 2025 2026', label: 'FESTIVAL' },
-      { q: 'showcases emerging artists music LATAM Bogotá Medellín 2025', label: 'SHOWCASE' },
-      { q: 'sync licensing música indie documental película 2025 convocatoria', label: 'SYNC' },
-      { q: 'residencias artísticas música alternativa Colombia LATAM 2025', label: 'RESIDENCIA' },
-      { q: 'playlists curadores spotify indie español LATAM submissions 2025', label: 'PLAYLIST' },
-      { q: 'becas grants música emergente Colombia ministerio cultura 2025', label: 'BECA' }
+      { q: 'festivales showcases música independiente Colombia LATAM convocatoria open call 2025 2026', label: 'FESTIVAL/SHOWCASE' },
+      { q: 'sync licensing playlists spotify curadores música indie español LATAM submissions 2025', label: 'SYNC/PLAYLIST' },
+      { q: 'becas residencias grants música emergente alternativa Colombia 2025', label: 'BECA/RESIDENCIA' }
     ];
 
     const results = await Promise.allSettled(
@@ -62,7 +59,7 @@ Genera:
 
 Solo información verificable de los datos web. Sé específico.`;
 
-    const report = await callClaude(prompt, '', 1000);
+    const report = await callClaude(prompt, '', 700);
 
     // ── Enviar a Telegram ─────────────────────────────────
     const sent = await sendTelegram(report);

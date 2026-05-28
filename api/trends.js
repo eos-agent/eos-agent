@@ -66,7 +66,7 @@ Genera el análisis:
 
 Cinematográfico, estratégico, nunca genérico.`;
 
-    const report = await callClaude(prompt, '', 900);
+    const report = await callClaude(prompt, '', 650);
 
     // ── Telegram ──────────────────────────────────────────
     const sent = await sendTelegram(report);
