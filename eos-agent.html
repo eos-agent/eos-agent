@@ -9690,56 +9690,31 @@ body.mode-rusia::before {
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
 </style>
 
-<style id="eos-ultra-v11">/* EOS AGENT v11.0 — LIVING INTELLIGENCE SYSTEM */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
+<style id="eos-ultra-v11">
 *{box-sizing:border-box;}
 body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;}
-
-/* ── HIDE ALL ORIGINAL CHROME ────────────────── */
 .sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar{display:none!important;}
-
-/* ── MAKE MAIN A TRANSPARENT CANVAS ──────────── */
 .shell{background:transparent!important;position:absolute!important;inset:0!important;}
 .main{background:transparent!important;width:100vw!important;height:100vh!important;position:absolute!important;top:0!important;left:0!important;}
 .content,#content{background:transparent!important;width:100%!important;height:100%!important;overflow:visible!important;}
 #view-dashboard{background:transparent!important;position:relative!important;overflow:visible!important;}
-
-/* Hide ALL grid panels — ORB gets extracted via JS */
 #view-dashboard>div{visibility:hidden!important;pointer-events:none!important;}
-
-/* ── ORB: glow & breathe ───────────────────── */
 #eosOrbCanvas{
-  filter:
-    drop-shadow(0 0 18px rgba(210,18,24,1))
-    drop-shadow(0 0 50px rgba(175,12,18,0.82))
-    drop-shadow(0 0 105px rgba(135,8,14,0.58))
-    drop-shadow(0 0 185px rgba(92,5,10,0.34))
-    drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;
+  filter:drop-shadow(0 0 18px rgba(210,18,24,1)) drop-shadow(0 0 50px rgba(175,12,18,0.82))
+          drop-shadow(0 0 105px rgba(135,8,14,0.58)) drop-shadow(0 0 185px rgba(92,5,10,0.34))
+          drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;
   animation:v11breathe 8s ease-in-out infinite!important;
   display:block!important;visibility:visible!important;
 }
 #eosOrbWrap{overflow:visible!important;display:block!important;visibility:visible!important;}
-.orb-v-ring{position:absolute!important;border-radius:50%!important;top:50%!important;left:50%!important;pointer-events:none!important;background:transparent!important;visibility:visible!important;}
-.orb-v-ring.r1{width:215px!important;height:215px!important;border:1px solid rgba(185,16,22,0.2)!important;animation:v11cw 18s linear infinite!important;transform:translate(-50%,-50%)!important;}
-.orb-v-ring.r2{width:302px!important;height:302px!important;border:1px solid rgba(155,12,16,0.09)!important;animation:v11ccw 32s linear infinite!important;transform:translate(-50%,-50%)!important;}
-.orb-v-ring.r3{width:402px!important;height:402px!important;border:1px solid rgba(120,8,12,0.045)!important;animation:v11cw 56s linear infinite!important;transform:translate(-50%,-50%)!important;}
-
-/* Background elements */
-#bg{opacity:0.06!important;filter:hue-rotate(352deg) saturate(1.2) brightness(0.35)!important;display:block!important;}
-#n60ParticleCanvas{opacity:0.1!important;display:block!important;}
-.scan-grid,.scan-overlay{display:none!important;}
-html::before,html::after,body::before,body::after{display:none!important;}
-
-/* Boot always on top */
 #eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{
   display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;
 }
-
+#eos-thought{transition:opacity 0.4s ease;}
 @keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
 @keyframes v11cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
 @keyframes v11ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
-@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}</style></head>
+</style></head>
 <body>
 <!-- ══ N108 JARVIS THINKING STATE — overlay elements ══ -->
 <span id="eosMoodTag"></span>
@@ -41669,323 +41644,203 @@ if(!window.__n149Patched){
     }).join('\n');
 
     return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n
-<script id="eos-v11-living"><script id="eos-v11-living">
+</script><script id="eos-v11-living">
 (function(){
-  // ── FONTS ──────────────────────────────────────────
-  if(!document.getElementById('eos-f11')){var l=document.createElement('link');l.id='eos-f11';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap';document.head.appendChild(l);}
+'use strict';
 
-  // ── EXTRA STYLES ───────────────────────────────────
-  var xs=document.createElement('style');
-  xs.textContent=[
-    '@keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}',
-    '@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}',
-    '@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}',
-    '@keyframes v11fog{0%,100%{opacity:0.38;}50%{opacity:0.78;}}',
-    '@keyframes v11dot{0%,100%{opacity:0.3;transform:scale(1);}50%{opacity:1;transform:scale(1.6);}}',
-    '@keyframes v11pulse{0%,100%{opacity:0.4;}50%{opacity:1;}}',
-    '@keyframes v11fadein{from{opacity:0;}to{opacity:1;}}',
-    '@keyframes v11slideright{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}',
-    '@keyframes v11slideup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}',
-    '@keyframes v11dockup{from{opacity:0;transform:translateX(-50%) translateY(12px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}',
-    '@keyframes v11think{0%{opacity:0.3;}33%{opacity:0.9;}66%{opacity:0.5;}100%{opacity:0.3;}}',
-    '.eos11-panel{transition:background 0.5s ease,box-shadow 0.5s ease;}',
-    '.eos11-panel:hover{background:rgba(14,6,6,0.6)!important;box-shadow:0 16px 80px rgba(0,0,0,0.82),0 0 0 1px rgba(90,10,12,0.16),0 0 50px rgba(105,8,12,0.12)!important;}',
-    '.eos11-dock-btn{transition:transform 0.22s ease;}',
-    '.eos11-dock-btn:hover{transform:translateY(-3px)!important;}',
-  ].join('');
-  document.head.appendChild(xs);
+// ── PARTICLES ───────────────────────────────────────────────────
+function buildParticles(){
+  var cv=document.createElement('canvas');
+  cv.id='eos-particles';
+  cv.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;z-index:8;pointer-events:none;';
+  document.body.appendChild(cv);
+  var W=cv.width=window.innerWidth, H=cv.height=window.innerHeight;
+  var ctx=cv.getContext('2d');
+  var pts=[];
+  for(var i=0;i<70;i++){
+    var a=Math.random()*Math.PI*2, r=Math.random()*180;
+    pts.push({
+      x:W/2+Math.cos(a)*r, y:H/2+Math.sin(a)*r,
+      vx:(Math.random()-0.5)*0.22, vy:(Math.random()-0.5)*0.18,
+      op:Math.random()*0.45+0.08, s:Math.random()*1.5+0.5
+    });
+  }
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.s,0,Math.PI*2);
+      ctx.fillStyle='rgba(158,14,20,'+p.op+')';
+      ctx.fill();
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
 
-  var W=window.innerWidth, H=window.innerHeight;
-  function T(){var d=new Date();return('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);}
+// ── ATMOSPHERE GLOW ─────────────────────────────────────────────
+function buildAtmosphere(){
+  var el=document.createElement('div');
+  el.id='eos-atmo';
+  el.style.cssText='position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(ellipse 60% 55% at 50% 48%,rgba(140,8,14,0.09) 0%,transparent 70%);';
+  document.body.appendChild(el);
+}
 
-  // ── 1. PARTICLE CANVAS ─────────────────────────────
-  function buildParticles(){
-    var cv=document.createElement('canvas');
-    cv.id='eos-particles';
-    cv.style.cssText='position:fixed;inset:0;z-index:8;pointer-events:none;';
-    cv.width=W;cv.height=H;
-    document.body.appendChild(cv);
-    var ctx=cv.getContext('2d');
-    // 70 ambient particles, clustered near center
-    var pts=[];
-    for(var i=0;i<70;i++){
-      var angle=Math.random()*Math.PI*2;
-      var dist=Math.random()*350+50;
-      pts.push({
-        x:W/2+Math.cos(angle)*dist*(0.5+Math.random()),
-        y:H/2+Math.sin(angle)*dist*(0.5+Math.random()),
-        vx:(Math.random()-0.5)*0.22,
-        vy:(Math.random()-0.5)*0.18,
-        r:Math.random()*1.4+0.3,
-        a:Math.random()*0.28+0.04,
-        da:(Math.random()-0.5)*0.002
-      });
+// ── TOP STATUS ──────────────────────────────────────────────────
+function buildTop(){
+  var el=document.createElement('div');
+  el.id='eos-top';
+  el.style.cssText='position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:9100;display:flex;align-items:center;gap:24px;pointer-events:none;';
+  el.innerHTML='<span style="font-family:Space Grotesk,Inter,sans-serif;font-size:11px;letter-spacing:0.18em;color:rgba(220,200,200,0.35);font-weight:300;">EOS AGENT</span>'
+    +'<span style="width:4px;height:4px;border-radius:50%;background:rgba(190,18,24,0.7);box-shadow:0 0 8px rgba(190,18,24,0.8);display:inline-block;animation:v11breathe 2s ease-in-out infinite;"></span>'
+    +'<span style="font-family:Inter,sans-serif;font-size:10px;letter-spacing:0.12em;color:rgba(180,160,160,0.25);font-weight:300;">SISTEMA ACTIVO</span>';
+  document.body.appendChild(el);
+}
+
+// ── RIGHT PANEL ─────────────────────────────────────────────────
+function buildRightPanel(){
+  var agents=[
+    {name:'Scout',state:'SCANNING'},
+    {name:'Outreach',state:'STANDBY'},
+    {name:'Trends',state:'MONITORING'},
+    {name:'Creative',state:'READY'},
+    {name:'Memory',state:'ACTIVE'}
+  ];
+  var thoughts=[
+    'Analizando patrones culturales en LATAM...',
+    'Detectando oportunidades de networking...',
+    'Procesando tendencias cinematográficas...',
+    'Evaluando posicionamiento de EOS...',
+    'Monitoreando escena alternativa Bogotá...'
+  ];
+  var panel=document.createElement('div');
+  panel.id='eos-right-panel';
+  panel.style.cssText='position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:9100;width:240px;'
+    +'backdrop-filter:blur(52px);-webkit-backdrop-filter:blur(52px);'
+    +'background:rgba(9,4,4,0.42);border:1px solid rgba(160,12,18,0.1);border-radius:16px;'
+    +'padding:20px 18px;font-family:Inter,sans-serif;pointer-events:none;';
+
+  var agentsHTML='<div style="font-size:9px;letter-spacing:0.16em;color:rgba(180,140,140,0.4);margin-bottom:14px;font-weight:400;">AGENTES</div>';
+  agents.forEach(function(a){
+    var col=a.state==='ACTIVE'||a.state==='MONITORING'?'rgba(120,220,140,0.7)':
+            a.state==='SCANNING'?'rgba(190,18,24,0.8)':'rgba(140,120,120,0.4)';
+    agentsHTML+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+      +'<span style="font-size:11px;color:rgba(210,190,190,0.65);font-weight:300;">'+a.name+'</span>'
+      +'<div style="display:flex;align-items:center;gap:6px;">'
+      +'<div style="width:5px;height:5px;border-radius:50%;background:'+col+';box-shadow:0 0 6px '+col+';"></div>'
+      +'<span style="font-size:9px;color:'+col+';letter-spacing:0.1em;">'+a.state+'</span>'
+      +'</div></div>';
+  });
+
+  var thoughtsDiv='<div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(120,8,12,0.12);">'
+    +'<div style="font-size:9px;letter-spacing:0.16em;color:rgba(180,140,140,0.35);margin-bottom:10px;">PROCESANDO</div>'
+    +'<div id="eos-thought" style="font-size:10.5px;color:rgba(200,170,170,0.55);line-height:1.6;font-weight:300;min-height:50px;">'+thoughts[0]+'</div>'
+    +'</div>';
+
+  panel.innerHTML=agentsHTML+thoughtsDiv;
+  document.body.appendChild(panel);
+
+  var ti=0;
+  setInterval(function(){
+    ti=(ti+1)%thoughts.length;
+    var el=document.getElementById('eos-thought');
+    if(el){el.style.opacity='0';setTimeout(function(){el.textContent=thoughts[ti];el.style.opacity='1';},400);}
+  },5000);
+}
+
+// ── DOCK ────────────────────────────────────────────────────────
+function buildDock(){
+  var items=[
+    {icon:'◉',label:'Central'},
+    {icon:'◈',label:'Memoria'},
+    {icon:'◎',label:'Scout'},
+    {icon:'┊',label:'',sep:true},
+    {icon:'◇',label:'Outreach'},
+    {icon:'◆',label:'Lab'},
+    {icon:'◉',label:'Trends'},
+    {icon:'◫',label:'Agenda'}
+  ];
+  var dock=document.createElement('div');
+  dock.id='eos-dock';
+  dock.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9200;'
+    +'display:flex;align-items:center;gap:2px;'
+    +'backdrop-filter:blur(44px);-webkit-backdrop-filter:blur(44px);'
+    +'background:rgba(8,3,3,0.52);border:1px solid rgba(140,10,16,0.14);'
+    +'border-radius:50px;padding:8px 16px;pointer-events:all;';
+
+  items.forEach(function(item){
+    if(item.sep){
+      var sep=document.createElement('div');
+      sep.style.cssText='width:1px;height:22px;background:rgba(120,8,12,0.2);margin:0 6px;';
+      dock.appendChild(sep);
+      return;
     }
-    function draw(){
-      ctx.clearRect(0,0,cv.width,cv.height);
-      pts.forEach(function(p){
-        p.x+=p.vx; p.y+=p.vy; p.a+=p.da;
-        if(p.a<0.03)p.da=Math.abs(p.da);
-        if(p.a>0.32)p.da=-Math.abs(p.da);
-        if(p.x<0)p.x=cv.width; if(p.x>cv.width)p.x=0;
-        if(p.y<0)p.y=cv.height; if(p.y>cv.height)p.y=0;
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,6.28);
-        ctx.fillStyle='rgba(158,14,20,'+p.a.toFixed(3)+')';
-        ctx.fill();
-      });
-      requestAnimationFrame(draw);
-    }
-    draw();
-    window.addEventListener('resize',function(){cv.width=window.innerWidth;cv.height=window.innerHeight;});
-  }
+    var btn=document.createElement('div');
+    btn.style.cssText='display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;'
+      +'cursor:pointer;border-radius:10px;transition:background 0.2s;';
+    btn.innerHTML='<span style="font-size:13px;color:rgba(200,160,160,0.6);line-height:1;">'+item.icon+'</span>'
+      +'<span style="font-size:8px;color:rgba(170,130,130,0.4);letter-spacing:0.08em;font-family:Inter,sans-serif;">'+item.label+'</span>';
+    btn.addEventListener('mouseenter',function(){this.style.background='rgba(140,10,16,0.15)';});
+    btn.addEventListener('mouseleave',function(){this.style.background='transparent';});
+    dock.appendChild(btn);
+  });
 
-  // ── 2. ATMOSPHERIC LAYERS ──────────────────────────
-  function buildAtmosphere(){
-    var a=document.createElement('div');
-    a.style.cssText='position:fixed;inset:0;z-index:10;pointer-events:none;'
-      +'background:'
-      +'radial-gradient(ellipse 52% 68% at 50% 50%,rgba(115,10,14,0.24) 0%,transparent 52%),'
-      +'radial-gradient(ellipse 85% 22% at 50% 100%,rgba(55,3,7,0.28) 0%,transparent 50%),'
-      +'radial-gradient(ellipse 85% 22% at 50% 0%,rgba(35,2,4,0.18) 0%,transparent 50%),'
-      +'radial-gradient(ellipse 18% 100% at 0% 50%,rgba(25,1,3,0.22) 0%,transparent 55%),'
-      +'radial-gradient(ellipse 18% 100% at 100% 50%,rgba(25,1,3,0.22) 0%,transparent 55%);';
-    document.body.appendChild(a);
-    // ORB fog
-    var fog=document.createElement('div');
-    fog.style.cssText='position:fixed;border-radius:50%;pointer-events:none;z-index:12;'
-      +'width:640px;height:640px;left:calc(50% - 320px);top:calc(50% - 320px);'
-      +'background:radial-gradient(ellipse,rgba(122,10,15,0.18) 0%,rgba(80,5,9,0.08) 40%,transparent 68%);'
-      +'animation:v11fog 10s ease-in-out infinite;';
-    document.body.appendChild(fog);
-  }
+  document.body.appendChild(dock);
+}
 
-  // ── 3. EXTRACT & CENTER ORB ────────────────────────
-  function extractOrb(){
-    var wrap=document.getElementById('eosOrbWrap');
-    if(!wrap||!wrap.getBoundingClientRect().width){setTimeout(extractOrb,400);return;}
-    if(document.getElementById('eos-orb-center'))return;
-    var host=document.createElement('div');
-    host.id='eos-orb-center';
-    host.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-55%);z-index:50;overflow:visible;';
-    document.body.appendChild(host);
-    host.appendChild(wrap);
-    // Add extra rings around extracted ORB
-    [{s:240,c:'rgba(180,15,20,0.18)',d:'19s',dir:'cw'},
-     {s:340,c:'rgba(148,10,14,0.08)',d:'33s',dir:'ccw'},
-     {s:455,c:'rgba(112,7,11,0.04)',d:'60s',dir:'cw'}
-    ].forEach(function(r){
-      var el=document.createElement('div');
-      el.style.cssText='position:absolute;border-radius:50%;background:transparent;pointer-events:none;'
-        +'width:'+r.s+'px;height:'+r.s+'px;'
-        +'top:50%;left:50%;transform:translate(-50%,-50%);'
-        +'border:1px solid '+r.c+';'
-        +'animation:eos-fixed-spin-'+r.dir+' '+r.d+' linear infinite;';
-      host.appendChild(el);
-    });
-    // nucleus label
-    var lbl=document.createElement('div');
-    lbl.style.cssText='position:absolute;bottom:-44px;left:50%;transform:translateX(-50%);'
-      +'text-align:center;pointer-events:none;white-space:nowrap;';
-    lbl.innerHTML='<div style="font-family:Space Grotesk,sans-serif;font-size:7.5px;font-weight:600;'
-      +'letter-spacing:0.35em;color:rgba(185,155,150,0.32);text-transform:uppercase;margin-bottom:4px;">NÚCLEO</div>'
-      +'<div style="display:flex;align-items:center;justify-content:center;gap:5px;">'
-      +'<span style="width:3px;height:3px;border-radius:50%;background:rgba(158,16,22,0.7);'
-      +'animation:v11pulse 2.5s ease-in-out infinite;display:inline-block;"></span>'
-      +'<span style="font-family:Inter,sans-serif;font-size:7px;letter-spacing:0.1em;'
-      +'color:rgba(162,135,130,0.28);text-transform:uppercase;">Activo</span>'
-      +'</div>';
-    host.appendChild(lbl);
-  }
+// ── ORB EXTRACTION ──────────────────────────────────────────────
+function extractOrb(){
+  var wrap=document.getElementById('eosOrbWrap');
+  if(!wrap||!wrap.getBoundingClientRect().width){setTimeout(extractOrb,500);return;}
 
-  // ── 4. TOP STATUS ──────────────────────────────────
-  function buildTop(){
-    var top=document.createElement('div');
-    top.style.cssText='position:fixed;top:0;left:0;right:0;height:44px;z-index:9200;pointer-events:none;'
-      +'display:flex;align-items:center;justify-content:space-between;padding:0 26px;'
-      +'background:linear-gradient(180deg,rgba(2,1,1,0.9) 0%,transparent 100%);'
-      +'animation:v11fadein 1s ease 0.2s both;';
-    top.innerHTML='<div style="display:flex;align-items:center;gap:10px;">'
-      +'<span style="font-family:Space Grotesk,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.32em;color:rgba(238,220,216,0.75);text-transform:uppercase;">E O S</span>'
-      +'<span style="width:4px;height:4px;border-radius:50%;background:rgba(158,16,22,0.85);display:inline-block;animation:v11dot 2.8s ease-in-out infinite;"></span>'
-      +'<span style="font-family:Inter,sans-serif;font-size:8px;font-weight:400;letter-spacing:0.09em;color:rgba(168,142,137,0.4);text-transform:uppercase;">Sistema Operativo Artístico</span>'
-      +'</div>'
-      +'<div style="display:flex;align-items:center;gap:14px;">'
-      +'<span style="font-family:Inter,sans-serif;font-size:7.5px;color:rgba(148,122,117,0.3);letter-spacing:0.06em;">'
-      +new Date().toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()+'</span>'
-      +'<span id="eos11-clock" style="font-family:Inter,monospace;font-size:9px;font-weight:300;color:rgba(160,132,127,0.36);letter-spacing:0.14em;">'+T()+'</span>'
-      +'</div>';
-    document.body.appendChild(top);
-    setInterval(function(){var c=document.getElementById('eos11-clock');if(c)c.textContent=T();},1000);
-  }
+  var host=document.createElement('div');
+  host.id='eos-orb-center';
+  host.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-55%);z-index:50;overflow:visible;';
+  document.body.appendChild(host);
+  host.appendChild(wrap);
 
-  // ── 5. RIGHT PANEL — Intelligence ─────────────────
-  function buildRightPanel(){
-    var p=document.createElement('div');
-    p.id='eos11-right';
-    p.className='eos11-panel';
-    p.style.cssText='position:fixed;right:26px;top:50%;transform:translateY(-50%);'
-      +'width:270px;z-index:9100;pointer-events:all;'
-      +'background:rgba(9,4,4,0.46);'
-      +'backdrop-filter:blur(52px) saturate(1.5);'
-      +'-webkit-backdrop-filter:blur(52px) saturate(1.5);'
-      +'border:1px solid rgba(75,8,10,0.1);'
-      +'border-radius:16px;padding:22px 20px;'
-      +'box-shadow:0 10px 60px rgba(0,0,0,0.75),0 0 0 1px rgba(50,4,7,0.06);'
-      +'animation:v11slideright 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s both;';
+  // orbital rings
+  [{s:215,dur:'18s',dir:1},{s:302,dur:'32s',dir:-1},{s:402,dur:'56s',dir:1}].forEach(function(r){
+    var ring=document.createElement('div');
+    ring.style.cssText='position:absolute;top:50%;left:50%;'
+      +'width:'+r.s+'px;height:'+r.s+'px;'
+      +'border-radius:50%;background:transparent;'
+      +'border:1px solid rgba(185,16,22,'+(r.dir===1?'0.18':'0.08')+');'
+      +'transform:translate(-50%,-50%);pointer-events:none;'
+      +'animation:v11'+(r.dir===1?'cw':'ccw')+' '+r.dur+' linear infinite;';
+    host.appendChild(ring);
+  });
 
-    // Agent states
-    var agents=[
-      {i:'◈',n:'Scout Agent',  s:'Operativo', c:'rgba(142,188,128,0.78)'},
-      {i:'◉',n:'Trend Analyzer',s:'Analizando',c:'rgba(195,152,85,0.78)'},
-      {i:'◆',n:'Creative Lab', s:'Activo',     c:'rgba(142,188,128,0.78)'},
-      {i:'◌',n:'Outreach',     s:'Standby',    c:'rgba(155,148,140,0.45)'},
-      {i:'◎',n:'Memoria',      s:'Conectada',  c:'rgba(142,188,128,0.78)'}
-    ];
+  // nucleus label
+  var lbl=document.createElement('div');
+  lbl.style.cssText='position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);'
+    +'font-family:Space Grotesk,sans-serif;font-size:9px;letter-spacing:0.22em;'
+    +'color:rgba(200,140,140,0.35);white-space:nowrap;font-weight:300;';
+  lbl.textContent='NÚCLEO ACTIVO';
+  host.appendChild(lbl);
+}
 
-    var html='<div style="font-family:Space Grotesk,sans-serif;font-size:7.5px;font-weight:600;'
-      +'letter-spacing:0.28em;color:rgba(168,90,82,0.38);text-transform:uppercase;margin-bottom:16px;">Inteligencia · Estado</div>';
+// ── INIT ────────────────────────────────────────────────────────
+function init(){
+  buildParticles();
+  buildAtmosphere();
+  buildTop();
+  buildRightPanel();
+  buildDock();
+  setTimeout(extractOrb,800);
+}
 
-    agents.forEach(function(a){
-      html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;">'
-        +'<div style="display:flex;align-items:center;gap:8px;">'
-        +'<span style="font-size:11px;color:rgba(168,140,135,0.45);">'+a.i+'</span>'
-        +'<span style="font-family:Inter,sans-serif;font-size:9px;color:rgba(202,175,170,0.58);">'+a.n+'</span>'
-        +'</div>'
-        +'<div style="display:flex;align-items:center;gap:5px;">'
-        +'<span style="width:3px;height:3px;border-radius:50%;background:'+a.c+';display:inline-block;animation:v11pulse '+(2+Math.random()).toFixed(1)+'s ease-in-out infinite;"></span>'
-        +'<span style="font-family:Inter,sans-serif;font-size:7px;letter-spacing:0.07em;color:'+a.c+';text-transform:uppercase;">'+a.s+'</span>'
-        +'</div></div>';
-    });
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',init);
+} else {
+  init();
+}
 
-    // Thinking area
-    html+='<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(65,6,8,0.1);">'
-      +'<div style="font-family:Space Grotesk,sans-serif;font-size:7px;font-weight:600;'
-      +'letter-spacing:0.22em;color:rgba(158,85,78,0.35);text-transform:uppercase;margin-bottom:10px;">Pensamiento Activo</div>'
-      +'<div id="eos11-thinking" style="font-family:Inter,sans-serif;font-size:9px;'
-      +'color:rgba(192,165,160,0.48);line-height:1.65;font-style:italic;">'
-      +'"Analizando ecosistema artístico en LATAM..."'
-      +'</div>'
-      +'<div style="margin-top:10px;display:flex;gap:3px;align-items:center;">'
-      +'<span style="width:3px;height:3px;border-radius:50%;background:rgba(155,16,22,0.6);animation:v11think 1.5s ease-in-out infinite;display:inline-block;"></span>'
-      +'<span style="width:3px;height:3px;border-radius:50%;background:rgba(155,16,22,0.6);animation:v11think 1.5s ease-in-out infinite 0.5s;display:inline-block;"></span>'
-      +'<span style="width:3px;height:3px;border-radius:50%;background:rgba(155,16,22,0.6);animation:v11think 1.5s ease-in-out infinite 1s;display:inline-block;"></span>'
-      +'<span style="font-family:Inter,sans-serif;font-size:7px;color:rgba(150,122,117,0.32);margin-left:6px;letter-spacing:0.06em;">EOS · procesando</span>'
-      +'</div></div>'
-
-      // Quick actions
-      +'<div style="margin-top:16px;display:flex;gap:6px;flex-wrap:wrap;">'
-      +'<button onclick="var n=document.querySelector('[data-view=scout]');if(n)n.click();" '
-      +'style="font-family:Inter,sans-serif;font-size:7.5px;letter-spacing:0.08em;text-transform:uppercase;'
-      +'background:rgba(155,16,22,0.12);border:1px solid rgba(155,16,22,0.18);border-radius:6px;'
-      +'padding:5px 10px;color:rgba(205,175,170,0.65);cursor:pointer;transition:all 0.25s ease;"'
-      +' onmouseover="this.style.background='rgba(155,16,22,0.22)'" onmouseout="this.style.background='rgba(155,16,22,0.12)'">'
-      +'Scout</button>'
-      +'<button onclick="var n=document.querySelector('[data-view=lab]');if(n)n.click();" '
-      +'style="font-family:Inter,sans-serif;font-size:7.5px;letter-spacing:0.08em;text-transform:uppercase;'
-      +'background:rgba(155,16,22,0.12);border:1px solid rgba(155,16,22,0.18);border-radius:6px;'
-      +'padding:5px 10px;color:rgba(205,175,170,0.65);cursor:pointer;transition:all 0.25s ease;"'
-      +' onmouseover="this.style.background='rgba(155,16,22,0.22)'" onmouseout="this.style.background='rgba(155,16,22,0.12)'">'
-      +'Lab</button>'
-      +'<button onclick="var n=document.querySelector('[data-view=briefing]');if(n)n.click();" '
-      +'style="font-family:Inter,sans-serif;font-size:7.5px;letter-spacing:0.08em;text-transform:uppercase;'
-      +'background:rgba(155,16,22,0.12);border:1px solid rgba(155,16,22,0.18);border-radius:6px;'
-      +'padding:5px 10px;color:rgba(205,175,170,0.65);cursor:pointer;transition:all 0.25s ease;"'
-      +' onmouseover="this.style.background='rgba(155,16,22,0.22)'" onmouseout="this.style.background='rgba(155,16,22,0.12)'">'
-      +'Briefing</button>'
-      +'</div>';
-
-    p.innerHTML=html;
-    document.body.appendChild(p);
-
-    // Rotate thinking messages
-    var thoughts=[
-      '"Analizando ecosistema artístico en LATAM..."',
-      '"Monitoreando tendencias cinematográficas..."',
-      '"Explorando oportunidades de colaboración..."',
-      '"Procesando directivas de EOS Νέα Αρχή..."',
-      '"Scout activo — escaneando festivales..."',
-    ];
-    var ti=0;
-    setInterval(function(){
-      ti=(ti+1)%thoughts.length;
-      var el=document.getElementById('eos11-thinking');
-      if(el){el.style.opacity='0';setTimeout(function(){if(el)el.textContent=thoughts[ti].replace(/"/g,'');el.style.transition='opacity 0.6s';el.style.opacity='1';},400);}
-    },5000);
-  }
-
-  // ── 6. BOTTOM DOCK ────────────────────────────────
-  function buildDock(){
-    var dock=document.createElement('nav');
-    dock.id='eos11-dock';
-    dock.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);'
-      +'z-index:9200;pointer-events:all;display:flex;align-items:center;gap:1px;'
-      +'background:rgba(7,3,3,0.68);backdrop-filter:blur(44px) saturate(1.5);'
-      +'-webkit-backdrop-filter:blur(44px) saturate(1.5);'
-      +'border:1px solid rgba(65,6,9,0.1);border-radius:18px;padding:7px 12px;'
-      +'box-shadow:0 6px 44px rgba(0,0,0,0.72),0 0 0 1px rgba(40,3,5,0.06);'
-      +'animation:v11dockup 0.9s cubic-bezier(0.22,1,0.36,1) 0.35s both;';
-
-    var items=[
-      {id:'dashboard',i:'◈',l:'Central'},
-      {id:'memo',i:'◎',l:'Memoria'},
-      {id:'scout',i:'◉',l:'Scout'},
-      null,
-      {id:'outreach',i:'◌',l:'Outreach'},
-      {id:'lab',i:'◆',l:'Lab'},
-      {id:'trends',i:'◇',l:'Trends'},
-      {id:'agenda',i:'◫',l:'Agenda'}
-    ];
-
-    items.forEach(function(item,idx){
-      if(!item){var s=document.createElement('div');s.style.cssText='width:1px;height:22px;background:rgba(65,6,9,0.15);margin:0 4px;';dock.appendChild(s);return;}
-      var btn=document.createElement('button');
-      btn.className='eos11-dock-btn';
-      var isFirst=(items.indexOf(item)===0);
-      btn.style.cssText='background:none;border:none;cursor:pointer;outline:none;'
-        +'display:flex;flex-direction:column;align-items:center;gap:2px;'
-        +'padding:5px 10px;border-radius:10px;position:relative;';
-      btn.innerHTML='<span style="font-size:12px;line-height:1;color:rgba(178,150,145,'+(isFirst?'0.85':'0.38')+');">'+item.i+'</span>'
-        +'<span style="font-family:Inter,sans-serif;font-size:6.5px;letter-spacing:0.1em;text-transform:uppercase;'
-        +'color:rgba(160,132,127,'+(isFirst?'0.7':'0.26')+');">'+item.l+'</span>'
-        +(isFirst?'<span class="eos11-adot" style="position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:2px;height:2px;border-radius:50%;background:rgba(158,16,22,0.8);"></span>':'');
-
-      btn.addEventListener('click',function(){
-        document.querySelectorAll('.eos11-dock-btn').forEach(function(b){
-          b.querySelectorAll('span')[0].style.color='rgba(178,150,145,0.38)';
-          b.querySelectorAll('span')[1].style.color='rgba(160,132,127,0.26)';
-          var d=b.querySelector('.eos11-adot');if(d)d.remove();
-        });
-        btn.querySelectorAll('span')[0].style.color='rgba(242,225,220,0.88)';
-        btn.querySelectorAll('span')[1].style.color='rgba(225,205,200,0.7)';
-        var nd=document.createElement('span');nd.className='eos11-adot';
-        nd.style.cssText='position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:2px;height:2px;border-radius:50%;background:rgba(158,16,22,0.8);';
-        btn.appendChild(nd);
-        var nav=document.querySelector('[data-view="'+item.id+'"]')||document.querySelector('.nav-item[data-id="'+item.id+'"]');
-        if(nav)nav.click();
-      });
-      dock.appendChild(btn);
-    });
-    document.body.appendChild(dock);
-  }
-
-  // ── INIT SEQUENCE ─────────────────────────────────
-  function init(){
-    buildParticles();
-    buildAtmosphere();
-    buildTop();
-    buildRightPanel();
-    buildDock();
-    setTimeout(extractOrb,500);
-  }
-
-  // Add thinking keyframe
-  document.head.insertAdjacentHTML('beforeend','<style>@keyframes v11think{0%{opacity:0.28;}50%{opacity:0.9;}100%{opacity:0.28;}}</style>');
-
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(init,600);});}
-  else{setTimeout(init,400);}
 })();
-</script></script></body>\n</html>';
+</script></body>\n</html>';
   }
 
   window.eosExportConversation = function(){
