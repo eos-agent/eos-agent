@@ -9689,7 +9689,7 @@ body.mode-rusia::before {
 .n92-scan-v{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(200,0,0,.5),transparent);animation:n92ScanV 1.4s ease-out forwards;}
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
 </style>
-<link id="eos-fonts-v9" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap">
+<link id="eos-fonts-v10" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap">
 </head>
 <body>
 <!-- ══ N108 JARVIS THINKING STATE — overlay elements ══ -->
@@ -41619,237 +41619,297 @@ if(!window.__n149Patched){
       return '<div class="msg '+cls+'"><span class="lbl">'+role+'</span><p>'+content+'</p></div>';
     }).join('\n');
 
-    return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n<script id="eos-v9-cinematic">
+    return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n<script id="eos-v10-cinematic">
 (function(){
   // Fonts
-  if(!document.getElementById('eos-f9')){
-    var l=document.createElement('link');l.id='eos-f9';l.rel='stylesheet';
-    l.href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap';
-    document.head.appendChild(l);
-  }
+  if(!document.getElementById('eos-f10')){var l=document.createElement('link');l.id='eos-f10';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap';document.head.appendChild(l);}
 
-  // Extra keyframes + overlay styles
-  var st=document.createElement('style');
-  st.textContent=`
-    #eos-overlay-v9{animation:v90fadein 1.2s ease forwards;}
-    #eos-status-line{animation:v90fadeup 1s ease 0.3s both;}
-    #eos-context{animation:v90fadeup 1s ease 0.5s both;}
-    #eos-dock-v9{animation:v90dockslide 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s both;}
-    @keyframes v90fadein{from{opacity:0;}to{opacity:1;}}
-    @keyframes v90fadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-    @keyframes v90dockslide{from{opacity:0;transform:translateX(-50%) translateY(14px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
-    @keyframes v90dot{0%,100%{opacity:0.3;}50%{opacity:1;}}
-    @keyframes eos-fog-pulse{0%,100%{opacity:0.4;}50%{opacity:0.9;}}
-    @keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-    @keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
-    .eos-dock-item:hover .eos-di-label{opacity:0.9!important;}
-    .eos-dock-item:hover .eos-di-icon{color:rgba(245,230,225,0.9)!important;}
-    .eos-dock-item{transition:transform 0.2s ease;}
-    .eos-dock-item:hover{transform:translateY(-2px);}
-  `;
-  document.head.appendChild(st);
+  // Extra styles
+  var xs=document.createElement('style');
+  xs.textContent='.eos-panel{transition:box-shadow 0.5s ease,background 0.5s ease;}.eos-panel:hover{background:rgba(14,6,6,0.58)!important;box-shadow:0 12px 70px rgba(0,0,0,0.8),0 0 0 1px rgba(90,10,12,0.14),0 0 40px rgba(100,8,12,0.1)!important;}'
+    +'.eos-dock-btn{transition:transform 0.22s ease,color 0.22s ease;}.eos-dock-btn:hover{transform:translateY(-3px)!important;}'
+    +'.eos-nav-link{transition:color 0.28s ease;}.eos-nav-link:hover{color:rgba(245,228,222,0.88)!important;}'
+    +'@keyframes v10breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}'
+    +'@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}'
+    +'@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}'
+    +'@keyframes v10fog{0%,100%{opacity:0.4;}50%{opacity:0.82;}}'
+    +'@keyframes v10dot{0%,100%{opacity:0.32;transform:scale(1);}50%{opacity:1;transform:scale(1.5);}}'
+    +'@keyframes v10pulse{0%,100%{opacity:0.35;}50%{opacity:0.85;}}'
+    +'@keyframes v10fadein{from{opacity:0;}to{opacity:1;}}'
+    +'@keyframes v10slideup{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}'
+    +'@keyframes v10slideleft{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}'
+    +'@keyframes v10slideright{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:translateX(0);}}'
+    +'@keyframes v10dock{from{opacity:0;transform:translateX(-50%) translateY(12px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}';
+  document.head.appendChild(xs);
 
-  function getTime(){
-    var d=new Date();
-    return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);
-  }
+  var W=window.innerWidth,H=window.innerHeight;
+  window.addEventListener('resize',function(){W=window.innerWidth;H=window.innerHeight;});
 
-  function buildOverlay(){
-    if(document.getElementById('eos-overlay-v9'))return;
+  function getTime(){var d=new Date();return('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);}
+  function getDate(){return new Date().toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();}
 
-    // ── MAIN OVERLAY ────────────────────────────────────────
-    var ov=document.createElement('div');
-    ov.id='eos-overlay-v9';
-    ov.style.cssText='position:fixed;inset:0;z-index:9000;pointer-events:none;overflow:hidden;';
-
-    // Atmospheric background — dark void with ORB-centered glow
-    var bg=document.createElement('div');
-    bg.style.cssText='position:absolute;inset:0;background:'
-      +'radial-gradient(ellipse 55% 70% at 50% 48%,rgba(105,9,13,0.2) 0%,transparent 55%),'
-      +'radial-gradient(ellipse 80% 25% at 50% 100%,rgba(60,4,7,0.22) 0%,transparent 50%),'
-      +'radial-gradient(ellipse 40% 40% at 50% 0%,rgba(30,2,4,0.12) 0%,transparent 50%);'
-      +'pointer-events:none;';
-    ov.appendChild(bg);
-
-    // Atmospheric fog around ORB area (will be repositioned after ORB is found)
-    var fog=document.createElement('div');
-    fog.id='eos-orb-fog';
-    fog.style.cssText='position:absolute;border-radius:50%;pointer-events:none;'
-      +'width:580px;height:580px;'
-      +'left:calc(50% - 290px);top:calc(50% - 290px);'
-      +'background:radial-gradient(ellipse,rgba(115,10,14,0.14) 0%,rgba(75,5,8,0.06) 42%,transparent 68%);'
-      +'animation:eos-fog-pulse 10s ease-in-out infinite;';
-    ov.appendChild(fog);
-
-    // Orbital rings (will be repositioned)
-    [{s:230,c:'rgba(178,14,20,0.2)',d:'18s',dir:'cw'},
-     {s:325,c:'rgba(148,10,15,0.09)',d:'30s',dir:'ccw'},
-     {s:435,c:'rgba(112,7,11,0.045)',d:'54s',dir:'cw'}
-    ].forEach(function(r){
-      var el=document.createElement('div');
-      el.className='eos-ring-v9';
-      el.style.cssText='position:absolute;border-radius:50%;background:transparent;pointer-events:none;'
-        +'width:'+r.s+'px;height:'+r.s+'px;'
-        +'left:calc(50% - '+Math.round(r.s/2)+'px);top:calc(50% - '+Math.round(r.s/2)+'px);'
-        +'border:1px solid '+r.c+';'
-        +'animation:eos-fixed-spin-'+r.dir+' '+r.d+' linear infinite;';
-      ov.appendChild(el);
-    });
-
-    document.body.appendChild(ov);
-
-    // ── STATUS LINE — top, ultra minimal ─────────────────────
-    var status=document.createElement('div');
-    status.id='eos-status-line';
-    status.style.cssText='position:fixed;top:0;left:0;right:0;height:36px;'
-      +'z-index:9100;pointer-events:none;'
-      +'display:flex;align-items:center;justify-content:space-between;'
-      +'padding:0 28px;'
-      +'background:linear-gradient(180deg,rgba(2,1,1,0.85) 0%,transparent 100%);';
-
-    status.innerHTML='<div style="display:flex;align-items:center;gap:10px;">'
-      +'<span style="font-family:Space Grotesk,sans-serif;font-size:10px;font-weight:600;'
-      +'letter-spacing:0.28em;color:rgba(235,220,215,0.75);text-transform:uppercase;">E O S</span>'
-      +'<span style="width:4px;height:4px;border-radius:50%;background:rgba(155,16,20,0.8);'
-      +'animation:v90dot 2.5s ease-in-out infinite;display:inline-block;"></span>'
-      +'<span style="font-family:Inter,sans-serif;font-size:8.5px;font-weight:400;'
-      +'letter-spacing:0.1em;color:rgba(175,148,143,0.45);text-transform:uppercase;">Sistema Activo</span>'
-      +'</div>'
-      +'<div id="eos-clock" style="font-family:Inter,monospace;font-size:9px;font-weight:300;'
-      +'letter-spacing:0.14em;color:rgba(165,138,132,0.38);">'+getTime()+'</div>';
-
-    document.body.appendChild(status);
-    setInterval(function(){
-      var c=document.getElementById('eos-clock');
-      if(c)c.textContent=getTime();
-    },1000);
-
-    // ── CONTEXT PANEL — right side, floating glass ─────────
-    var ctx=document.createElement('div');
-    ctx.id='eos-context';
-    ctx.style.cssText='position:fixed;right:28px;top:50%;transform:translateY(-50%);'
-      +'z-index:9100;pointer-events:all;'
-      +'width:220px;'
-      +'background:rgba(10,4,4,0.52);'
-      +'backdrop-filter:blur(40px) saturate(1.4);'
-      +'-webkit-backdrop-filter:blur(40px) saturate(1.4);'
-      +'border:1px solid rgba(70,7,10,0.1);'
+  // ── PANEL FACTORY ──────────────────────────────────────
+  function panel(css,anim,delay){
+    var p=document.createElement('div');
+    p.className='eos-panel';
+    p.style.cssText='position:fixed;'+css
+      +'background:rgba(9,4,4,0.48);'
+      +'backdrop-filter:blur(48px) saturate(1.5);'
+      +'-webkit-backdrop-filter:blur(48px) saturate(1.5);'
+      +'border:1px solid rgba(75,8,10,0.1);'
       +'border-radius:14px;'
-      +'padding:20px 18px;'
-      +'box-shadow:0 8px 50px rgba(0,0,0,0.7),0 0 0 1px rgba(50,4,7,0.06);';
+      +'box-shadow:0 8px 55px rgba(0,0,0,0.72),0 0 0 1px rgba(50,5,7,0.06);'
+      +'z-index:9100;pointer-events:all;'
+      +'animation:'+anim+' 0.8s cubic-bezier(0.22,1,0.36,1) '+delay+'s both;';
+    return p;
+  }
+  function sectionHeader(text){
+    return '<div style="font-family:Space Grotesk,sans-serif;font-size:7.5px;font-weight:600;'
+      +'letter-spacing:0.28em;color:rgba(170,95,85,0.42);text-transform:uppercase;margin-bottom:16px;">'+text+'</div>';
+  }
 
-    // get live data from DOM
-    var sessions=document.querySelector('[id*="session"],[class*="session"]');
-    var tasks=document.querySelector('[id*="task"],[class*="task"]');
+  // ── 1. ATMOSPHERIC BACKGROUND ─────────────────────────
+  function buildAtmosphere(){
+    var atm=document.createElement('div');
+    atm.id='eos-atmosphere';
+    atm.style.cssText='position:fixed;inset:0;z-index:10;pointer-events:none;'
+      +'background:'
+      +'radial-gradient(ellipse 55% 70% at 50% 50%,rgba(112,10,14,0.22) 0%,transparent 55%),'
+      +'radial-gradient(ellipse 30% 40% at 50% 0%,rgba(40,2,5,0.14) 0%,transparent 50%),'
+      +'radial-gradient(ellipse 80% 25% at 50% 100%,rgba(55,3,7,0.22) 0%,transparent 52%),'
+      +'radial-gradient(ellipse 20% 30% at 0% 50%,rgba(30,2,4,0.1) 0%,transparent 50%),'
+      +'radial-gradient(ellipse 20% 30% at 100% 50%,rgba(30,2,4,0.1) 0%,transparent 50%);';
+    document.body.appendChild(atm);
 
-    ctx.innerHTML='<div style="font-family:Space Grotesk,sans-serif;font-size:7.5px;font-weight:600;'
-      +'letter-spacing:0.26em;color:rgba(175,100,90,0.42);text-transform:uppercase;margin-bottom:16px;">Status</div>'
-      +'<div style="display:flex;flex-direction:column;gap:12px;">'
-      +ctxItem('◈','Scout Agent','Operativo')
-      +ctxItem('◎','Outreach','Standby')
-      +ctxItem('◉','Trends','Analizando')
-      +ctxItem('◌','Creative Lab','Activo')
+    // Atmospheric fog around ORB center
+    var fog=document.createElement('div');
+    fog.id='eos-fog';
+    fog.style.cssText='position:fixed;border-radius:50%;pointer-events:none;'
+      +'width:620px;height:620px;'
+      +'left:calc(50% - 310px);top:calc(50% - 310px);'
+      +'background:radial-gradient(ellipse,rgba(118,10,14,0.16) 0%,rgba(78,5,8,0.07) 42%,transparent 68%);'
+      +'animation:v10fog 10s ease-in-out infinite;z-index:20;';
+    document.body.appendChild(fog);
+  }
+
+  // ── 2. EXTRACT & CENTER ORB ───────────────────────────
+  function extractOrb(){
+    var wrap=document.getElementById('eosOrbWrap');
+    if(!wrap){setTimeout(extractOrb,400);return;}
+    var host=document.createElement('div');
+    host.id='eos-orb-host';
+    host.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:50;overflow:visible;';
+    document.body.appendChild(host);
+    host.appendChild(wrap);
+
+    // Add rings around extracted ORB
+    setTimeout(function(){
+      [{s:230,c:'rgba(182,16,20,0.18)',d:'18s',dir:'cw'},
+       {s:325,c:'rgba(150,10,14,0.08)',d:'30s',dir:'ccw'},
+       {s:435,c:'rgba(115,7,10,0.04)',d:'56s',dir:'cw'}
+      ].forEach(function(r){
+        var el=document.createElement('div');
+        el.style.cssText='position:absolute;border-radius:50%;background:transparent;pointer-events:none;'
+          +'width:'+r.s+'px;height:'+r.s+'px;'
+          +'top:50%;left:50%;'
+          +'transform:translate(-50%,-50%);'
+          +'margin-top:0;margin-left:0;'
+          +'border:1px solid '+r.c+';'
+          +'animation:eos-fixed-spin-'+r.dir+' '+r.d+' linear infinite;';
+        host.appendChild(el);
+      });
+      // Center label under ORB
+      var lbl=document.createElement('div');
+      lbl.style.cssText='position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);'
+        +'white-space:nowrap;text-align:center;pointer-events:none;';
+      lbl.innerHTML='<span style="font-family:Space Grotesk,sans-serif;font-size:8px;font-weight:500;'
+        +'letter-spacing:0.35em;color:rgba(190,158,152,0.38);text-transform:uppercase;">NÚCLEO ACTIVO</span>';
+      host.appendChild(lbl);
+    },300);
+  }
+
+  // ── 3. TOP STATUS ─────────────────────────────────────
+  function buildTopStatus(){
+    var top=document.createElement('div');
+    top.id='eos-top';
+    top.style.cssText='position:fixed;top:0;left:0;right:0;height:40px;z-index:9200;'
+      +'display:flex;align-items:center;justify-content:space-between;'
+      +'padding:0 24px;pointer-events:none;'
+      +'background:linear-gradient(180deg,rgba(2,1,1,0.88) 0%,rgba(2,1,1,0) 100%);'
+      +'animation:v10fadein 1s ease 0.2s both;';
+    top.innerHTML='<div style="display:flex;align-items:center;gap:10px;">'
+      +'<span style="font-family:Space Grotesk,sans-serif;font-size:11px;font-weight:600;'
+      +'letter-spacing:0.3em;color:rgba(238,222,218,0.78);text-transform:uppercase;">E O S</span>'
+      +'<span style="width:4px;height:4px;border-radius:50%;background:rgba(158,16,22,0.85);'
+      +'display:inline-block;animation:v10dot 2.8s ease-in-out infinite;"></span>'
+      +'<span style="font-family:Inter,sans-serif;font-size:8px;font-weight:400;'
+      +'letter-spacing:0.1em;color:rgba(172,145,140,0.42);text-transform:uppercase;">Sistema Activo</span>'
       +'</div>'
-      +'<div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(70,6,9,0.1);">'
-      +'<div style="font-family:Inter,sans-serif;font-size:8px;letter-spacing:0.06em;'
-      +'color:rgba(155,128,122,0.35);line-height:1.6;">EOS · v8.0<br>Bogotá · LATAM<br>'+new Date().toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'})+'</div>'
+      +'<div style="display:flex;align-items:center;gap:16px;">'
+      +'<span id="eos-date" style="font-family:Inter,sans-serif;font-size:8px;'
+      +'color:rgba(155,128,122,0.32);letter-spacing:0.08em;">'+getDate()+'</span>'
+      +'<span id="eos-clock" style="font-family:Inter,monospace;font-size:8.5px;font-weight:300;'
+      +'color:rgba(165,138,132,0.38);letter-spacing:0.14em;">'+getTime()+'</span>'
       +'</div>';
+    document.body.appendChild(top);
+    setInterval(function(){var c=document.getElementById('eos-clock');if(c)c.textContent=getTime();},1000);
+  }
 
-    document.body.appendChild(ctx);
+  // ── 4. LEFT PANEL — Orkis / Emociones ────────────────
+  function buildLeftPanel(){
+    var p=panel('left:24px;top:50%;transform:translateY(-50%);width:192px;padding:22px 18px;','v10slideleft',0.5);
+    var orkis=[
+      {name:'Amor sin fronteras',pct:88},
+      {name:'Culpa sin reciprocidad',pct:62},
+      {name:'Cambio',pct:74},
+      {name:'Paz',pct:95},
+      {name:'Comienzo',pct:48}
+    ];
+    var html=sectionHeader('Νέα Αρχή · Orkis');
+    orkis.forEach(function(o,i){
+      var color=i===0?'rgba(155,185,140,0.7)':i===3?'rgba(155,175,185,0.7)':'rgba(175,148,142,0.5)';
+      html+='<div style="margin-bottom:12px;">'
+        +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">'
+        +'<span style="font-family:Inter,sans-serif;font-size:9px;color:rgba(205,180,174,0.62);letter-spacing:0.02em;">'+o.name+'</span>'
+        +'<span style="font-family:Inter,sans-serif;font-size:7px;color:rgba(160,132,127,0.38);">'+o.pct+'%</span>'
+        +'</div>'
+        +'<div style="height:1px;background:rgba(60,5,7,0.18);border-radius:1px;overflow:hidden;">'
+        +'<div style="height:100%;width:'+o.pct+'%;background:'+color+';border-radius:1px;transition:width 1s ease;"></div>'
+        +'</div></div>';
+    });
+    html+='<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(65,6,8,0.1);">'
+      +'<div style="font-family:Inter,sans-serif;font-size:7.5px;color:rgba(148,122,117,0.32);'
+      +'letter-spacing:0.06em;line-height:1.7;">5 dimensiones<br>en equilibrio</div></div>';
+    p.innerHTML=html;
+    document.body.appendChild(p);
+  }
 
-    // ── DOCK — bottom center ────────────────────────────────
+  // ── 5. RIGHT PANEL — Inteligencia activa ──────────────
+  function buildRightPanel(){
+    var p=panel('right:24px;top:50%;transform:translateY(-50%);width:248px;padding:22px 20px;','v10slideright',0.6);
+    var agents=[
+      {icon:'◈',name:'Scout Agent',status:'Operativo',color:'rgba(148,188,132,0.72)'},
+      {icon:'◎',name:'Outreach',status:'Standby',color:'rgba(155,148,140,0.48)'},
+      {icon:'◉',name:'Trend Analyzer',status:'Analizando',color:'rgba(195,155,88,0.72)'},
+      {icon:'◆',name:'Creative Lab',status:'Activo',color:'rgba(148,188,132,0.72)'},
+      {icon:'◌',name:'Memoria',status:'Conectada',color:'rgba(148,188,132,0.72)'}
+    ];
+    var html=sectionHeader('Agentes · Estado');
+    agents.forEach(function(a){
+      html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+        +'<div style="display:flex;align-items:center;gap:8px;">'
+        +'<span style="font-size:11px;color:rgba(172,145,140,0.5);">'+a.icon+'</span>'
+        +'<span style="font-family:Inter,sans-serif;font-size:9px;color:rgba(205,178,172,0.62);">'+a.name+'</span>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:5px;">'
+        +'<span style="width:3px;height:3px;border-radius:50%;background:'+a.color+';display:inline-block;animation:v10pulse 2.5s ease-in-out infinite;"></span>'
+        +'<span style="font-family:Inter,sans-serif;font-size:7.5px;letter-spacing:0.06em;color:'+a.color+';text-transform:uppercase;">'+a.status+'</span>'
+        +'</div></div>';
+    });
+    // Last directive
+    html+='<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(65,6,8,0.1);">'
+      +'<div style="font-family:Space Grotesk,sans-serif;font-size:7px;font-weight:600;'
+      +'letter-spacing:0.22em;color:rgba(165,90,82,0.38);text-transform:uppercase;margin-bottom:8px;">Directiva</div>'
+      +'<div id="eos-last-directive" style="font-family:Inter,sans-serif;font-size:8.5px;'
+      +'color:rgba(195,168,162,0.48);line-height:1.6;font-style:italic;">'
+      +'"Sistema operativo artístico · en evolución"'
+      +'</div></div>';
+    p.innerHTML=html;
+    document.body.appendChild(p);
+  }
+
+  // ── 6. BOTTOM METRICS STRIP ──────────────────────────
+  function buildBottomStrip(){
+    var strip=document.createElement('div');
+    strip.id='eos-strip';
+    strip.style.cssText='position:fixed;bottom:75px;left:50%;transform:translateX(-50%);'
+      +'z-index:9100;pointer-events:none;'
+      +'display:flex;align-items:center;gap:24px;'
+      +'animation:v10slideup 0.8s cubic-bezier(0.22,1,0.36,1) 0.7s both;';
+    var metrics=[
+      {icon:'◈',label:'Scout',val:'0 opp'},
+      {icon:'◇',label:'Trends',val:'Monitoring'},
+      {icon:'◆',label:'Lab',val:'Activo'},
+      {icon:'◫',label:'Sesión',val:'00:00'}
+    ];
+    strip.innerHTML=metrics.map(function(m){
+      return '<div style="display:flex;align-items:center;gap:5px;">'
+        +'<span style="font-family:Inter,sans-serif;font-size:8.5px;color:rgba(165,138,133,0.35);">'+m.icon+'</span>'
+        +'<span style="font-family:Inter,sans-serif;font-size:7.5px;letter-spacing:0.08em;'
+        +'text-transform:uppercase;color:rgba(155,128,123,0.3);">'+m.label+'</span>'
+        +'<span style="font-family:Inter,sans-serif;font-size:7.5px;color:rgba(195,168,162,0.42);">'+m.val+'</span>'
+        +'</div>';
+    }).join('<span style="width:1px;height:10px;background:rgba(65,6,8,0.18);"></span>');
+    document.body.appendChild(strip);
+  }
+
+  // ── 7. DOCK ────────────────────────────────────────────
+  function buildDock(){
     var dock=document.createElement('nav');
-    dock.id='eos-dock-v9';
-    dock.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%);'
+    dock.id='eos-dock-v10';
+    dock.style.cssText='position:fixed;bottom:18px;left:50%;transform:translateX(-50%);'
       +'z-index:9200;pointer-events:all;'
-      +'display:flex;align-items:center;gap:2px;'
-      +'background:rgba(7,3,3,0.7);'
-      +'backdrop-filter:blur(36px) saturate(1.5);'
-      +'-webkit-backdrop-filter:blur(36px) saturate(1.5);'
+      +'display:flex;align-items:center;gap:1px;'
+      +'background:rgba(7,3,3,0.68);'
+      +'backdrop-filter:blur(40px) saturate(1.5);'
+      +'-webkit-backdrop-filter:blur(40px) saturate(1.5);'
       +'border:1px solid rgba(65,6,9,0.1);'
-      +'border-radius:18px;padding:8px 12px;'
-      +'box-shadow:0 8px 40px rgba(0,0,0,0.72),0 0 0 1px rgba(40,3,5,0.06),0 0 28px rgba(90,7,11,0.1);';
-
-    var navItems=[
+      +'border-radius:18px;padding:7px 12px;'
+      +'box-shadow:0 6px 40px rgba(0,0,0,0.7),0 0 0 1px rgba(40,3,5,0.05);'
+      +'animation:v10dock 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s both;';
+    var items=[
       {id:'dashboard',i:'◈',l:'Central'},
       {id:'memo',i:'◎',l:'Memoria'},
       {id:'scout',i:'◉',l:'Scout'},
+      null,
       {id:'outreach',i:'◌',l:'Outreach'},
       {id:'lab',i:'◆',l:'Lab'},
       {id:'trends',i:'◇',l:'Trends'},
       {id:'agenda',i:'◫',l:'Agenda'}
     ];
-    navItems.forEach(function(item,idx){
+    items.forEach(function(item,idx){
+      if(!item){var sep=document.createElement('div');sep.style.cssText='width:1px;height:22px;background:rgba(65,6,9,0.15);margin:0 5px;';dock.appendChild(sep);return;}
       var btn=document.createElement('button');
-      btn.className='eos-dock-item';
+      btn.className='eos-dock-btn';
       btn.style.cssText='background:none;border:none;cursor:pointer;outline:none;'
         +'display:flex;flex-direction:column;align-items:center;gap:2px;'
-        +'padding:5px 9px;border-radius:10px;position:relative;';
-      btn.innerHTML='<span class="eos-di-icon" style="font-size:12px;line-height:1;'
-        +'color:rgba(175,148,142,'+(idx===0?'0.85':'0.38')+');">'+(item.i)+'</span>'
-        +'<span class="eos-di-label" style="font-family:Inter,sans-serif;font-size:7px;'
-        +'letter-spacing:0.1em;text-transform:uppercase;'
-        +'color:rgba(165,138,132,'+(idx===0?'0.7':'0.3')+');">'+(item.l)+'</span>'
-        +(idx===0?'<span style="position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);'
-          +'width:2px;height:2px;border-radius:50%;background:rgba(155,16,20,0.75);"></span>':'');
+        +'padding:5px 10px;border-radius:10px;position:relative;';
+      btn.innerHTML='<span style="font-size:12px;line-height:1;color:rgba(178,150,145,'+(idx===0?'0.85':'0.4')+');">'+item.i+'</span>'
+        +'<span style="font-family:Inter,sans-serif;font-size:6.5px;letter-spacing:0.1em;text-transform:uppercase;'
+        +'color:rgba(162,135,130,'+(idx===0?'0.72':'0.28')+');">'+item.l+'</span>'
+        +(idx===0?'<span class="eos-active-dot" style="position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:2px;height:2px;border-radius:50%;background:rgba(155,16,22,0.75);"></span>':'');
       btn.addEventListener('click',function(){
-        document.querySelectorAll('.eos-dock-item').forEach(function(b){
-          b.querySelector('.eos-di-icon').style.color='rgba(175,148,142,0.38)';
-          b.querySelector('.eos-di-label').style.color='rgba(165,138,132,0.3)';
-          var dot=b.querySelector('span:last-child');
-          if(dot&&dot.style.position==='absolute')dot.remove();
+        document.querySelectorAll('.eos-dock-btn').forEach(function(b){
+          b.querySelectorAll('span')[0].style.color='rgba(178,150,145,0.4)';
+          b.querySelectorAll('span')[1].style.color='rgba(162,135,130,0.28)';
+          var d=b.querySelector('.eos-active-dot');if(d)d.remove();
         });
-        btn.querySelector('.eos-di-icon').style.color='rgba(245,228,222,0.88)';
-        btn.querySelector('.eos-di-label').style.color='rgba(225,208,202,0.72)';
-        var ind=document.createElement('span');
-        ind.style.cssText='position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:2px;height:2px;border-radius:50%;background:rgba(155,16,20,0.75);';
-        btn.appendChild(ind);
-        var nav=document.querySelector('[data-view="'+item.id+'"]')
-          ||document.querySelector('.nav-item[data-id="'+item.id+'"]')
-          ||document.querySelector('a[href*="'+item.id+'"]');
+        btn.querySelectorAll('span')[0].style.color='rgba(242,225,220,0.88)';
+        btn.querySelectorAll('span')[1].style.color='rgba(225,205,200,0.7)';
+        var nd=document.createElement('span');nd.className='eos-active-dot';
+        nd.style.cssText='position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:2px;height:2px;border-radius:50%;background:rgba(155,16,22,0.75);';
+        btn.appendChild(nd);
+        var nav=document.querySelector('[data-view="'+item.id+'"]')||document.querySelector('.nav-item[data-id="'+item.id+'"]');
         if(nav)nav.click();
       });
       dock.appendChild(btn);
-      if(idx===2){var sep=document.createElement('div');sep.style.cssText='width:1px;height:24px;background:rgba(65,6,9,0.15);margin:0 4px;';dock.appendChild(sep);}
     });
     document.body.appendChild(dock);
-
-    // Reposition rings/fog after ORB is found
-    setTimeout(positionAroundOrb,800);
   }
 
-  function ctxItem(icon,label,status){
-    var color=status==='Operativo'?'rgba(155,195,140,0.7)':status==='Analizando'?'rgba(195,155,90,0.7)':'rgba(155,148,142,0.45)';
-    return '<div style="display:flex;align-items:center;justify-content:space-between;">'
-      +'<div style="display:flex;align-items:center;gap:7px;">'
-      +'<span style="font-size:10px;color:rgba(175,148,142,0.5);">'+icon+'</span>'
-      +'<span style="font-family:Inter,sans-serif;font-size:9px;color:rgba(210,188,183,0.6);letter-spacing:0.03em;">'+label+'</span>'
-      +'</div>'
-      +'<span style="font-family:Inter,sans-serif;font-size:7.5px;letter-spacing:0.06em;color:'+color+';text-transform:uppercase;">'+status+'</span>'
-      +'</div>';
+  // ── INIT ───────────────────────────────────────────────
+  function init(){
+    buildAtmosphere();
+    buildTopStatus();
+    setTimeout(buildLeftPanel,100);
+    setTimeout(buildRightPanel,100);
+    setTimeout(buildBottomStrip,100);
+    setTimeout(buildDock,100);
+    setTimeout(extractOrb,300);
   }
 
-  function positionAroundOrb(){
-    var c=document.getElementById('eosOrbCanvas');
-    if(!c){setTimeout(positionAroundOrb,500);return;}
-    var r=c.getBoundingClientRect();
-    var cx=r.left+r.width/2, cy=r.top+r.height/2;
-    if(cx<10){setTimeout(positionAroundOrb,500);return;}
-
-    // reposition fog
-    var fg=document.getElementById('eos-orb-fog');
-    if(fg){fg.style.left=(cx-290)+'px';fg.style.top=(cy-290)+'px';}
-
-    // reposition rings
-    document.querySelectorAll('.eos-ring-v9').forEach(function(el){
-      var s=parseInt(el.style.width);
-      el.style.left=(cx-s/2)+'px';
-      el.style.top=(cy-s/2)+'px';
-    });
-  }
-
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(buildOverlay,600);});}
-  else{setTimeout(buildOverlay,400);}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(init,500);});}
+  else{setTimeout(init,400);}
 })();
 </script>
 </body>\n</html>';
@@ -44067,116 +44127,46 @@ if(!window.__n166Patched){
 .eos-achievement-toast .at-desc{font-size:8px;color:rgba(180,180,180,.4);margin-top:4px;letter-spacing:.3px;}
 </style>
 <style id="eos-ultra-v2">
-/* EOS AGENT v9.0 — CINEMATIC OVERLAY */
+/* EOS AGENT v10.0 — CINEMATIC LIVING ECOSYSTEM */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
-
-*{ box-sizing:border-box; }
-
-body{
-  background:#020101!important;
-  font-family:'Inter',-apple-system,sans-serif!important;
-  overflow:hidden!important;
-  margin:0!important;padding:0!important;
-}
-
-/* ── HIDE THE ENTIRE ORIGINAL UI ─────────────────────────
-   The app still RUNS underneath — we just don't see it.
-   Only the ORB canvas needs to stay alive and visible. */
-.sb{ display:none!important; }
-.tb,.topbar,[class*="topbar"]{ visibility:hidden!important; height:0!important; min-height:0!important; overflow:hidden!important; }
-#mainTabBar{ visibility:hidden!important; height:0!important; min-height:0!important; overflow:hidden!important; }
-#presenceBar{ display:none!important; }
-.main{ position:absolute!important; top:0!important; left:0!important; width:100vw!important; height:100vh!important; }
-.content,#content{ width:100%!important; height:100%!important; overflow:hidden!important; }
-
-/* Dashboard: hide all panels EXCEPT the ORB */
-#view-dashboard>div:not(#orbPanel):not(.orb-panel){
-  visibility:hidden!important;
-  pointer-events:none!important;
-}
-/* ORB panel: expand to fill column */
-#orbPanel,.orb-panel{
-  position:absolute!important;
-  top:0!important; left:0!important;
-  width:100%!important; height:100%!important;
-  visibility:visible!important;
-  background:transparent!important;
-  border:none!important;
-  box-shadow:none!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  overflow:visible!important;
-  z-index:1!important;
-}
-#view-dashboard{
-  position:relative!important;
-  width:100vw!important;
-  height:100vh!important;
-}
-
-/* ORB — scale up, breathe */
-#eosOrbWrap{
-  overflow:visible!important;
-  position:relative!important;
-}
+*{box-sizing:border-box;}
+body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;font-family:'Inter',-apple-system,sans-serif!important;}
+/* Hide entire original UI */
+.sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar,.shell,.main,.content,#content{display:none!important;}
+/* ORB canvas — keep alive, style it */
 #eosOrbCanvas{
-  transform:scale(1.35)!important;
-  transform-origin:center!important;
-  animation:v90breathe 8s ease-in-out infinite!important;
-  filter:
-    drop-shadow(0 0 14px rgba(200,16,22,0.95))
-    drop-shadow(0 0 40px rgba(165,12,18,0.72))
-    drop-shadow(0 0 85px rgba(125,8,14,0.48))
-    drop-shadow(0 0 150px rgba(85,5,10,0.28))
-    drop-shadow(0 0 230px rgba(55,3,6,0.14))!important;
+  filter:drop-shadow(0 0 16px rgba(205,18,24,1)) drop-shadow(0 0 45px rgba(170,12,18,0.78)) drop-shadow(0 0 95px rgba(130,8,14,0.52)) drop-shadow(0 0 170px rgba(90,5,10,0.3)) drop-shadow(0 0 260px rgba(58,3,7,0.15))!important;
+  animation:v10breathe 8s ease-in-out infinite!important;
+  display:block!important;
 }
-
-/* ORB rings */
-.orb-v-ring{
-  position:absolute!important;border-radius:50%!important;
-  top:50%!important;left:50%!important;
-  pointer-events:none!important;background:transparent!important;
-}
-.orb-v-ring.r1{ width:210px!important;height:210px!important;border:1px solid rgba(185,16,20,0.18)!important;animation:v90cw 18s linear infinite!important;transform:translate(-50%,-50%)!important; }
-.orb-v-ring.r2{ width:296px!important;height:296px!important;border:1px solid rgba(155,12,16,0.08)!important;animation:v90ccw 32s linear infinite!important;transform:translate(-50%,-50%)!important; }
-.orb-v-ring.r3{ width:395px!important;height:395px!important;border:1px solid rgba(115,8,12,0.04)!important;animation:v90cw 58s linear infinite!important;transform:translate(-50%,-50%)!important; }
-
-/* Background */
-#bg{ opacity:0.05!important;filter:hue-rotate(350deg) saturate(1.3) brightness(0.35)!important; }
-#n60ParticleCanvas{ opacity:0.14!important;filter:hue-rotate(350deg) saturate(0.4)!important; }
-.scan-grid{
-  background-image:
-    radial-gradient(ellipse 60% 80% at 50% 50%,rgba(110,9,13,0.18) 0%,transparent 55%),
-    radial-gradient(ellipse 100% 30% at 50% 100%,rgba(55,3,6,0.2) 0%,transparent 50%)!important;
-  background-size:100% 100%!important;
-}
-.scan-overlay{ display:none!important; }
-html::before,html::after{ display:none!important; }
-body::before,body::after{ display:none!important; }
-
-/* Boot screen safety */
-#eosBootScreen,#bootEnterPrompt,#bootBypass,
-#eosAccess,#accPass,#accPassInput,#accActivation{
-  pointer-events:all!important;
-  visibility:visible!important;
-  z-index:99999!important;
-}
-
+#eosOrbWrap{overflow:visible!important;display:block!important;}
+/* CSS rings — visible */
+.orb-v-ring{position:absolute!important;border-radius:50%!important;top:50%!important;left:50%!important;pointer-events:none!important;background:transparent!important;}
+.orb-v-ring.r1{width:215px!important;height:215px!important;border:1px solid rgba(185,16,22,0.2)!important;animation:v10cw 18s linear infinite!important;transform:translate(-50%,-50%)!important;}
+.orb-v-ring.r2{width:300px!important;height:300px!important;border:1px solid rgba(155,12,16,0.09)!important;animation:v10ccw 32s linear infinite!important;transform:translate(-50%,-50%)!important;}
+.orb-v-ring.r3{width:400px!important;height:400px!important;border:1px solid rgba(118,8,12,0.045)!important;animation:v10cw 58s linear infinite!important;transform:translate(-50%,-50%)!important;}
+/* Boot screen — always on top and functional */
+#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;}
+/* Background layers */
+#bg{opacity:0.055!important;filter:hue-rotate(352deg) saturate(1.2) brightness(0.32)!important;display:block!important;}
+#n60ParticleCanvas{opacity:0.12!important;filter:hue-rotate(352deg) saturate(0.35)!important;display:block!important;}
+.scan-grid,.scan-overlay{display:none!important;}
+html::before,html::after,body::before,body::after{display:none!important;}
 /* Keyframes */
-@keyframes v90breathe{
-  0%,100%{ opacity:0.88;transform:scale(1.35); }
-  50%{ opacity:1;transform:scale(1.4); }
-}
-@keyframes v90cw{ from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);} }
-@keyframes v90ccw{ from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);} }
-@keyframes eos-fixed-spin-cw{ from{transform:rotate(0deg);}to{transform:rotate(360deg);} }
-@keyframes eos-fixed-spin-ccw{ from{transform:rotate(0deg);}to{transform:rotate(-360deg);} }
-@keyframes eos-fog-pulse{ 0%,100%{opacity:0.5;}50%{opacity:1;} }
-@keyframes v90fadeup{ from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);} }
-@keyframes v90fadein{ from{opacity:0;}to{opacity:1;} }
-@keyframes v90dot{ 0%,100%{opacity:0.3;transform:scale(1);}50%{opacity:1;transform:scale(1.5);} }
-@keyframes v90dockslide{ from{opacity:0;transform:translateX(-50%) translateY(12px);}to{opacity:1;transform:translateX(-50%) translateY(0);} }
+@keyframes v10breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}
+@keyframes v10cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+@keyframes v10ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}
+@keyframes eos-fixed-spin-cw{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes eos-fixed-spin-ccw{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+@keyframes v10fog{0%,100%{opacity:0.45;}50%{opacity:0.85;}}
+@keyframes v10fadein{from{opacity:0;}to{opacity:1;}}
+@keyframes v10slideup{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes v10slideleft{from{opacity:0;transform:translateX(-12px);}to{opacity:1;transform:translateX(0);}}
+@keyframes v10slideright{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+@keyframes v10dock{from{opacity:0;transform:translateX(-50%) translateY(14px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes v10dot{0%,100%{opacity:0.3;transform:scale(1);}50%{opacity:1;transform:scale(1.4);}}
+@keyframes v10pulse{0%,100%{box-shadow:0 0 0 0 rgba(155,16,20,0);}50%{box-shadow:0 0 0 4px rgba(155,16,20,0.15);}}
+@keyframes v10orklive{0%,100%{width:var(--ow);}50%{width:calc(var(--ow) * 1.08);}}
 </style>
 
 <script>
