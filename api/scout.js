@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-//  EOS AGENT — /api/scout  v2.1
+//  EOS AGENT — /api/scout  v2.2
 //  Scout Agent: busca oportunidades reales en internet.
 //  Acepta API keys del cliente (localStorage) para operar
 //  sin necesitar env vars en Vercel.
@@ -21,7 +21,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // ── Build queries based on category ──────────────────
+    // ── Build queries based on category ──────────────────────
     const allQueries = [
       { q: 'festivales showcases música independiente Colombia LATAM convocatoria open call 2026', label: 'FESTIVAL/SHOWCASE', type: 'festival' },
       { q: 'sync licensing playlists spotify curadores música indie español LATAM submissions 2026', label: 'SYNC/PLAYLIST', type: 'sync' },
@@ -41,8 +41,9 @@ module.exports = async function handler(req, res) {
       );
       results.forEach((r, i) => {
         if (r.status === 'fulfilled' && r.value) {
-          webCtx += `\n[${queries[i].label}]\n`;
+          webCtx += '\n[' + queries[i].label + ']\n';
           webCtx += formatSearch(r.value, queries[i].q);
+          // Extract raw opportunity items
           (r.value.results || []).slice(0, 3).forEach(item => {
             rawResults.push({
               type: queries[i].type,
@@ -56,45 +57,26 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Claude analysis ───────────────────────────────────
-    const prompt = `Eres el Scout Agent de EOS (Νέα Αρχή), proyecto musical cinematic/documental de Bogotá, Colombia.
+    const webPart = webCtx ? 'DATOS WEB EN TIEMPO REAL:\n' + webCtx : 'No hay datos Tavily — usa conocimiento del ecosistema LATAM 2026.';
+    const prompt = 'Eres el Scout Agent de EOS (Νέα Αρχή), proyecto musical cinematic/documental de Bogotá, Colombia.\n\n' + webPart + '\n\nGenera un reporte de oportunidades REALES y ACCIONABLES para EOS.\n\nFormato de respuesta (JSON puro, sin markdown):\n{\n  "critical": { "title": "...", "why": "...", "deadline": "...", "action": "..." },\n  "opportunities": [\n    { "title": "...", "type": "festival|sync|beca|concurso", "deadline": "...", "why": "...", "action": "...", "priority": "high|medium|low" }\n  ],\n  "strategy": "...",\n  "radar": "..."\n}\n\nSé específico, práctico y alineado con la identidad de EOS.';
 
-${webCtx ? `DATOS WEB EN TIEMPO REAL:\n${webCtx}` : 'No hay datos Tavily — usa conocimiento del ecosistema LATAM 2026.'}
+    const raw = await callClaude(prompt, '', 900, claudeKey);
 
-Genera un reporte de oportunidades REALES y ACCIONABLES para EOS.
-
-IMPORTANTE: Responde SOLO con JSON puro, sin markdown, sin bloques de código, sin explicaciones.
-Estructura exacta:
-{
-  "critical": { "title": "...", "why": "...", "deadline": "...", "action": "..." },
-  "opportunities": [
-    { "title": "...", "type": "festival|sync|beca|concurso", "deadline": "...", "why": "...", "action": "...", "priority": "high|medium|low" }
-  ],
-  "strategy": "...",
-  "radar": "..."
-}
-
-Sé específico, práctico y alineado con la identidad de EOS.`;
-
-    const raw = await callClaude(prompt, '', 1000, claudeKey);
-
-    // Parse JSON response — strip markdown fences if present
+    // Parse JSON response — extract first { ... } block, handles markdown fences
     let analysis = null;
     try {
-      const stripped = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
-      const jsonMatch = stripped.match(/\{[\s\S]*\}/);
-      if (jsonMatch) analysis = JSON.parse(jsonMatch[0]);
-    } catch(e) {
-      try {
-        const jsonMatch = raw.match(/\{[\s\S]*\}/);
-        if (jsonMatch) analysis = JSON.parse(jsonMatch[0]);
-      } catch(e2) {
-        analysis = { strategy: raw, opportunities: [], radar: '' };
+      const start = raw.indexOf('{');
+      const end = raw.lastIndexOf('}');
+      if (start >= 0 && end > start) {
+        analysis = JSON.parse(raw.slice(start, end + 1));
       }
+    } catch(e) {
+      analysis = { strategy: raw, opportunities: [], radar: '' };
     }
 
     // ── Optional Telegram notification ───────────────────
-    if (analysis?.critical && process.env.TELEGRAM_TOKEN) {
-      const msg = `🔴 *EOS SCOUT — OPORTUNIDAD CRÍTICA*\n\n*${analysis.critical.title}*\n${analysis.critical.why}\n\n⏰ ${analysis.critical.deadline}\n▶️ ${analysis.critical.action}`;
+    if (analysis && analysis.critical && process.env.TELEGRAM_TOKEN) {
+      const msg = '\ud83d\udd34 *EOS SCOUT — OPORTUNIDAD CRÍTICA*\n\n*' + analysis.critical.title + '*\n' + analysis.critical.why + '\n\n\u23f0 ' + analysis.critical.deadline + '\n\u25b6\ufe0f ' + analysis.critical.action;
       await sendTelegram(msg).catch(() => {});
     }
 
