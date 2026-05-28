@@ -4,7 +4,7 @@
   "name": "eos-agent",
   "builds": [
     {
-      "src": "index.html",
+      "src": "eos-agent.html",
       "use": "@vercel/static"
     }
   ],
@@ -25,7 +25,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/eos-agent.html"
     }
   ],
   "headers": [
