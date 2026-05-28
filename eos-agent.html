@@ -9690,7 +9690,377 @@ body.mode-rusia::before {
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
 </style>
 
-<style id="eos-ultra-v11">*{box-sizing:border-box;}body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;}.sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar,#eos-hud,.ci-modal-badge{display:none!important;}.shell{background:transparent!important;position:absolute!important;inset:0!important;}.main{background:transparent!important;width:100vw!important;height:100vh!important;position:absolute!important;top:0!important;left:0!important;}.content,#content{background:transparent!important;width:100%!important;height:100%!important;overflow:visible!important;}#view-dashboard{background:transparent!important;position:relative!important;overflow:visible!important;}#view-dashboard>div{display:none!important;}#eosOrbCanvas{filter:drop-shadow(0 0 18px rgba(210,18,24,1)) drop-shadow(0 0 50px rgba(175,12,18,0.82)) drop-shadow(0 0 105px rgba(135,8,14,0.58)) drop-shadow(0 0 185px rgba(92,5,10,0.34)) drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;animation:v11breathe 8s ease-in-out infinite!important;display:block!important;visibility:visible!important;}#eosOrbWrap{overflow:visible!important;display:block!important;visibility:visible!important;}#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;}#eos-thought{transition:opacity 0.4s ease;}@keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}@keyframes v11cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}@keyframes v11ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}</style></head>
+<style id="eos-ultra-v11">*{box-sizing:border-box;}body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;}.sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar,#eos-hud,.ci-modal-badge{display:none!important;}.shell{background:transparent!important;position:absolute!important;inset:0!important;}.main{background:transparent!important;width:100vw!important;height:100vh!important;position:absolute!important;top:0!important;left:0!important;}.content,#content{background:transparent!important;width:100%!important;height:100%!important;overflow:visible!important;}#view-dashboard{background:transparent!important;position:relative!important;overflow:visible!important;}#view-dashboard>div{display:none!important;}#eosOrbCanvas{filter:drop-shadow(0 0 18px rgba(210,18,24,1)) drop-shadow(0 0 50px rgba(175,12,18,0.82)) drop-shadow(0 0 105px rgba(135,8,14,0.58)) drop-shadow(0 0 185px rgba(92,5,10,0.34)) drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;animation:v11breathe 8s ease-in-out infinite!important;display:block!important;visibility:visible!important;}#eosOrbWrap{overflow:visible!important;display:block!important;visibility:visible!important;}#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;}#eos-thought{transition:opacity 0.4s ease;}@keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}@keyframes v11cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}@keyframes v11ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}</style><style id="eos-v12-combined">
+/* ═══ EOS v12 — AESTHETIC UPGRADE ═══ */
+
+/* ─── LEFT PANEL ─── */
+#eosLeftPanel {
+  position: fixed;
+  left: 0; top: 50px;
+  width: 268px;
+  height: calc(100vh - 50px);
+  z-index: 200;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.elp-block {
+  background: linear-gradient(135deg, rgba(20,4,4,0.7) 0%, rgba(12,2,2,0.5) 100%);
+  border: 1px solid rgba(210,18,24,0.18);
+  border-left: 2px solid rgba(210,18,24,0.55);
+  padding: 11px 13px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+.elp-block::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(210,18,24,0.7) 0%, transparent 80%);
+}
+.elp-label {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  color: rgba(210,18,24,0.55);
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.elp-big {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ff3c3c;
+  text-shadow: 0 0 16px rgba(210,18,24,0.9), 0 0 30px rgba(210,18,24,0.4);
+  line-height: 1;
+}
+.elp-big sub {
+  font-size: 10px;
+  color: rgba(200,100,100,0.6);
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  margin-left: 2px;
+  vertical-align: baseline;
+}
+.elp-bar-row { display:flex; align-items:center; gap:7px; margin-top:6px; }
+.elp-bar-key {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: rgba(180,80,80,0.55);
+  width: 72px;
+  flex-shrink: 0;
+  letter-spacing: 0.06em;
+}
+.elp-bar-track {
+  flex: 1; height: 2px;
+  background: rgba(210,18,24,0.1);
+  border-radius: 1px;
+  overflow: hidden;
+}
+.elp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(180,18,24,0.8), rgba(255,80,80,0.95));
+  box-shadow: 0 0 5px rgba(210,18,24,0.7);
+  border-radius: 1px;
+  animation: elp-bar-anim 4s ease-in-out infinite alternate;
+}
+@keyframes elp-bar-anim { from { filter: brightness(0.85); } to { filter: brightness(1.15); } }
+
+/* ORKIS */
+.elp-orkis-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 4.5px 0;
+  border-bottom: 1px solid rgba(210,18,24,0.07);
+  font-family: 'Rajdhani', 'Arial Narrow', sans-serif;
+  font-size: 11px;
+  color: rgba(220,140,140,0.8);
+  letter-spacing: 0.04em;
+}
+.elp-orkis-row:last-child { border-bottom: none; }
+.elp-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(210,18,24,0.8);
+  box-shadow: 0 0 5px rgba(210,18,24,0.6);
+  flex-shrink: 0;
+}
+.elp-orkis-row:nth-child(1) .elp-dot { animation: elp-dot-pulse 3s 0s infinite; }
+.elp-orkis-row:nth-child(2) .elp-dot { animation: elp-dot-pulse 3s 0.6s infinite; }
+.elp-orkis-row:nth-child(3) .elp-dot { animation: elp-dot-pulse 3s 1.2s infinite; }
+.elp-orkis-row:nth-child(4) .elp-dot { animation: elp-dot-pulse 3s 1.8s infinite; }
+.elp-orkis-row:nth-child(5) .elp-dot { animation: elp-dot-pulse 3s 2.4s infinite; }
+@keyframes elp-dot-pulse { 0%,100%{opacity:.45;transform:scale(1);} 50%{opacity:1;transform:scale(1.5);} }
+
+/* STATUS TAGS */
+.elp-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+.elp-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  padding: 3px 7px;
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+}
+.elp-tag-green { color:rgba(60,210,100,0.85); background:rgba(60,210,100,0.07); border:1px solid rgba(60,210,100,0.2); }
+.elp-tag-red   { color:rgba(210,18,24,0.85);  background:rgba(210,18,24,0.06);  border:1px solid rgba(210,18,24,0.22); }
+.elp-tag-amber { color:rgba(200,140,40,0.85); background:rgba(200,140,40,0.07); border:1px solid rgba(200,140,40,0.22); }
+
+/* ─── ORB CORNER BRACKETS ─── */
+#eosOrbBrackets {
+  position: fixed;
+  pointer-events: none;
+  z-index: 60;
+  animation: elp-brackets-breathe 6s ease-in-out infinite;
+}
+@keyframes elp-brackets-breathe { 0%,100%{opacity:.55} 50%{opacity:.9} }
+.eos-brk {
+  position: absolute; width: 22px; height: 22px;
+  border-color: rgba(210,18,24,0.85);
+  border-style: solid;
+}
+.eos-brk-tl { top:0; left:0;  border-width:2px 0 0 2px; }
+.eos-brk-tr { top:0; right:0; border-width:2px 2px 0 0; }
+.eos-brk-bl { bottom:0; left:0;  border-width:0 0 2px 2px; }
+.eos-brk-br { bottom:0; right:0; border-width:0 2px 2px 0; }
+
+/* ─── TOPBAR UPGRADE ─── */
+.acc-topbar {
+  background: rgba(6,1,1,0.96) !important;
+  border-bottom: 1px solid rgba(210,18,24,0.22) !important;
+  backdrop-filter: blur(12px) !important;
+  position: relative !important;
+}
+.acc-topbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(210,18,24,0.5) 20%, rgba(210,18,24,0.5) 80%, transparent 100%);
+}
+
+/* ─── RIGHT PANEL (floatChatPanel) UPGRADE ─── */
+#floatChatPanel {
+  background: rgba(8,1,1,0.88) !important;
+  border: 1px solid rgba(210,18,24,0.18) !important;
+  border-radius: 3px !important;
+  backdrop-filter: blur(18px) !important;
+  box-shadow: 
+    -1px 0 0 rgba(210,18,24,0.35),
+    0 0 40px rgba(210,18,24,0.06),
+    inset 1px 0 0 rgba(255,255,255,0.02) !important;
+}
+.fcp-header {
+  background: rgba(210,18,24,0.06) !important;
+  border-bottom: 1px solid rgba(210,18,24,0.2) !important;
+}
+.fcp-orb {
+  box-shadow: 0 0 10px rgba(210,18,24,0.8) !important;
+  animation: elp-dot-pulse 3s ease-in-out infinite !important;
+}
+
+/* ─── HUD AMBIENT LINES ─── */
+#eosHudLines {
+  position: fixed;
+  top: 50px; left: 268px;
+  right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 30;
+  overflow: hidden;
+}
+.ehl-h {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(210,18,24,0.12) 30%, rgba(210,18,24,0.12) 70%, transparent 100%);
+}
+.ehl-v {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(210,18,24,0.1) 30%, rgba(210,18,24,0.1) 70%, transparent 100%);
+}
+/* scan sweep line */
+.ehl-sweep {
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(210,18,24,0.6) 50%, transparent 100%);
+  box-shadow: 0 0 8px rgba(210,18,24,0.5);
+  animation: ehl-sweep-anim 8s linear infinite;
+}
+@keyframes ehl-sweep-anim {
+  0%   { left: -2px; opacity:0; }
+  5%   { opacity:1; }
+  95%  { opacity:1; }
+  100% { left: calc(100% + 2px); opacity:0; }
+}
+
+/* ═══ EOS v12b — EXTRA REFINEMENTS ═══ */
+
+/* BRIEFING CENTER PANEL (wb-container) */
+.wb-container {
+  background: rgba(6,1,1,0.85) !important;
+  border: 1px solid rgba(210,18,24,0.22) !important;
+  border-top: 2px solid rgba(210,18,24,0.5) !important;
+  backdrop-filter: blur(12px) !important;
+  border-radius: 3px !important;
+  box-shadow: 0 0 25px rgba(210,18,24,0.07), 0 0 60px rgba(210,18,24,0.04) !important;
+}
+.wb-badge {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 9px !important;
+  letter-spacing: 0.15em !important;
+  color: rgba(210,18,24,0.55) !important;
+  text-transform: uppercase !important;
+}
+.wb-title {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: rgba(255,255,255,0.9) !important;
+  text-shadow: 0 0 10px rgba(210,18,24,0.4) !important;
+  letter-spacing: 0.1em !important;
+}
+
+/* BOTTOM NAV TABS */
+.tab-bar, [class*="tab-bar"], .n60-nav, [class*="bottom-nav"],
+.nav-bar, [class*="nav-bar"], [class*="tabbar"] {
+  background: rgba(6,1,1,0.94) !important;
+  border-top: 1px solid rgba(210,18,24,0.2) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* The tab bar at bottom (INICIO, SCOUT, etc.) */
+div[style*="bottom"]:has(button) {
+  background: rgba(8,2,2,0.9) !important;
+}
+
+/* Quick Capture Modal */
+#quickCaptureModal {
+  background: rgba(8,2,2,0.92) !important;
+  border: 1px solid rgba(210,18,24,0.2) !important;
+  border-radius: 4px !important;
+  backdrop-filter: blur(14px) !important;
+  box-shadow: 0 0 30px rgba(210,18,24,0.07) !important;
+}
+.qc-title {
+  font-family: 'Share Tech Mono', monospace !important;
+  letter-spacing: 0.15em !important;
+  color: rgba(210,18,24,0.7) !important;
+}
+.qc-tab {
+  font-family: 'Rajdhani', sans-serif !important;
+  font-size: 9px !important;
+  letter-spacing: 0.1em !important;
+  color: rgba(180,100,100,0.6) !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(210,18,24,0.15) !important;
+  transition: color 0.2s !important;
+}
+.qc-tab.active, .qc-tab:hover {
+  color: rgba(210,18,24,0.9) !important;
+  border-bottom-color: rgba(210,18,24,0.5) !important;
+}
+
+/* FLOAT CHAT BUTTON */
+#floatChatBtn {
+  background: rgba(210,18,24,0.12) !important;
+  border: 1px solid rgba(210,18,24,0.35) !important;
+  box-shadow: 0 0 12px rgba(210,18,24,0.2), 0 0 25px rgba(210,18,24,0.08) !important;
+  backdrop-filter: blur(8px) !important;
+}
+#floatChatBtn:hover {
+  background: rgba(210,18,24,0.22) !important;
+  box-shadow: 0 0 18px rgba(210,18,24,0.35) !important;
+}
+
+/* FAB Buttons */
+#qcFab {
+  background: rgba(8,2,2,0.9) !important;
+  border: 1px solid rgba(210,18,24,0.3) !important;
+  box-shadow: 0 0 10px rgba(210,18,24,0.15) !important;
+}
+
+/* AI MODAL BOX */
+.ai-modal-box {
+  background: rgba(6,1,1,0.96) !important;
+  border: 1px solid rgba(210,18,24,0.25) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 50px rgba(210,18,24,0.1), 0 20px 60px rgba(0,0,0,0.8) !important;
+}
+
+/* N90 ALERT BAR */
+#n90AlertBar {
+  background: rgba(4,1,1,0.95) !important;
+  border-bottom: 1px solid rgba(210,18,24,0.15) !important;
+}
+
+/* TOPBAR logo + sys */
+.acc-topbar-logo {
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(210,18,24,0.95) !important;
+  text-shadow: 0 0 10px rgba(210,18,24,0.6) !important;
+  font-size: 14px !important;
+}
+.acc-topbar-sys {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 9px !important;
+  letter-spacing: 0.2em !important;
+  color: rgba(180,80,80,0.4) !important;
+}
+.acc-topbar-time {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(220,120,120,0.8) !important;
+}
+.acc-topbar-dot {
+  background: rgba(210,18,24,0.9) !important;
+  box-shadow: 0 0 8px rgba(210,18,24,0.8) !important;
+  animation: elp-dot-pulse 2s ease-in-out infinite !important;
+}
+.acc-topbar-pill {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 8px !important;
+  letter-spacing: 0.12em !important;
+  background: rgba(210,18,24,0.1) !important;
+  border: 1px solid rgba(210,18,24,0.25) !important;
+  color: rgba(210,18,24,0.75) !important;
+  border-radius: 2px !important;
+}
+
+/* PATTERN ALERT */
+#patternAlert {
+  background: rgba(8,2,2,0.9) !important;
+  border: 1px solid rgba(210,18,24,0.25) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 3px !important;
+}
+.pa-title {
+  font-family: 'Share Tech Mono', monospace !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(210,18,24,0.7) !important;
+  font-size: 8px !important;
+}
+
+/* N57 MODE HUD */
+#n57ModeHud {
+  background: rgba(6,1,1,0.9) !important;
+  border: 1px solid rgba(210,18,24,0.2) !important;
+  border-radius: 2px !important;
+  backdrop-filter: blur(8px) !important;
+}
+</style></head>
 <body>
 <!-- ══ N108 JARVIS THINKING STATE — overlay elements ══ -->
 <span id="eosMoodTag"></span>
@@ -41746,7 +42116,7 @@ rotateTh();
 setInterval(rotateTh,5000);
 }
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init);}else{init();}
-})();</script></body>\n</html>';
+})();</script><script id="eos-v12-dom">(function(){function bv12(){["eosLeftPanel","eosOrbBrackets","eosHudLines"].forEach(function(id){var e=document.getElementById(id);if(e)e.remove();});var lp=document.createElement("div");lp.id="eosLeftPanel";lp.innerHTML="<div class=\"elp-block\"><div class=\"elp-label\">◈ EOS MOMENTUM</div><div class=\"elp-big\">87<sub>%</sub></div><div class=\"elp-bar-row\"><div class=\"elp-bar-key\">GROWTH</div><div class=\"elp-bar-track\"><div class=\"elp-bar-fill\" style=\"width:87%\"></div></div></div><div class=\"elp-bar-row\"><div class=\"elp-bar-key\">VISIBILITY</div><div class=\"elp-bar-track\"><div class=\"elp-bar-fill\" style=\"width:62%\"></div></div></div><div class=\"elp-bar-row\"><div class=\"elp-bar-key\">TREND ALIGN</div><div class=\"elp-bar-track\"><div class=\"elp-bar-fill\" style=\"width:74%\"></div></div></div></div><div class=\"elp-block\"><div class=\"elp-label\">◈ 5 ORKIS — NÚCLEO EMOCIONAL</div><div class=\"elp-orkis-row\"><div class=\"elp-dot\"></div>Amor no habitado</div><div class=\"elp-orkis-row\"><div class=\"elp-dot\"></div>Culpa sin reciprocidad</div><div class=\"elp-orkis-row\"><div class=\"elp-dot\"></div>Cambio</div><div class=\"elp-orkis-row\"><div class=\"elp-dot\"></div>Paz</div><div class=\"elp-orkis-row\"><div class=\"elp-dot\"></div>Comienzo</div></div><div class=\"elp-block\"><div class=\"elp-label\">◈ SEÑALES DETECTADAS</div><div class=\"elp-big\">3<sub> oport.</sub></div><div class=\"elp-bar-row\"><div class=\"elp-bar-key\">FESTIVALES</div><div class=\"elp-bar-track\"><div class=\"elp-bar-fill\" style=\"width:40%\"></div></div></div><div class=\"elp-bar-row\"><div class=\"elp-bar-key\">PLAYLISTS</div><div class=\"elp-bar-track\"><div class=\"elp-bar-fill\" style=\"width:70%\"></div></div></div><div class=\"elp-bar-row\"><div class=\"elp-bar-key\">MEDIA / BLOGS</div><div class=\"elp-bar-track\"><div class=\"elp-bar-fill\" style=\"width:55%\"></div></div></div></div><div class=\"elp-block\"><div class=\"elp-label\">◈ ESTADO DEL SISTEMA</div><div class=\"elp-tags\"><div class=\"elp-tag elp-tag-green\">● SCOUT ON</div><div class=\"elp-tag elp-tag-red\">● VOICE ON</div><div class=\"elp-tag elp-tag-amber\">● MEMORY</div><div class=\"elp-tag elp-tag-green\">● API ACTIVE</div></div></div>";document.body.appendChild(lp);var oc=document.getElementById("eosOrbCanvas"),br=document.createElement("div");br.id="eosOrbBrackets";["tl","tr","bl","br"].forEach(function(c){var d=document.createElement("div");d.className="eos-brk eos-brk-"+c;br.appendChild(d);});if(oc){var r=oc.getBoundingClientRect(),p=18;br.style.cssText="position:fixed;pointer-events:none;z-index:60;left:"+(r.left-p)+"px;top:"+(r.top-p)+"px;width:"+(r.width+p*2)+"px;height:"+(r.height+p*2)+"px;";}else{br.style.cssText="position:fixed;pointer-events:none;z-index:60;left:360px;top:155px;width:340px;height:340px;";}document.body.appendChild(br);var hl=document.createElement("div");hl.id="eosHudLines";[[33,"h"],[50,"h"],[67,"h"],[33,"v"],[67,"v"]].forEach(function(x){var d=document.createElement("div");d.className="ehl-"+x[1];d.style[x[1]==="h"?"top":"left"]=x[0]+"%";hl.appendChild(d);});var sw=document.createElement("div");sw.className="ehl-sweep";hl.appendChild(sw);document.body.appendChild(hl);var so=document.querySelector(".scan-overlay");if(so)so.style.opacity="0";}setTimeout(bv12,2500);})();</script></body>\n</html>';
   }
 
   window.eosExportConversation = function(){
