@@ -9690,7 +9690,7 @@ body.mode-rusia::before {
 @keyframes n92ScanV{0%{left:0;opacity:1;}100%{left:100%;opacity:.1;}}
 </style>
 
-<style id="eos-ultra-v11">*{box-sizing:border-box;}body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;}.sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar,#eos-hud,.ci-modal-badge{display:none!important;}.shell{background:transparent!important;position:absolute!important;inset:0!important;}.main{background:transparent!important;width:100vw!important;height:100vh!important;position:absolute!important;top:0!important;left:0!important;}.content,#content{background:transparent!important;width:100%!important;height:100%!important;overflow:visible!important;}#view-dashboard{background:transparent!important;position:relative!important;overflow:visible!important;}#view-dashboard>div{visibility:hidden!important;pointer-events:none!important;}#eosOrbCanvas{filter:drop-shadow(0 0 18px rgba(210,18,24,1)) drop-shadow(0 0 50px rgba(175,12,18,0.82)) drop-shadow(0 0 105px rgba(135,8,14,0.58)) drop-shadow(0 0 185px rgba(92,5,10,0.34)) drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;animation:v11breathe 8s ease-in-out infinite!important;display:block!important;visibility:visible!important;}#eosOrbWrap{overflow:visible!important;display:block!important;visibility:visible!important;}#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;}#eos-thought{transition:opacity 0.4s ease;}@keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}@keyframes v11cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}@keyframes v11ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}</style></head>
+<style id="eos-ultra-v11">*{box-sizing:border-box;}body{background:#020101!important;overflow:hidden!important;margin:0!important;padding:0!important;}.sb,.tb,.topbar,[class*="topbar"],#mainTabBar,#presenceBar,#eos-hud,.ci-modal-badge{display:none!important;}.shell{background:transparent!important;position:absolute!important;inset:0!important;}.main{background:transparent!important;width:100vw!important;height:100vh!important;position:absolute!important;top:0!important;left:0!important;}.content,#content{background:transparent!important;width:100%!important;height:100%!important;overflow:visible!important;}#view-dashboard{background:transparent!important;position:relative!important;overflow:visible!important;}#view-dashboard>div{display:none!important;}#eosOrbCanvas{filter:drop-shadow(0 0 18px rgba(210,18,24,1)) drop-shadow(0 0 50px rgba(175,12,18,0.82)) drop-shadow(0 0 105px rgba(135,8,14,0.58)) drop-shadow(0 0 185px rgba(92,5,10,0.34)) drop-shadow(0 0 280px rgba(60,3,7,0.18))!important;animation:v11breathe 8s ease-in-out infinite!important;display:block!important;visibility:visible!important;}#eosOrbWrap{overflow:visible!important;display:block!important;visibility:visible!important;}#eosBootScreen,#bootEnterPrompt,#bootBypass,#eosAccess,#accPass,#accPassInput,#accActivation{display:block!important;pointer-events:all!important;visibility:visible!important;z-index:99999!important;}#eos-thought{transition:opacity 0.4s ease;}@keyframes v11breathe{0%,100%{opacity:0.88;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}@keyframes v11cw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}@keyframes v11ccw{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(-360deg);}}</style></head>
 <body>
 <!-- ══ N108 JARVIS THINKING STATE — overlay elements ══ -->
 <span id="eosMoodTag"></span>
@@ -41622,14 +41622,129 @@ if(!window.__n149Patched){
     return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>EOS — Conversación '+dateStr+'</title>\n<style>\n  body{margin:0;font-family:\'Courier New\',monospace;background:#0a0a0a;color:#e0e0e0;}\n  .header{padding:40px;border-bottom:1px solid rgba(200,0,0,.3);}\n  .header h1{margin:0;font-size:22px;letter-spacing:8px;color:#cc0000;}\n  .header p{margin:8px 0 0;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);}\n  .body{padding:40px;max-width:800px;}\n  .msg{margin-bottom:24px;}\n  .lbl{font-size:8px;letter-spacing:4px;color:rgba(200,0,0,.5);display:block;margin-bottom:6px;}\n  .msg.eos p{color:#e0e0e0;border-left:2px solid rgba(200,0,0,.4);padding-left:14px;margin:0;line-height:1.7;}\n  .msg.user p{color:rgba(255,255,255,.5);padding-left:16px;margin:0;line-height:1.7;}\n  .footer{padding:20px 40px;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);border-top:1px solid rgba(200,0,0,.1);}\n</style>\n</head>\n<body>\n<div class="header"><h1>EOS ■ Νέα Αρχή</h1><p>CONVERSACIÓN — '+dateStr.toUpperCase()+' — '+timeStr+'</p></div>\n<div class="body">\n'+rows+'\n</div>\n<div class="footer">EOS AGENT — SISTEMA OPERATIVO ARTÍSTICO — GENERADO '+timeStr+'</div>\n
 </script><script id="eos-v11-living">(function(){
 "use strict";
-function buildBlackout(){var s=document.createElement("style");s.textContent="#eos-hud,.ci-modal-badge,#app,.shell,.main,.content,#content,#view-dashboard,#view-dashboard>div,.sb,.tb,#mainTabBar,#presenceBar{visibility:hidden!important;pointer-events:none!important;}";document.head.appendChild(s);var el=document.createElement("div");el.id="eos-blackout";el.style.cssText="position:fixed;inset:0;z-index:15;background:#020101;pointer-events:none;";document.body.insertBefore(el,document.body.firstChild);}
-function buildParticles(){var cv=document.createElement("canvas");cv.id="eos-particles";cv.style.cssText="position:fixed;inset:0;width:100vw;height:100vh;z-index:18;pointer-events:none;";document.body.appendChild(cv);var W=cv.width=window.innerWidth,H=cv.height=window.innerHeight;var ctx=cv.getContext("2d"),pts=[];for(var i=0;i<70;i++){var a=Math.random()*Math.PI*2,r=Math.random()*180;pts.push({x:W/2+Math.cos(a)*r,y:H/2+Math.sin(a)*r,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.18,op:Math.random()*.45+.08,s:Math.random()*1.5+.5});}function loop(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fillStyle="rgba(158,14,20,"+p.op+")";ctx.fill();});requestAnimationFrame(loop);}loop();}
-function buildAtmosphere(){var el=document.createElement("div");el.id="eos-atmo";el.style.cssText="position:fixed;inset:0;z-index:16;pointer-events:none;background:radial-gradient(ellipse 60% 55% at 50% 48%,rgba(140,8,14,0.09) 0%,transparent 70%);";document.body.appendChild(el);}
-function buildTop(){var el=document.createElement("div");el.id="eos-top";el.style.cssText="position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:9100;display:flex;align-items:center;gap:24px;pointer-events:none;";el.innerHTML="<span style=\"font-family:Space Grotesk,Inter,sans-serif;font-size:11px;letter-spacing:0.18em;color:rgba(220,200,200,0.35);font-weight:300;\">EOS AGENT<\/span><span style=\"width:4px;height:4px;border-radius:50%;background:rgba(190,18,24,0.7);box-shadow:0 0 8px rgba(190,18,24,0.8);display:inline-block;animation:v11breathe 2s ease-in-out infinite;\"><\/span><span style=\"font-family:Inter,sans-serif;font-size:10px;letter-spacing:0.12em;color:rgba(180,160,160,0.25);font-weight:300;\">SISTEMA ACTIVO<\/span>";document.body.appendChild(el);}
-function buildRightPanel(){var agents=[{name:"Scout",state:"SCANNING"},{name:"Outreach",state:"STANDBY"},{name:"Trends",state:"MONITORING"},{name:"Creative",state:"READY"},{name:"Memory",state:"ACTIVE"}];var thoughts=["Analizando patrones culturales en LATAM...","Detectando oportunidades de networking...","Procesando tendencias cinematograficas...","Evaluando posicionamiento de EOS...","Monitoreando escena alternativa Bogota..."];var panel=document.createElement("div");panel.id="eos-right-panel";panel.style.cssText="position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:9100;width:240px;backdrop-filter:blur(52px);-webkit-backdrop-filter:blur(52px);background:rgba(9,4,4,0.42);border:1px solid rgba(160,12,18,0.1);border-radius:16px;padding:20px 18px;font-family:Inter,sans-serif;pointer-events:none;";var h="<div style=\"font-size:9px;letter-spacing:0.16em;color:rgba(180,140,140,0.4);margin-bottom:14px;\">AGENTES<\/div>";agents.forEach(function(a){var col=a.state==="ACTIVE"||a.state==="MONITORING"?"rgba(120,220,140,0.7)":a.state==="SCANNING"?"rgba(190,18,24,0.8)":"rgba(140,120,120,0.4)";h+="<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;\"><span style=\"font-size:11px;color:rgba(210,190,190,0.65);font-weight:300;\">"+a.name+"<\/span><div style=\"display:flex;align-items:center;gap:6px;\"><div style=\"width:5px;height:5px;border-radius:50%;background:"+col+";box-shadow:0 0 6px "+col+";\"><\/div><span style=\"font-size:9px;color:"+col+";letter-spacing:0.1em;\">"+a.state+"<\/span><\/div><\/div>";});h+="<div style=\"margin-top:16px;padding-top:16px;border-top:1px solid rgba(120,8,12,0.12);\"><div style=\"font-size:9px;letter-spacing:0.16em;color:rgba(180,140,140,0.35);margin-bottom:10px;\">PROCESANDO<\/div><div id=\"eos-thought\" style=\"font-size:10.5px;color:rgba(200,170,170,0.55);line-height:1.6;font-weight:300;min-height:50px;transition:opacity 0.4s;\">"+thoughts[0]+"<\/div><\/div>";panel.innerHTML=h;document.body.appendChild(panel);var ti=0;setInterval(function(){ti=(ti+1)%thoughts.length;var el=document.getElementById("eos-thought");if(el){el.style.opacity="0";setTimeout(function(){el.textContent=thoughts[ti];el.style.opacity="1";},400);}},5000);}
-function buildDock(){var items=[{icon:"\u25C9",label:"Central"},{icon:"\u25C8",label:"Memoria"},{icon:"\u25CE",label:"Scout"},{sep:true},{icon:"\u25C7",label:"Outreach"},{icon:"\u25C6",label:"Lab"},{icon:"\u25C9",label:"Trends"},{icon:"\u25EB",label:"Agenda"}];var dock=document.createElement("div");dock.id="eos-dock";dock.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9200;display:flex;align-items:center;gap:2px;backdrop-filter:blur(44px);-webkit-backdrop-filter:blur(44px);background:rgba(8,3,3,0.52);border:1px solid rgba(140,10,16,0.14);border-radius:50px;padding:8px 16px;pointer-events:all;";items.forEach(function(item){if(item.sep){var sep=document.createElement("div");sep.style.cssText="width:1px;height:22px;background:rgba(120,8,12,0.2);margin:0 6px;";dock.appendChild(sep);return;}var btn=document.createElement("div");btn.style.cssText="display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;cursor:pointer;border-radius:10px;transition:background 0.2s;";btn.innerHTML="<span style=\"font-size:13px;color:rgba(200,160,160,0.6);line-height:1;\">"+item.icon+"<\/span><span style=\"font-size:8px;color:rgba(170,130,130,0.4);letter-spacing:0.08em;font-family:Inter,sans-serif;\">"+item.label+"<\/span>";btn.addEventListener("mouseenter",function(){this.style.background="rgba(140,10,16,0.15)";});btn.addEventListener("mouseleave",function(){this.style.background="transparent";});dock.appendChild(btn);});document.body.appendChild(dock);}
-function extractOrb(){var wrap=document.getElementById("eosOrbWrap");if(!wrap||!wrap.getBoundingClientRect().width){setTimeout(extractOrb,500);return;}var existing=document.getElementById("eos-orb-center");if(existing)existing.parentElement.removeChild(existing);var host=document.createElement("div");host.id="eos-orb-center";host.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-55%);z-index:50;overflow:visible;";document.body.appendChild(host);host.appendChild(wrap);[{s:215,dur:"18s",dir:1},{s:302,dur:"32s",dir:-1},{s:402,dur:"56s",dir:1}].forEach(function(r){var ring=document.createElement("div");ring.style.cssText="position:absolute;top:50%;left:50%;width:"+r.s+"px;height:"+r.s+"px;border-radius:50%;background:transparent;border:1px solid rgba(185,16,22,"+(r.dir===1?"0.18":"0.08")+");transform:translate(-50%,-50%);pointer-events:none;animation:v11"+(r.dir===1?"cw":"ccw")+" "+r.dur+" linear infinite;";host.appendChild(ring);});var lbl=document.createElement("div");lbl.style.cssText="position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);font-family:Space Grotesk,sans-serif;font-size:9px;letter-spacing:0.22em;color:rgba(200,140,140,0.35);white-space:nowrap;font-weight:300;";lbl.textContent="N\u00DACLEO ACTIVO";host.appendChild(lbl);}
-function init(){buildBlackout();buildParticles();buildAtmosphere();buildTop();buildRightPanel();buildDock();setTimeout(extractOrb,800);}
+function bb(){
+var s=document.createElement("style");
+s.textContent="#eos-hud,.ci-modal-badge{display:none!important;}";
+document.head.appendChild(s);
+var el=document.createElement("div");
+el.style.cssText="position:fixed;inset:0;z-index:15;background:#020101;pointer-events:none;";
+document.body.insertBefore(el,document.body.firstChild);
+}
+function mkP(){
+var c=document.createElement("canvas");
+c.style.cssText="position:fixed;inset:0;z-index:18;pointer-events:none;";
+document.body.appendChild(c);
+var ctx=c.getContext("2d"),pts=[];
+var W=c.width=innerWidth,H=c.height=innerHeight;
+window.addEventListener("resize",function(){W=c.width=innerWidth;H=c.height=innerHeight;});
+for(var i=0;i<80;i++)pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+0.3,vx:(Math.random()-0.5)*0.15,vy:(Math.random()-0.5)*0.15,a:Math.random()*0.3+0.05});
+(function draw(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fillStyle="rgba(185,16,22,"+p.a+")";ctx.fill();});requestAnimationFrame(draw);})();
+}
+function mkOrb(){
+var wrap=document.getElementById("eosOrbWrap");
+if(!wrap)return;
+var host=document.createElement("div");
+host.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:50;pointer-events:none;width:200px;height:200px;overflow:visible;";
+document.body.appendChild(host);
+host.appendChild(wrap);
+wrap.style.cssText="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow:visible;";
+var rings=[{s:215,d:"18s",o:"0.22"},{s:310,d:"32s",o:"0.11"},{s:420,d:"56s",o:"0.05"}];
+rings.forEach(function(r,i){
+var el=document.createElement("div");
+el.style.cssText="position:absolute;top:50%;left:50%;width:"+r.s+"px;height:"+r.s+"px;border-radius:50%;background:transparent;border:1px solid rgba(185,16,22,"+r.o+") !important;transform:translate(-50%,-50%);pointer-events:none;animation:v11"+(i%2===0?"cw":"ccw")+" "+r.d+" linear infinite;";
+host.appendChild(el);
+});
+}
+function mkA(){
+var el=document.createElement("div");
+el.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(185,16,22,0.06) 0%,rgba(100,8,12,0.04) 40%,transparent 70%);z-index:16;pointer-events:none;animation:v11breathe 8s ease-in-out infinite;";
+document.body.appendChild(el);
+}
+function mkTop(){
+var b=document.createElement("div");
+b.style.cssText="position:fixed;top:0;left:0;right:0;height:44px;z-index:9100;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(2,1,1,0.6);backdrop-filter:blur(12px);border-bottom:1px solid rgba(185,16,22,0.12);";
+var dot=document.createElement("div");
+dot.style.cssText="width:7px;height:7px;border-radius:50%;background:#b91016;box-shadow:0 0 8px rgba(185,16,22,0.9);animation:v11breathe 2s ease-in-out infinite;";
+var lbl=document.createElement("span");
+lbl.style.cssText="color:rgba(185,16,22,0.9);font-size:11px;letter-spacing:0.2em;font-family:monospace;font-weight:600;margin-left:10px;";
+lbl.textContent="EOS AGENT";
+var lft=document.createElement("div");
+lft.style.cssText="display:flex;align-items:center;";
+lft.appendChild(dot);lft.appendChild(lbl);
+var tm=document.createElement("div");
+tm.id="v11tm";
+tm.style.cssText="color:rgba(255,255,255,0.3);font-size:10px;font-family:monospace;letter-spacing:0.1em;";
+var sta=document.createElement("span");
+sta.style.cssText="color:rgba(185,16,22,0.5);font-size:9px;font-family:monospace;letter-spacing:0.15em;";
+sta.textContent="SISTEMA ACTIVO";
+b.appendChild(lft);b.appendChild(tm);b.appendChild(sta);
+document.body.appendChild(b);
+setInterval(function(){var t=new Date();var e=document.getElementById("v11tm");if(e)e.textContent=t.toLocaleDateString("es-CO",{weekday:"short",month:"short",day:"numeric"})+" · "+t.toLocaleTimeString("es-CO",{hour:"2-digit",minute:"2-digit"});},1000);
+}
+function mkPnl(){
+var p=document.createElement("div");
+p.style.cssText="position:fixed;right:24px;top:60px;bottom:80px;width:280px;z-index:9100;display:flex;flex-direction:column;gap:10px;overflow:hidden;";
+var agents=[{n:"SCOUT",s:"Monitoreando oportunidades",c:"#b91016"},{n:"OUTREACH",s:"3 contactos pendientes",c:"rgba(185,16,22,0.5)"},{n:"TRENDS",s:"Analizando cultura digital",c:"rgba(185,16,22,0.5)"},{n:"CREATIVE",s:"En espera",c:"rgba(185,16,22,0.3)"}];
+agents.forEach(function(a){
+var card=document.createElement("div");
+card.style.cssText="background:rgba(2,1,1,0.7);border:1px solid rgba(185,16,22,0.15);border-radius:12px;padding:12px 14px;backdrop-filter:blur(16px);";
+var row=document.createElement("div");
+row.style.cssText="display:flex;align-items:center;gap:8px;margin-bottom:5px;";
+var dot=document.createElement("div");
+dot.style.cssText="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:"+a.c+";box-shadow:0 0 6px "+a.c+";";
+var nm=document.createElement("span");
+nm.style.cssText="color:rgba(185,16,22,0.8);font-size:9px;font-family:monospace;letter-spacing:0.18em;font-weight:700;";
+nm.textContent=a.n;
+var st=document.createElement("div");
+st.style.cssText="color:rgba(255,255,255,0.4);font-size:10px;font-family:sans-serif;";
+st.textContent=a.s;
+row.appendChild(dot);row.appendChild(nm);
+card.appendChild(row);card.appendChild(st);
+p.appendChild(card);
+});
+var tb=document.createElement("div");
+tb.style.cssText="background:rgba(2,1,1,0.7);border:1px solid rgba(185,16,22,0.25);border-radius:12px;padding:16px;backdrop-filter:blur(16px);flex:1;display:flex;flex-direction:column;justify-content:center;";
+var tl=document.createElement("div");
+tl.style.cssText="color:rgba(185,16,22,0.5);font-size:8px;font-family:monospace;letter-spacing:0.2em;margin-bottom:10px;";
+tl.textContent="SISTEMA · PENSANDO";
+var tt=document.createElement("div");
+tt.id="v11th";
+tt.style.cssText="color:rgba(255,255,255,0.65);font-size:11px;font-family:sans-serif;line-height:1.6;font-style:italic;transition:opacity 0.4s;";
+tb.appendChild(tl);tb.appendChild(tt);
+p.appendChild(tb);
+document.body.appendChild(p);
+}
+function mkDock(){
+var d=document.createElement("div");
+d.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9200;display:flex;align-items:center;gap:6px;background:rgba(2,1,1,0.75);border:1px solid rgba(185,16,22,0.2);border-radius:32px;padding:10px 20px;backdrop-filter:blur(20px);";
+var items=[{l:"INICIO",ic:"◈",a:true},{l:"SCOUT",ic:"◎",a:false},{l:"MEMORIA",ic:"◉",a:false},{l:"CREATIVE",ic:"◇",a:false},{l:"TAREAS",ic:"◻",a:false},{l:"CONFIG",ic:"⊙",a:false}];
+items.forEach(function(it){
+var btn=document.createElement("div");
+btn.style.cssText="display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 10px;border-radius:20px;color:"+(it.a?"rgba(185,16,22,1)":"rgba(255,255,255,0.3)")+";";
+var ic=document.createElement("span");
+ic.style.cssText="font-size:14px;";
+ic.textContent=it.ic;
+var lb=document.createElement("span");
+lb.style.cssText="font-size:7px;font-family:monospace;letter-spacing:0.12em;";
+lb.textContent=it.l;
+btn.appendChild(ic);btn.appendChild(lb);
+d.appendChild(btn);
+});
+document.body.appendChild(d);
+}
+var TH=["Monitoreando ecosistema artistico de Bogota...","3 oportunidades detectadas esta semana.","Analizando patrones de contenido cinematografico.","Diferenciacion EOS identificada en el mercado.","Tendencia: storytelling documental en ascenso.","Evaluando colaboradores potenciales en LATAM.","El sistema esta aprendiendo tu voz artistica.","Buscando festivales alineados con tu identidad.","Nueva ola estetica: minimalismo emocional.","EOS es unico. El sistema lo confirma."];
+var tIdx=0;
+function rotateTh(){
+var el=document.getElementById("v11th");
+if(!el)return;
+el.style.opacity="0";
+setTimeout(function(){el.textContent=TH[tIdx%TH.length];tIdx++;el.style.opacity="1";},400);
+}
+function init(){
+bb();mkP();mkA();mkOrb();mkTop();mkPnl();mkDock();
+rotateTh();
+setInterval(rotateTh,5000);
+}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init);}else{init();}
 })();</script></body>\n</html>';
   }
