@@ -37985,6 +37985,7 @@ if(document.readyState === 'loading'){
 
 
 <link rel="stylesheet" href="eos-jarvis.css">
+<link rel="stylesheet" href="eos-ultra.css">
 
 <!-- ══════════════════════════════════════════════════════════════
      N178 — JARVIS DYNAMIC SYSTEM — EOS Agent v4.0
@@ -38664,8 +38665,28 @@ if(document.readyState === 'loading'){
       } catch (e) {}
     }, 1000);
   }
+  /* N182 — Inject global radar sweep element */
+  function injectRadarSweep() {
+    try {
+      if (document.getElementById('eos-radar-sweep')) return;
+      var sweep = document.createElement('div');
+      sweep.id = 'eos-radar-sweep';
+      var line = document.createElement('div');
+      line.id = 'eos-radar-line';
+      sweep.appendChild(line);
+      document.body.insertBefore(sweep, document.body.firstChild);
+    } catch(e) {}
+  }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', doInit);
   else doInit();
+
+  /* Inject radar on DOMContentLoaded regardless of boot state */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectRadarSweep);
+  } else {
+    injectRadarSweep();
+  }
 
 })();
 </script>
