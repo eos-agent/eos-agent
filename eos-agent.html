@@ -686,10 +686,10 @@ canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-e
 /* ══ NIVEL 46 — CINEMATIC ORB ══════════════════════════════════ */
 #eosOrbWrap{position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 #eosOrbCanvas{position:absolute;top:50%;left:50%;width:250px;height:250px;border-radius:50%;margin-top:-125px;margin-left:-125px;}
-.orb-v-ring{position:absolute;border-radius:50%;border:1px solid rgba(200,0,0,.12);pointer-events:none;}
-.orb-v-ring.r1{width:210px;height:210px;animation:ovr 3.5s ease-in-out infinite;}
-.orb-v-ring.r2{width:238px;height:238px;animation:ovr 5s ease-in-out infinite .8s;opacity:.7;}
-.orb-v-ring.r3{width:266px;height:266px;animation:ovr 7s ease-in-out infinite 1.6s;opacity:.4;}
+.orb-v-ring{position:absolute;top:50%;left:50%;border-radius:50%;border:1px solid rgba(200,0,0,.18);pointer-events:none;}
+.orb-v-ring.r1{width:210px;height:210px;margin:-105px 0 0 -105px;animation:ovr 3.5s ease-in-out infinite;}
+.orb-v-ring.r2{width:238px;height:238px;margin:-119px 0 0 -119px;animation:ovr 5s ease-in-out infinite .8s;opacity:.7;}
+.orb-v-ring.r3{width:266px;height:266px;margin:-133px 0 0 -133px;animation:ovr 7s ease-in-out infinite 1.6s;opacity:.4;}
 @keyframes ovr{0%,100%{transform:scale(1);opacity:.45;}50%{transform:scale(1.06);opacity:.12;}}
 .orb-v-ring.active{border-color:rgba(255,40,40,.55) !important;animation-duration:1.2s !important;}
 #orbLabel{font-family:var(--mo);font-size:7px;color:var(--r2);letter-spacing:3px;text-align:center;transition:all .4s;min-height:12px;}
