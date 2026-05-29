@@ -64,10 +64,9 @@ export default async function handler(req, res) {
     try {
       const rows = trends.map(t => ({
         title: (t.title || 'Trend').substring(0, 200),
-        content: (t.insight || t.description || '').substring(0, 600),
+        content: ('[' + (t.platform||'General') + '] ' + (t.insight||'') + ' | EOS angle: ' + (t.eos_angle||'')).substring(0, 600),
         type: 'trend',
-        source: t.platform || 'Trend Analyzer v2',
-        status: 'active'
+        status: 'nueva'
       }));
       const r = await fetch(supabaseUrl + '/rest/v1/ideas', {
         method: 'POST',
