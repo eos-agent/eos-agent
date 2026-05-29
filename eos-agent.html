@@ -42974,6 +42974,152 @@ async function runIntelAgent() {
 }
 </script>
 
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- EOS TELEGRAM CONFIG + NOTIFY BUTTON v1.0       -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="eos-tg-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <div style="background:rgba(5,5,10,0.98);border:1px solid rgba(220,38,38,0.3);border-radius:20px;padding:32px;width:420px;max-width:90vw;font-family:'Inter',sans-serif;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+      <span style="font-size:24px;">✈️</span>
+      <div>
+        <div style="font-size:11px;letter-spacing:3px;color:#dc2626;font-weight:700;">TELEGRAM SETUP</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">Notificaciones proactivas EOS</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);display:block;margin-bottom:6px;">BOT TOKEN</label>
+      <input id="tg-token-input" type="password" placeholder="123456789:ABCdefGHI..." style="
+        width:100%;box-sizing:border-box;padding:10px 14px;
+        background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+        border-radius:8px;color:#fff;font-size:12px;outline:none;font-family:'Inter',sans-serif;
+      "/>
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:5px;">Obtén uno con @BotFather en Telegram</div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);display:block;margin-bottom:6px;">CHAT ID</label>
+      <input id="tg-chat-input" type="text" placeholder="Tu chat ID numérico..." style="
+        width:100%;box-sizing:border-box;padding:10px 14px;
+        background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+        border-radius:8px;color:#fff;font-size:12px;outline:none;font-family:'Inter',sans-serif;
+      "/>
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:5px;">Usa @userinfobot para obtener tu ID</div>
+    </div>
+
+    <div style="display:flex;gap:10px;">
+      <button onclick="saveTelegramConfig()" style="
+        flex:1;padding:12px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.4);
+        border-radius:10px;color:#dc2626;font-size:12px;letter-spacing:2px;font-weight:700;
+        cursor:pointer;text-transform:uppercase;
+      ">💾 Guardar</button>
+      <button onclick="testTelegramNotify()" style="
+        flex:1;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+        border-radius:10px;color:rgba(255,255,255,0.6);font-size:12px;letter-spacing:2px;
+        cursor:pointer;text-transform:uppercase;
+      ">🧪 Test</button>
+      <button onclick="document.getElementById('eos-tg-modal').style.display='none'" style="
+        padding:12px 16px;background:none;border:1px solid rgba(255,255,255,0.08);
+        border-radius:10px;color:rgba(255,255,255,0.3);cursor:pointer;font-size:12px;
+      ">✕</button>
+    </div>
+
+    <div id="tg-status" style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;min-height:16px;"></div>
+  </div>
+</div>
+
+<!-- Telegram Bell Button — bottom right -->
+<button id="eos-tg-btn" onclick="openTelegramSetup()" title="Configurar Telegram" style="
+  position:fixed;bottom:20px;right:20px;z-index:8999;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(5,5,10,0.95);border:1px solid rgba(220,38,38,0.4);
+  color:#dc2626;font-size:18px;cursor:pointer;
+  box-shadow:0 0 20px rgba(220,38,38,0.15);
+  backdrop-filter:blur(10px);transition:all 0.3s;
+  display:flex;align-items:center;justify-content:center;
+" onmouseover="this.style.boxShadow='0 0 30px rgba(220,38,38,0.4)'"
+   onmouseout="this.style.boxShadow='0 0 20px rgba(220,38,38,0.15)'">✈️</button>
+
+<script>
+// ═══════════════════════════════════════════════
+// TELEGRAM CONFIG & NOTIFY v1.0
+// ═══════════════════════════════════════════════
+
+function openTelegramSetup() {
+  const modal = document.getElementById('eos-tg-modal');
+  modal.style.display = 'flex';
+  // Pre-fill saved values
+  const saved_token = localStorage.getItem('eos_tg_token');
+  const saved_chat = localStorage.getItem('eos_tg_chat');
+  if (saved_token) document.getElementById('tg-token-input').value = saved_token;
+  if (saved_chat) document.getElementById('tg-chat-input').value = saved_chat;
+  // Update bell color if configured
+  updateTgBtnStatus();
+}
+
+function saveTelegramConfig() {
+  const token = document.getElementById('tg-token-input').value.trim();
+  const chat = document.getElementById('tg-chat-input').value.trim();
+  if (!token || !chat) {
+    document.getElementById('tg-status').innerHTML = '<span style="color:#dc2626;">⚠️ Rellena ambos campos</span>';
+    return;
+  }
+  localStorage.setItem('eos_tg_token', token);
+  localStorage.setItem('eos_tg_chat', chat);
+  document.getElementById('tg-status').innerHTML = '<span style="color:#22c55e;">✅ Guardado en localStorage</span>';
+  updateTgBtnStatus();
+}
+
+function updateTgBtnStatus() {
+  const btn = document.getElementById('eos-tg-btn');
+  if (!btn) return;
+  const hasConfig = localStorage.getItem('eos_tg_token') && localStorage.getItem('eos_tg_chat');
+  btn.style.borderColor = hasConfig ? 'rgba(34,197,94,0.5)' : 'rgba(220,38,38,0.4)';
+  btn.title = hasConfig ? 'Telegram configurado ✅ — Click para editar' : 'Configurar Telegram';
+}
+
+async function testTelegramNotify() {
+  const token = document.getElementById('tg-token-input').value.trim() || localStorage.getItem('eos_tg_token');
+  const chat = document.getElementById('tg-chat-input').value.trim() || localStorage.getItem('eos_tg_chat');
+  const statusEl = document.getElementById('tg-status');
+
+  if (!token || !chat) {
+    statusEl.innerHTML = '<span style="color:#dc2626;">⚠️ Configura el Bot Token y Chat ID primero</span>';
+    return;
+  }
+
+  statusEl.innerHTML = 'Enviando mensaje de prueba...';
+
+  try {
+    const res = await fetch('/api/notify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-telegram-token': token,
+        'x-telegram-chat-id': chat
+      },
+      body: JSON.stringify({ message: '🔴 *EOS AGENT ACTIVO*\n\nSistema de notificaciones Telegram configurado correctamente.\n\n_EOS Νέα Αρχή — Sistema Operativo Artístico_' })
+    });
+    const data = await res.json();
+    if (data.success) {
+      statusEl.innerHTML = '<span style="color:#22c55e;">✅ Mensaje enviado — revisa tu Telegram</span>';
+      localStorage.setItem('eos_tg_token', token);
+      localStorage.setItem('eos_tg_chat', chat);
+      updateTgBtnStatus();
+    } else {
+      statusEl.innerHTML = '<span style="color:#dc2626;">❌ Error: ' + (data.error || 'Telegram rechazó el mensaje') + '</span>';
+    }
+  } catch(e) {
+    statusEl.innerHTML = '<span style="color:#dc2626;">❌ Error de red: ' + e.message + '</span>';
+  }
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', updateTgBtnStatus);
+setTimeout(updateTgBtnStatus, 1000);
+</script>
+
 </body>\n</html>';
   }
 
