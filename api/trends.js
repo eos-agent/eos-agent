@@ -1,86 +1,148 @@
-// ═══════════════════════════════════════════════════════
-//  EOS AGENT — /api/trends
-//  Trend Analyzer autónomo. n8n lo llama cada semana.
-//  Monitorea cultura, detecta oportunidades, alerta.
-// ═══════════════════════════════════════════════════════
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-claude-key, x-tavily-key, x-supabase-url, x-supabase-key');
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
-const { searchWeb, formatSearch, callClaude, sendTelegram, handleCors, checkAuth } = require('./_utils');
+  const body = req.body || {};
+  const claudeKey = body.claudeKey || req.headers['x-claude-key'] || process.env.CLAUDE_API_KEY;
+  const tavilyKey = body.tavilyKey || req.headers['x-tavily-key'] || process.env.TAVILY_API_KEY;
+  const supabaseUrl = body.supabaseUrl || req.headers['x-supabase-url'] || process.env.SUPABASE_URL;
+  const supabaseKey = body.supabaseKey || req.headers['x-supabase-key'] || process.env.SUPABASE_SERVICE_KEY;
 
-module.exports = async function handler(req, res) {
-  if (handleCors(req, res)) return;
-  if (!checkAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
+  if (req.method === 'GET') {
+    // Return latest saved trends from Supabase
+    if (!supabaseUrl || !supabaseKey) return res.status(200).json({ success: true, trends: [] });
+    try {
+      const r = await fetch(supabaseUrl + '/rest/v1/ideas?type=eq.trend&order=created_at.desc&limit=15', {
+        headers: { 'apikey': supabaseKey, 'Authorization': 'Bearer ' + supabaseKey }
+      });
+      const rows = await r.json();
+      return res.status(200).json({ success: true, trends: Array.isArray(rows) ? rows : [] });
+    } catch(e) {
+      return res.status(200).json({ success: true, trends: [] });
+    }
+  }
+
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (!claudeKey) return res.status(400).json({ error: 'Missing claudeKey' });
+  if (!tavilyKey) return res.status(400).json({ error: 'Missing tavilyKey' });
+
+  async function searchWeb(query) {
+    try {
+      const r = await fetch('https://api.tavily.com/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ api_key: tavilyKey, query, max_results: 5, search_depth: 'basic' })
+      });
+      const d = await r.json();
+      return (d.results || []).map(x => x.title + ': ' + x.content).join('\n\n');
+    } catch(e) { return ''; }
+  }
+
+  async function callClaude(prompt) {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': claudeKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 2500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message);
+    return d.content[0].text;
+  }
+
+  async function saveToSupabase(trends) {
+    if (!supabaseUrl || !supabaseKey) return false;
+    try {
+      const rows = trends.map(t => ({
+        title: (t.title || 'Trend').substring(0, 200),
+        content: (t.insight || t.description || '').substring(0, 600),
+        type: 'trend',
+        source: t.platform || 'Trend Analyzer v2',
+        status: 'active'
+      }));
+      const r = await fetch(supabaseUrl + '/rest/v1/ideas', {
+        method: 'POST',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': 'Bearer ' + supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(rows)
+      });
+      return r.status === 201 || r.status === 200;
+    } catch(e) { return false; }
+  }
 
   try {
-    // ── Búsquedas de tendencias ───────────────────────────
-    const [cultural, visual, platform, competitive] = await Promise.allSettled([
-      searchWeb('tendencias música alternativa cinematic indie LATAM 2025 viral TikTok', {
-        maxResults: 4, includeAnswer: true, topic: 'news'
-      }),
-      searchWeb('estéticas visuales música documental cinematográfico tendencia 2025', {
-        maxResults: 3, includeAnswer: true, topic: 'general'
-      }),
-      searchWeb('algoritmo spotify instagram tiktok música indie 2025 crecimiento', {
-        maxResults: 3, includeAnswer: true, topic: 'general'
-      }),
-      searchWeb('artistas alternativos colombia latinoamerica emergentes exitosos 2025', {
-        maxResults: 3, includeAnswer: true, topic: 'general'
-      })
-    ]);
+    const queries = [
+      'TikTok aesthetic trends cinematic music videos 2025 2026',
+      'Instagram Reels emotional storytelling content creators viral 2025',
+      'YouTube documentary style music artist behind scenes trending',
+      'alternative indie music visual identity red black aesthetic 2025',
+      'Latin American artists going viral TikTok emotional content 2025'
+    ];
 
-    let webCtx = '';
-    if (cultural.status === 'fulfilled' && cultural.value)
-      webCtx += formatSearch(cultural.value, 'Tendencias culturales actuales');
-    if (visual.status === 'fulfilled' && visual.value)
-      webCtx += formatSearch(visual.value, 'Estéticas visuales en tendencia');
-    if (platform.status === 'fulfilled' && platform.value)
-      webCtx += formatSearch(platform.value, 'Plataformas y algoritmos');
-    if (competitive.status === 'fulfilled' && competitive.value)
-      webCtx += formatSearch(competitive.value, 'Competencia y referentes');
+    const results = await Promise.all(queries.map(q => searchWeb(q)));
+    const combined = results.map((r, i) => '=== ' + queries[i] + ' ===\n' + r).join('\n\n');
 
-    // ── Claude analiza ────────────────────────────────────
-    const prompt = `Eres el Trend Analyzer de EOS. Analiza los datos culturales actuales.
+    const prompt = `Eres el Trend Analyzer de EOS (Νέα Αρchή), proyecto musical/documental de KDK en Bogotá.
 
-DATOS WEB EN TIEMPO REAL:
-${webCtx || 'Usa tu conocimiento profundo del ecosistema alternativo LATAM.'}
+EOS: música cinematic-alternativa, estética rojo/negro, storytelling documental, mitología griega, vulnerabilidad artística real.
 
-Genera el análisis:
+Analiza estos datos de tendencias culturales y digitales:
 
-◑ *EOS TREND REPORT*
+${combined}
 
-*🔴 TENDENCIA CRÍTICA PARA EOS*
-[La tendencia más relevante ahora mismo — por qué favorece a EOS específicamente]
+Extrae los 6-8 insights de tendencias más relevantes para EOS. Para cada uno:
+- Qué está pasando culturalmente
+- Por qué es relevante para EOS específicamente  
+- Cómo EOS puede diferenciarse o aprovechar esto
 
-*◈ MAPA DE TENDENCIAS*
-• Tendencia que FAVORECE a EOS: [explica]
-• Tendencia SATURADA — evitar: [explica]
-• Tendencia EMERGENTE — aprovechar ya: [explica]
+Responde SOLO con JSON válido (array):
+[
+  {
+    "title": "Nombre corto de la tendencia",
+    "platform": "TikTok|Instagram|YouTube|Cultural|General",
+    "insight": "Qué está pasando y por qué importa para EOS — máx 250 chars",
+    "eos_angle": "Cómo EOS puede diferenciarse — máx 150 chars",
+    "momentum": "creciendo|estable|bajando"
+  }
+]
 
-*◎ GAPS DE MERCADO DETECTADOS*
-[2 espacios vacíos donde EOS puede posicionarse ahora mismo]
+Solo JSON, sin markdown.`;
 
-*⊕ POSICIONAMIENTO DIFERENCIAL*
-[Cómo EOS se diferencia del ruido visual y sonoro actual en LATAM]
+    const raw = await callClaude(prompt);
+    let trends = [];
+    try {
+      const match = raw.match(/\[\s*\{[\s\S]*\}\s*\]/);
+      trends = match ? JSON.parse(match[0]) : [];
+    } catch(e) { trends = []; }
 
-*▲ SEÑALES A MONITOREAR*
-[3 señales culturales para seguir las próximas 2 semanas]
+    if (trends.length === 0) {
+      return res.status(200).json({ success: false, error: 'No trends parsed', raw: raw.substring(0, 300) });
+    }
 
-Cinematográfico, estratégico, nunca genérico.`;
-
-    const report = await callClaude(prompt, '', 650);
-
-    // ── Telegram ──────────────────────────────────────────
-    const sent = await sendTelegram(report);
+    const saved = await saveToSupabase(trends);
 
     return res.status(200).json({
       success: true,
-      report,
-      telegram: sent,
-      timestamp: new Date().toISOString()
+      trends: trends.length,
+      savedToMemory: saved,
+      topTrend: trends[0]?.title,
+      data: trends
     });
 
-  } catch (err) {
-    console.error('[EOS Trends Error]', err);
-    await sendTelegram(`⚠️ *EOS Trends* — Error\n\`${err.message}\``).catch(() => {});
-    return res.status(500).json({ error: err.message });
+  } catch(err) {
+    return res.status(500).json({ error: err.message, stack: err.stack?.substring(0, 300) });
   }
-};
+}
