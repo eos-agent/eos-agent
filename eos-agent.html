@@ -43218,6 +43218,7 @@ async function toggleGoalStatus(id,cur){var sb=getSb(),ns=cur==='completed'?'act
 async function createGoal(){var t=document.getElementById('goal-title-input').value.trim(),desc=document.getElementById('goal-desc-input').value.trim(),pri=document.getElementById('goal-priority-input').value,date=document.getElementById('goal-date-input').value,st=document.getElementById('goals-status');if(!t){st.textContent='⚠ Escribe el título';return;}var sb=getSb();st.textContent='Guardando...';try{var p={title:t,description:desc,priority:pri,status:'active'};if(date)p.target_date=date;var r=await fetch(sb.url+'/rest/v1/goals',{method:'POST',headers:{'Content-Type':'application/json','apikey':sb.key,'Authorization':'Bearer '+sb.key,'Prefer':'return=minimal'},body:JSON.stringify(p)});if(r.ok){document.getElementById('goal-title-input').value='';document.getElementById('goal-desc-input').value='';document.getElementById('goal-date-input').value='';st.innerHTML='<span style="color:#22c55e;">✅ Objetivo creado</span>';loadGoals();setTimeout(function(){st.textContent='';},3000);}else st.innerHTML='<span style="color:#dc2626;">Error al guardar</span>';}catch(e){st.innerHTML='<span style="color:#dc2626;">'+e.message+'</span>';}}
 </script>
 <!-- EOS v2.0 -->
+<script src="/goals-panel.js"></script>
 </body>\n</html>';
   }
 
