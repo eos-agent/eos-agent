@@ -1,152 +1,95 @@
-// ─────────────────────────────────────────────────────────
-//  EOS AGENT — /api/scout  v2.4
-//  Scout Agent: busca oportunidades reales en internet.
-//  v2.4: guarda oportunidades en Supabase Memory Core.
-// ─────────────────────────────────────────────────────────
-import { callClaude, searchWeb, sendTelegram, handleCors } from './_utils.js';
-
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
-
-async function saveOpportunityToSupabase(opp) {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return null;
-  try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/opportunities`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({
-        title: opp.title || opp.name || 'Sin título',
-        description: opp.description || opp.why || '',
-        source: opp.source || opp.url || 'Scout Agent',
-        priority: opp.priority || 'medium',
-        status: 'detected',
-        detected_at: new Date().toISOString(),
-        metadata: { raw: opp }
-      })
-    });
-    return r.ok;
-  } catch(e) { return false; }
-}
-
-async function logToSupabase(content, metadata) {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return;
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/memory_logs`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({
-        agent: 'scout',
-        event_type: 'scan_complete',
-        content: content,
-        metadata: metadata,
-        created_at: new Date().toISOString()
-      })
-    });
-  } catch(e) {}
-}
+// api/scout.js — EOS Scout Agent v2.5
+// Self-contained: sin imports externos. Busca oportunidades + guarda en Supabase.
 
 export default async function handler(req, res) {
-  handleCors(res);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,x-claude-key,x-tavily-key,x-supabase-url,x-supabase-key');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const claudeKey = req.headers['x-claude-key'] || req.body?.claudeKey;
-  const tavilyKey = req.headers['x-tavily-key'] || req.body?.tavilyKey;
-  const telegramToken = req.headers['x-telegram-token'] || req.body?.telegramToken;
-  const telegramChatId = req.headers['x-telegram-chat'] || req.body?.telegramChatId;
+  const body = req.body || {};
+  const claudeKey  = req.headers['x-claude-key']   || body.claudeKey;
+  const tavilyKey  = req.headers['x-tavily-key']   || body.tavilyKey;
+  const tgToken    = body.telegramToken;
+  const tgChat     = body.telegramChatId;
+  const supaUrl    = req.headers['x-supabase-url'] || body.supabaseUrl || process.env.SUPABASE_URL;
+  const supaKey    = req.headers['x-supabase-key'] || body.supabaseKey || process.env.SUPABASE_SERVICE_KEY;
 
-  if (!claudeKey) return res.status(400).json({ error: 'Missing claude key' });
+  if (!claudeKey) return res.status(400).json({ error: 'Missing claudeKey' });
 
   try {
-    // 1. Búsqueda web con Tavily
+    // 1. Busqueda Tavily
     let webResults = '';
     let tavilyUsed = false;
     if (tavilyKey) {
-      const searches = [
-        'music festival open call Bogota Colombia 2025 2026',
-        'alternative music showcase LATAM emerging artists 2025',
-        'music blog submission independent artists cinematic',
-        'Spotify playlist curator indie alternative submission'
+      const queries = [
+        'music festival open call Colombia LATAM 2025 2026',
+        'alternative cinematic music showcase emerging artists',
+        'Spotify playlist curator indie submission open',
+        'music blog submission independent artists Bogota'
       ];
-      const allResults = await Promise.allSettled(
-        searches.map(q => searchWeb(q, tavilyKey))
+      const searches = await Promise.allSettled(
+        queries.slice(0,3).map(q => fetch('https://api.tavily.com/search', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ api_key: tavilyKey, query: q, max_results: 3, search_depth: 'basic' })
+        }).then(r=>r.json()).then(d=>d.results?.map(r=>r.title+': '+r.url).join(' | ')).catch(()=>''))
       );
-      const good = allResults.filter(r=>r.status==='fulfilled').map(r=>r.value);
-      if (good.length > 0) {
-        webResults = good.slice(0,3).map(r => JSON.stringify(r).slice(0,800)).join('\n\n');
-        tavilyUsed = true;
-      }
+      const good = searches.filter(r=>r.status==='fulfilled' && r.value).map(r=>r.value);
+      if (good.length > 0) { webResults = good.join('\n'); tavilyUsed = true; }
     }
 
-    // 2. Claude analiza y estructura oportunidades
-    const systemPrompt = `Eres el Scout Agent de EOS — sistema de inteligencia artística para KDK, artista alternativo/cinematográfico en Bogotá, Colombia.
-Tu misión: detectar oportunidades reales y estratégicas para el proyecto EOS / Νέα Αρchή.
-EOS es: documental artístico real, estética rojo/negro, cinematic, música alternativa, crecimiento orgánico.
-Responde SOLO con JSON válido, sin markdown, sin explicaciones fuera del JSON.`;
-
-    const userPrompt = `Analiza estos resultados de búsqueda y extrae las 3 mejores oportunidades para EOS:
-
-RESULTADOS:
-${webResults || 'Sin resultados de búsqueda — genera oportunidades basadas en conocimiento del ecosistema musical LATAM 2025.'}
-
-Responde con este JSON exacto:
-{
-  "critical": "Una sola acción que EOS debe tomar ESTA SEMANA. Máximo 2 oraciones.",
-  "opportunities": [
-    {
-      "title": "Nombre de la oportunidad",
-      "why": "Por qué es relevante para EOS (1 oración)",
-      "action": "Qué hacer exactamente (1 oración)",
-      "priority": "high|medium|low",
-      "source": "URL o fuente si existe"
-    }
-  ],
-  "strategy": "Observación estratégica sobre el ecosistema artístico actual (2-3 oraciones)",
-  "radar": "Tendencia cultural o artística que EOS debe monitorear (1 oración)"
-}`;
-
-    const raw = await callClaude(claudeKey, systemPrompt, userPrompt, 2000);
-
-    // 3. Parse robusto JSON
-    let parsed;
-    try {
-      const start = raw.indexOf('{');
-      const end = raw.lastIndexOf('}');
-      if (start === -1 || end === -1) throw new Error('No JSON found');
-      parsed = JSON.parse(raw.slice(start, end + 1));
-    } catch(e) {
-      parsed = {
-        critical: 'Revisar manualmente — error de parse en respuesta Claude.',
-        opportunities: [],
-        strategy: raw.slice(0, 300),
-        radar: ''
-      };
-    }
-
-    // 4. Guardar en Supabase Memory Core
-    const opps = parsed.opportunities || [];
-    if (opps.length > 0) {
-      await Promise.allSettled(opps.map(o => saveOpportunityToSupabase(o)));
-    }
-    await logToSupabase(parsed.critical || 'Scout scan complete', {
-      opps_found: opps.length,
-      tavilyUsed,
-      strategy: parsed.strategy
+    // 2. Claude analiza oportunidades
+    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': claudeKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 2000,
+        system: 'Eres el Scout Agent de EOS — radar de oportunidades para KDK, artista alternativo/cinematografico en Bogota. Responde SOLO con JSON valido sin markdown.',
+        messages: [{
+          role: 'user',
+          content: 'Resultados de busqueda:\n' + (webResults || 'Sin resultados — usa conocimiento del ecosistema musical LATAM 2025.') + '\n\nResponde con este JSON exacto:\n{"critical":"Una accion que EOS debe tomar ESTA SEMANA (2 oraciones max)","opportunities":[{"title":"Nombre","why":"Relevancia para EOS (1 oracion)","action":"Que hacer exactamente","priority":"high|medium|low","source":"URL si existe"}],"strategy":"Observacion estrategica (2-3 oraciones)","radar":"Tendencia a monitorear (1 oracion)"}'
+        }]
+      })
     });
+    const claudeData = await claudeRes.json();
+    const raw = claudeData.content?.[0]?.text || '';
 
-    // 5. Telegram para oportunidad crítica
-    if (telegramToken && telegramChatId && parsed.critical) {
-      const msg = `🔴 EOS SCOUT AGENT\n\n⚡ CRÍTICO: ${parsed.critical}\n\n🎯 ${opps.length} oportunidades detectadas y guardadas en memoria.`;
-      await sendTelegram(msg, telegramToken, telegramChatId);
+    // 3. Parse JSON robusto
+    let parsed = { critical: '', opportunities: [], strategy: '', radar: '' };
+    try {
+      const s = raw.indexOf('{');
+      const e = raw.lastIndexOf('}');
+      if (s >= 0 && e >= 0) parsed = JSON.parse(raw.slice(s, e+1));
+    } catch(pe) { parsed.strategy = raw.slice(0,300); }
+
+    const opps = Array.isArray(parsed.opportunities) ? parsed.opportunities : [];
+
+    // 4. Guardar en Supabase (no-critical — si falla no rompe el agente)
+    let savedToMemory = false;
+    if (supaUrl && supaKey && opps.length > 0) {
+      try {
+        await Promise.allSettled(opps.map(o =>
+          fetch(supaUrl + '/rest/v1/opportunities', {
+            method: 'POST',
+            headers: { 'apikey': supaKey, 'Authorization': 'Bearer '+supaKey, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ title: o.title||'Sin titulo', description: o.why||'', source: o.source||'Scout', priority: o.priority||'medium', status: 'detected', detected_at: new Date().toISOString(), metadata: { action: o.action } })
+          })
+        ));
+        savedToMemory = true;
+      } catch(se) {}
+    }
+
+    // 5. Telegram (opcional)
+    if (tgToken && tgChat && parsed.critical) {
+      try {
+        await fetch('https://api.telegram.org/bot'+tgToken+'/sendMessage', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ chat_id: tgChat, text: 'EOS SCOUT\n\nCRITICO: '+parsed.critical+'\n\n'+opps.length+' oportunidades detectadas.', parse_mode: 'HTML' })
+        });
+      } catch(te) {}
     }
 
     return res.status(200).json({
@@ -157,12 +100,11 @@ Responde con este JSON exacto:
       radar: parsed.radar,
       opps: opps.length,
       tavilyUsed,
-      savedToMemory: !!SUPABASE_URL,
+      savedToMemory,
       timestamp: new Date().toISOString()
     });
 
   } catch(err) {
-    console.error('Scout error:', err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message, stack: err.stack?.slice(0,200) });
   }
 }
