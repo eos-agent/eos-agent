@@ -5,6 +5,10 @@
     {
       "src": "eos-agent.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -21,6 +25,10 @@
         "Content-Type": "application/manifest+json"
       },
       "dest": "/manifest.json"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
