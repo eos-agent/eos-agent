@@ -20,7 +20,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing Claude or Tavily keys' });
   }
 
+  
   const BASE = 'https://eos-agent.vercel.app';
+
+  // ── Fetch active goals for context ─────────────────────────────────────
+  let activeGoals = [];
+  if (SB_URL && SB_KEY) {
+    try {
+      const gr = await fetch(SB_URL + '/rest/v1/goals?status=eq.active&order=priority.desc&limit=10', {
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+      });
+      if (gr.ok) activeGoals = await gr.json();
+    } catch(e) { console.error('[Orchestrator] Goals fetch failed:', e.message); }
+  }
   const results = { started_at: new Date().toISOString(), agents: {} };
   const errors = [];
 
@@ -87,6 +99,9 @@ export default async function handler(req, res) {
 
     const briefPrompt = `Eres EOS Agent, el sistema de inteligencia artística de EOS (Νέα Αρχή). 
 Genera un brief de inteligencia diario conciso, estratégico y cinematográfico.
+
+OBJETIVOS ACTIVOS DE EOS (evalúa cada insight contra estas metas):
+${activeGoals.length > 0 ? activeGoals.map(g => '- [' + g.priority.toUpperCase() + '] ' + g.title + (g.description ? ': ' + g.description.substring(0,80) : '')).join('\n') : 'Sin objetivos registrados aún'}
 
 DATOS DEL SISTEMA HOY:
 - Scout: ${scoutSummary}
