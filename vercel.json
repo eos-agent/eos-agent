@@ -3,7 +3,7 @@
   "name": "eos-agent",
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/(.*)",
       "destination": "/eos-agent.html"
     }
   ],
