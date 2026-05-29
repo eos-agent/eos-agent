@@ -128,6 +128,25 @@ Solo JSON, sin markdown, sin explicaciones.`;
     const savedToMemory = await saveToSupabase(opps);
     const critical = opps.find(o => o.priority === 'alta');
 
+        // ── Telegram Notify: fire for critical/high opps ──
+    const TG_TOKEN = req.headers['x-telegram-token'];
+    const TG_CHAT  = req.headers['x-telegram-chat-id'];
+    if (TG_TOKEN && TG_CHAT && criticalCount > 0) {
+      try {
+        const notifyRes = await fetch(req.headers['x-host'] ? req.headers['x-host'] + '/api/notify' : 'https://eos-agent.vercel.app/api/notify', {
+          headers: {
+            'x-telegram-token': TG_TOKEN,
+            'x-telegram-chat-id': TG_CHAT,
+            'x-supabase-url': req.headers['x-supabase-url'] || '',
+            'x-supabase-key': req.headers['x-supabase-key'] || ''
+          }
+        });
+        const notifyData = await notifyRes.json();
+        console.log('[Scout] Telegram notify:', notifyData.notified, 'opps sent');
+      } catch(e) {
+        console.error('[Scout] Telegram notify failed:', e.message);
+      }
+    }
     return res.status(200).json({
       success: true,
       opps: opps.length,
