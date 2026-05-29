@@ -42423,63 +42423,28 @@ setTimeout(()=>{EOSMemory.load();},3000);
 <script id="eos-memory-connector">
 (function() {
   'use strict';
-  
-  const CONNECTOR_VERSION = '1.2';
-  
+  const CONNECTOR_VERSION = '1.3';
+
   function getKeys() {
     return {
       supabaseUrl: localStorage.getItem('eos_supabase_url'),
       supabaseKey: localStorage.getItem('eos_supabase_key'),
-      claudeKey: localStorage.getItem('eos_claude_key'),
-      tavilyKey: localStorage.getItem('eos_tavily_key')
+      claudeKey: localStorage.getItem('eos_claude_key')
     };
   }
 
   async function fetchMemory(table, params) {
-    const keys = getKeys();
-    if (!keys.supabaseUrl || !keys.supabaseKey) return null;
+    const k = getKeys();
+    if (!k.supabaseUrl || !k.supabaseKey) return null;
     try {
       let url = '/api/memory?table=' + table;
       if (params) url += '&' + params;
-      const resp = await fetch(url, {
-        headers: {
-          'x-supabase-url': keys.supabaseUrl,
-          'x-supabase-key': keys.supabaseKey
-        }
+      const r = await fetch(url, {
+        headers: { 'x-supabase-url': k.supabaseUrl, 'x-supabase-key': k.supabaseKey }
       });
-      const data = await resp.json();
-      return data.success ? data.rows : null;
+      const d = await r.json();
+      return d.success ? d.rows : null;
     } catch(e) { return null; }
-  }
-
-  async function generateOutreach(id, title, desc) {
-    const keys = getKeys();
-    if (!keys.claudeKey) {
-      alert('Configure tu Claude API key primero');
-      return;
-    }
-    // Show loading modal
-    showOutreachModal('⚙️ Generando draft...', '', true);
-    try {
-      const resp = await fetch('/api/outreach', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-claude-key': keys.claudeKey,
-          'x-supabase-url': keys.supabaseUrl || '',
-          'x-supabase-key': keys.supabaseKey || ''
-        },
-        body: JSON.stringify({ opportunityId: id, title, description: desc })
-      });
-      const data = await resp.json();
-      if (data.success) {
-        showOutreachModal(data.subject || title, data.draft, false);
-      } else {
-        showOutreachModal('Error', data.error || 'No se pudo generar el draft', false);
-      }
-    } catch(e) {
-      showOutreachModal('Error', e.message, false);
-    }
   }
 
   function showOutreachModal(subject, body, loading) {
@@ -42487,59 +42452,74 @@ setTimeout(()=>{EOSMemory.load();},3000);
     if (!modal) {
       modal = document.createElement('div');
       modal.id = 'eos-outreach-modal';
-      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
       document.body.appendChild(modal);
     }
-    modal.innerHTML = `
-      <div style="background:#0a0a0a;border:1px solid #cc0000;border-radius:8px;padding:32px;max-width:700px;width:90%;max-height:80vh;overflow-y:auto;position:relative">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-          <span style="color:#cc0000;font-size:11px;letter-spacing:2px">OUTREACH DRAFT — REVISION REQUERIDA</span>
-          <button onclick="document.getElementById('eos-outreach-modal').remove()" style="background:none;border:none;color:#666;font-size:20px;cursor:pointer">×</button>
-        </div>
-        <div style="color:#fff;font-size:13px;margin-bottom:8px;font-weight:bold">${subject}</div>
-        <div style="color:#aaa;font-size:12px;white-space:pre-wrap;line-height:1.6">${loading ? '<span style="color:#cc0000">Generando con Claude AI...</span>' : body}</div>
-        ${!loading ? '<div style="margin-top:16px;padding:12px;background:#1a0000;border-radius:4px;color:#cc6666;font-size:11px">⚠️ Este email NO se envía automáticamente. Revisa, edita y envía manualmente.</div>' : ''}
+    modal.innerHTML = `<div style="background:#0a0a0a;border:1px solid #cc0000;border-radius:8px;padding:32px;max-width:720px;width:92%;max-height:82vh;overflow-y:auto;position:relative;box-shadow:0 0 40px rgba(204,0,0,0.2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <span style="color:#cc0000;font-size:10px;letter-spacing:3px;font-weight:bold">OUTREACH DRAFT — REVISION REQUERIDA</span>
+        <button onclick="document.getElementById('eos-outreach-modal').remove()" style="background:none;border:1px solid #333;color:#888;font-size:16px;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center">×</button>
       </div>
-    `;
+      ${subject ? `<div style="color:#fff;font-size:14px;margin-bottom:16px;font-weight:bold;border-bottom:1px solid #1a1a1a;padding-bottom:12px">📧 ${subject}</div>` : ''}
+      <div style="color:#ccc;font-size:12px;white-space:pre-wrap;line-height:1.8">${loading ? '<span style="color:#cc0000;animation:pulse 1s infinite">⚙ Generando con Claude AI...</span>' : body}</div>
+      ${!loading ? `<div style="margin-top:20px;padding:12px;background:#100000;border:1px solid #3a0000;border-radius:4px;color:#cc6666;font-size:10px;letter-spacing:1px">⚠ ESTE EMAIL NO SE ENVÍA AUTOMÁTICAMENTE — Revisa, edita y envía tú mismo</div>` : ''}
+    </div>`;
     modal.style.display = 'flex';
   }
 
-  // Make outreach globally accessible
+  async function generateOutreach(id, title, why) {
+    const k = getKeys();
+    if (!k.claudeKey) { alert('Configura tu Claude API key en ajustes'); return; }
+    showOutreachModal('', '', true);
+    try {
+      const r = await fetch('/api/outreach', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-claude-key': k.claudeKey,
+          'x-supabase-url': k.supabaseUrl || '',
+          'x-supabase-key': k.supabaseKey || ''
+        },
+        body: JSON.stringify({ opportunityId: id, title, description: why })
+      });
+      const d = await r.json();
+      showOutreachModal(d.subject || title, d.success ? d.draft : (d.error || 'Error generando draft'), false);
+    } catch(e) { showOutreachModal('Error', e.message, false); }
+  }
+
   window.eosOutreach = generateOutreach;
 
   async function renderOpportunities() {
-    const rows = await fetchMemory('opportunities', 'limit=20');
+    const rows = await fetchMemory('opportunities', 'limit=30');
     if (!rows || rows.length === 0) return;
 
-    // Update counter
     const counter = document.getElementById('scout-count');
     if (counter) counter.textContent = rows.length;
 
-    // Find scout results container
     let container = document.getElementById('scoutMusicResults');
-    if (!container) {
-      // Try alternative containers
-      container = document.querySelector('.scout-results') || document.querySelector('[data-scout]');
-    }
+    if (!container) container = document.querySelector('.scout-results, [data-scout]');
     if (!container) return;
 
-    const priorityColors = { alta: '#cc0000', media: '#ff6600', baja: '#666' };
-    
-    container.innerHTML = rows.map(opp => {
-      const pColor = priorityColors[opp.priority] || '#666';
-      return `<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid ${pColor};border-radius:4px;padding:16px;margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div style="color:#fff;font-size:13px;font-weight:bold;flex:1">${opp.title || 'Oportunidad'}</div>
-          <span style="color:${pColor};font-size:10px;letter-spacing:1px;margin-left:8px">${(opp.priority || 'media').toUpperCase()}</span>
+    const pColors = { alta: '#cc0000', media: '#cc6600', baja: '#555' };
+
+    container.innerHTML = rows.map(o => {
+      const pc = pColors[o.priority] || '#555';
+      const safeTitle = (o.title||'').replace(/'/g,"\\'");
+      const safeWhy = (o.why||'').substring(0,200).replace(/'/g,"\\'");
+      return `<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid ${pc};border-radius:4px;padding:14px 16px;margin-bottom:10px;transition:border-color 0.2s" onmouseover="this.style.borderColor='${pc}'" onmouseout="this.style.borderLeftColor='${pc}';this.style.borderColor='#1a1a1a';this.style.borderLeftColor='${pc}'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <div style="color:#fff;font-size:12px;font-weight:600;flex:1;line-height:1.4">${o.title||'Oportunidad'}</div>
+          <div style="display:flex;gap:6px;margin-left:8px;flex-shrink:0">
+            ${o.type ? `<span style="color:#444;font-size:9px;letter-spacing:1px;text-transform:uppercase">${o.type}</span>` : ''}
+            <span style="color:${pc};font-size:9px;letter-spacing:1.5px;font-weight:bold">${(o.priority||'media').toUpperCase()}</span>
+          </div>
         </div>
-        <div style="color:#888;font-size:11px;margin-bottom:8px;line-height:1.5">${opp.description || ''}</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          ${opp.deadline ? `<span style="color:#cc6600;font-size:10px">📅 ${opp.deadline}</span>` : ''}
-          ${opp.source ? `<span style="color:#444;font-size:10px">${opp.source}</span>` : ''}
-          <button onclick="window.eosOutreach('${opp.id}', '${(opp.title||'').replace(/'/g,"\\'")}', '${(opp.description||'').substring(0,200).replace(/'/g,"\\'")}');" 
-            style="margin-left:auto;background:none;border:1px solid #cc0000;color:#cc0000;padding:4px 12px;border-radius:3px;font-size:10px;cursor:pointer;letter-spacing:1px;transition:all 0.2s"
-            onmouseover="this.style.background='#cc0000';this.style.color='#fff'" 
-            onmouseout="this.style.background='none';this.style.color='#cc0000'">OUTREACH</button>
+        ${o.why ? `<div style="color:#777;font-size:11px;margin-bottom:8px;line-height:1.5">${o.why}</div>` : ''}
+        ${o.action ? `<div style="color:#cc6600;font-size:10px;margin-bottom:8px;line-height:1.4">→ ${o.action}</div>` : ''}
+        <div style="display:flex;align-items:center;gap:10px">
+          ${o.deadline ? `<span style="color:#666;font-size:10px">📅 ${o.deadline}</span>` : ''}
+          ${o.source ? `<span style="color:#333;font-size:9px">${o.source}</span>` : ''}
+          <button onclick="window.eosOutreach('${o.id}','${safeTitle}','${safeWhy}')" style="margin-left:auto;background:transparent;border:1px solid #cc0000;color:#cc0000;padding:3px 10px;border-radius:2px;font-size:9px;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.2s" onmouseover="this.style.background='#cc0000';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#cc0000'">OUTREACH</button>
         </div>
       </div>`;
     }).join('');
@@ -42547,39 +42527,32 @@ setTimeout(()=>{EOSMemory.load();},3000);
 
   async function updateIntelScore() {
     try {
-      const keys = getKeys();
-      if (!keys.supabaseUrl) return;
-      const resp = await fetch('/api/memory?summary=true', {
-        headers: {
-          'x-supabase-url': keys.supabaseUrl,
-          'x-supabase-key': keys.supabaseKey
-        }
-      });
-      const data = await resp.json();
-      if (data.success) {
-        // Count total records across tables
-        const summary = data.summary || {};
-        const total = Object.values(summary).reduce((a, b) => a + (Array.isArray(b) ? b.length : 0), 0);
-        const score = Math.min(95, 40 + total * 2);
-        const el = document.getElementById('intelScore');
-        if (el) el.textContent = score + '%';
+      const k = getKeys();
+      if (!k.supabaseUrl) return;
+      const tables = ['orkis','projects','songs','contacts','goals','opportunities','ideas','decisions'];
+      let total = 0;
+      for (const t of tables) {
+        const r = await fetch(`${k.supabaseUrl}/rest/v1/${t}?select=count`, {
+          headers: { 'apikey': k.supabaseKey, 'Authorization': 'Bearer ' + k.supabaseKey, 'Prefer': 'count=exact', 'Range': '0-0' }
+        });
+        const cr = r.headers.get('content-range');
+        if (cr) { const m = cr.match(/\/(\d+)/); if (m) total += parseInt(m[1]); }
       }
+      const score = Math.min(97, 35 + total * 3);
+      const el = document.getElementById('intelScore');
+      if (el) el.textContent = score + '%';
     } catch(e) {}
   }
 
-  // Initialize after page is ready
   function init() {
     setTimeout(() => {
       renderOpportunities().catch(() => {});
       updateIntelScore().catch(() => {});
-    }, 2000); // Wait 2s for dashboard animations
+    }, 2500);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 </script>
 
