@@ -50,7 +50,12 @@ export default async function handler(req, res) {
       } catch(e) {}
     }
 
-    const prompt = `Eres el Outreach Agent de EOS (Νέα Αρchή), proyecto musical/documental cinematic de KDK, artista emergente de Bogotá, Colombia.
+    const prompt = `Eres el Outreach Agent de EOS (Νέα Αρχή), proyecto musical/documental cinematic de un artista emergente de Bogotá, Colombia.
+DATOS OFICIALES DEL ARTISTA:
+- Proyecto: EOS / Νέα Αρχή
+- Email oficial de contacto: eosscontactt@gmail.com (SIEMPRE usar este email en firmas y datos de contacto)
+- Ciudad: Bogotá, Colombia
+- Estética: cinematográfica, rojo/negro, inspiración mitología griega, documental emocional
 
 OPORTUNIDAD A LA QUE APLICAR:
 Título: ${opp.title}
