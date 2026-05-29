@@ -1,110 +1,142 @@
-// api/scout.js — EOS Scout Agent v2.5
-// Self-contained: sin imports externos. Busca oportunidades + guarda en Supabase.
-
 export default async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,x-claude-key,x-tavily-key,x-supabase-url,x-supabase-key');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-claude-key, x-tavily-key, x-supabase-url, x-supabase-key');
   if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const body = req.body || {};
-  const claudeKey  = req.headers['x-claude-key']   || body.claudeKey;
-  const tavilyKey  = req.headers['x-tavily-key']   || body.tavilyKey;
-  const tgToken    = body.telegramToken;
-  const tgChat     = body.telegramChatId;
-  const supaUrl    = req.headers['x-supabase-url'] || body.supabaseUrl || process.env.SUPABASE_URL;
-  const supaKey    = req.headers['x-supabase-key'] || body.supabaseKey || process.env.SUPABASE_SERVICE_KEY;
+  const claudeKey = body.claudeKey || req.headers['x-claude-key'] || process.env.CLAUDE_API_KEY;
+  const tavilyKey = body.tavilyKey || req.headers['x-tavily-key'] || process.env.TAVILY_API_KEY;
+  const supabaseUrl = body.supabaseUrl || req.headers['x-supabase-url'] || process.env.SUPABASE_URL;
+  const supabaseKey = body.supabaseKey || req.headers['x-supabase-key'] || process.env.SUPABASE_SERVICE_KEY;
 
   if (!claudeKey) return res.status(400).json({ error: 'Missing claudeKey' });
+  if (!tavilyKey) return res.status(400).json({ error: 'Missing tavilyKey' });
 
-  try {
-    // 1. Busqueda Tavily
-    let webResults = '';
-    let tavilyUsed = false;
-    if (tavilyKey) {
-      const queries = [
-        'music festival open call Colombia LATAM 2025 2026',
-        'alternative cinematic music showcase emerging artists',
-        'Spotify playlist curator indie submission open',
-        'music blog submission independent artists Bogota'
-      ];
-      const searches = await Promise.allSettled(
-        queries.slice(0,3).map(q => fetch('https://api.tavily.com/search', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ api_key: tavilyKey, query: q, max_results: 3, search_depth: 'basic' })
-        }).then(r=>r.json()).then(d=>d.results?.map(r=>r.title+': '+r.url).join(' | ')).catch(()=>''))
-      );
-      const good = searches.filter(r=>r.status==='fulfilled' && r.value).map(r=>r.value);
-      if (good.length > 0) { webResults = good.join('\n'); tavilyUsed = true; }
-    }
+  async function searchWeb(query) {
+    try {
+      const r = await fetch('https://api.tavily.com/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ api_key: tavilyKey, query, max_results: 5, search_depth: 'basic' })
+      });
+      const d = await r.json();
+      return (d.results || []).map(x => x.title + ': ' + x.content).join('\n\n');
+    } catch(e) { return ''; }
+  }
 
-    // 2. Claude analiza oportunidades
-    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+  async function callClaude(prompt) {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'x-api-key': claudeKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+      headers: {
+        'x-api-key': claudeKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
       body: JSON.stringify({
         model: 'claude-opus-4-6',
         max_tokens: 2000,
-        system: 'Eres el Scout Agent de EOS — radar de oportunidades para KDK, artista alternativo/cinematografico en Bogota. Responde SOLO con JSON valido sin markdown.',
-        messages: [{
-          role: 'user',
-          content: 'Resultados de busqueda:\n' + (webResults || 'Sin resultados — usa conocimiento del ecosistema musical LATAM 2025.') + '\n\nResponde con este JSON exacto:\n{"critical":"Una accion que EOS debe tomar ESTA SEMANA (2 oraciones max)","opportunities":[{"title":"Nombre","why":"Relevancia para EOS (1 oracion)","action":"Que hacer exactamente","priority":"high|medium|low","source":"URL si existe"}],"strategy":"Observacion estrategica (2-3 oraciones)","radar":"Tendencia a monitorear (1 oracion)"}'
-        }]
+        messages: [{ role: 'user', content: prompt }]
       })
     });
-    const claudeData = await claudeRes.json();
-    const raw = claudeData.content?.[0]?.text || '';
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message);
+    return d.content[0].text;
+  }
 
-    // 3. Parse JSON robusto
-    let parsed = { critical: '', opportunities: [], strategy: '', radar: '' };
+  async function saveToSupabase(opps) {
+    if (!supabaseUrl || !supabaseKey) return false;
     try {
-      const s = raw.indexOf('{');
-      const e = raw.lastIndexOf('}');
-      if (s >= 0 && e >= 0) parsed = JSON.parse(raw.slice(s, e+1));
-    } catch(pe) { parsed.strategy = raw.slice(0,300); }
+      // Map to exact Supabase schema: id, title, type, priority, status, deadline, why, action, source, orki_id
+      const rows = opps.map(o => ({
+        title: (o.title || 'Oportunidad sin título').substring(0, 200),
+        type: o.type || 'general',
+        priority: o.priority === 'alta' ? 'alta' : o.priority === 'baja' ? 'baja' : 'media',
+        status: 'nueva',
+        deadline: o.deadline || null,
+        why: (o.why || o.description || o.reason || '').substring(0, 500),
+        action: (o.action || o.recommended_action || '').substring(0, 300),
+        source: 'Scout Agent v2.6 / Tavily'
+      }));
 
-    const opps = Array.isArray(parsed.opportunities) ? parsed.opportunities : [];
+      const r = await fetch(supabaseUrl + '/rest/v1/opportunities', {
+        method: 'POST',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': 'Bearer ' + supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(rows)
+      });
+      return r.status === 201 || r.status === 200;
+    } catch(e) { return false; }
+  }
 
-    // 4. Guardar en Supabase (no-critical — si falla no rompe el agente)
-    let savedToMemory = false;
-    if (supaUrl && supaKey && opps.length > 0) {
-      try {
-        await Promise.allSettled(opps.map(o =>
-          fetch(supaUrl + '/rest/v1/opportunities', {
-            method: 'POST',
-            headers: { 'apikey': supaKey, 'Authorization': 'Bearer '+supaKey, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-            body: JSON.stringify({ title: o.title||'Sin titulo', description: o.why||'', source: o.source||'Scout', priority: o.priority||'medium', status: 'detected', detected_at: new Date().toISOString(), metadata: { action: o.action } })
-          })
-        ));
-        savedToMemory = true;
-      } catch(se) {}
+  try {
+    // Search for opportunities
+    const queries = [
+      'convocatorias festivales música emergente Colombia LATAM 2025 2026',
+      'open calls showcases artistas alternativos Bogotá Medellín 2025',
+      'music grants funding emerging artists Latin America 2025',
+      'playlists editoriales Spotify nuevos artistas latinoamericanos',
+      'blogs medios música alternativa cinematic Colombia entrevistas'
+    ];
+
+    const searchResults = await Promise.all(queries.map(q => searchWeb(q)));
+    const combinedResults = searchResults.map((r, i) => `=== Búsqueda ${i+1}: ${queries[i]} ===\n${r}`).join('\n\n');
+
+    const prompt = `Eres el Scout Agent de EOS (Νέα Αρχή), proyecto musical/documental de KDK basado en Bogotá.
+
+EOS es: música cinematic-alternativa, estética rojo/negro, storytelling documental, inspiración mitología griega, artista emergente.
+
+Analiza estos resultados de búsqueda y extrae las 6-8 mejores oportunidades reales y accionables:
+
+${combinedResults}
+
+Responde SOLO con JSON válido (array):
+[
+  {
+    "title": "Nombre específico de la oportunidad",
+    "type": "festival|showcase|playlist|media|grant|collaboration|other",
+    "priority": "alta|media|baja",
+    "deadline": "YYYY-MM-DD o null",
+    "why": "Por qué es perfecta para EOS — máx 200 chars",
+    "action": "Acción específica que KDK debe tomar — máx 150 chars"
+  }
+]
+
+Solo JSON, sin markdown, sin explicaciones.`;
+
+    const raw = await callClaude(prompt);
+    
+    // Parse JSON from Claude response
+    let opps = [];
+    try {
+      const jsonMatch = raw.match(/\[\s*\{[\s\S]*\}\s*\]/);
+      opps = jsonMatch ? JSON.parse(jsonMatch[0]) : [];
+    } catch(e) {
+      opps = [];
     }
 
-    // 5. Telegram (opcional)
-    if (tgToken && tgChat && parsed.critical) {
-      try {
-        await fetch('https://api.telegram.org/bot'+tgToken+'/sendMessage', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ chat_id: tgChat, text: 'EOS SCOUT\n\nCRITICO: '+parsed.critical+'\n\n'+opps.length+' oportunidades detectadas.', parse_mode: 'HTML' })
-        });
-      } catch(te) {}
+    if (opps.length === 0) {
+      return res.status(200).json({ success: false, error: 'No opportunities parsed', raw: raw.substring(0, 200) });
     }
+
+    const savedToMemory = await saveToSupabase(opps);
+    const critical = opps.find(o => o.priority === 'alta');
 
     return res.status(200).json({
       success: true,
-      critical: parsed.critical,
-      opportunities: opps,
-      strategy: parsed.strategy,
-      radar: parsed.radar,
       opps: opps.length,
-      tavilyUsed,
       savedToMemory,
-      timestamp: new Date().toISOString()
+      critical: critical ? critical.action : null,
+      opportunities: opps
     });
 
   } catch(err) {
-    return res.status(500).json({ error: err.message, stack: err.stack?.slice(0,200) });
+    return res.status(500).json({ error: err.message, stack: err.stack?.substring(0, 300) });
   }
 }
