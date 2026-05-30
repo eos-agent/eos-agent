@@ -37,7 +37,7 @@ function scoreItem(item, identity, goals, orkis) {
   const artisticScore = artisticKeywords.filter(k => text.includes(k)).length * 15;
 
   const strategicKeywords = ['latam', 'bogotá', 'colombia', 'alternativo', 'indie', 'emergente', 'plataforma', 'playlist', 'media', 'prensa'];
-  const strategicScore = strategicKeywords.filter'k => text.includes(k)).length * 15;
+  const strategicScore = strategicKeywords.filter(k => text.includes(k)).length * 15;
 
   const differentiationKeywords = ['documental', 'proceso', 'real', 'vulnerab', 'humano', 'auténtico', 'cinematic'];
   const differentiationScore = differentiationKeywords.filter(k => text.includes(k)).length * 20;
@@ -326,13 +326,13 @@ Genera el análisis de inteligencia estratégica completo.`;
           scores: { opportunities: scoredOpportunities.map(o => ({ id: o.id, title: o.title, score: o.score })) }
         })
       });
-    } catch (e) { /* tabla no existe aún — no bloqueante */ }
+    } catch (e) { /* tabla no existe aún — fno bloqueante */ }
 
     // ── STEP 10: TELEGRAM PROACTIVO ─────────────────────────────────────────
     if (tgToken && tgChat) {
       const highAlerts = alerts.filter(a => a.urgency === 'HIGH');
       if (highAlerts.length > 0) {
-        const tgMsg = `🧠 <b>EOS INTELLIGENCE CORE</b>\n\n<b>PRIORIDAD HOY:</b> ${priorityOne}\n\n<b>ALERTAS CRÍTICAS:</b>\n${highAlerts.map(a => `⚠️ ${a.message}`).join('\n')}\n\n<b>RECOMENDACIÓN:</b> ${recommendation}`;
+        const tgMsg = `🧧 <b>EOS INTELLIGENCE CORE</b>\n\n<b>PRIORIDAD HOY:</b> ${priorityOne}\n\n<b>ALERTAS CRITICAS:</b>\n${highAlerts.map(a => `⚠️ ${a.message}`).join('\n')}\n\n<b>RECOMENDACIÓN:</b> ${recommendation}`;
         await sendTelegram(tgToken, tgChat, tgMsg);
       }
     }
