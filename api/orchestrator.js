@@ -1,6 +1,8 @@
-// EOS Agent — Orchestrator v1.0
-// Coordina Scout → Trends → Competitive Intel → Notify en secuencia unificada
+// EOS Agent — Orchestrator v2.0
+// Coordina Scout → Trends → Competitive Intel → Intelligence Core → Notify → Brief
 // El cerebro que conecta todos los agentes de EOS
+
+export const config = { maxDuration: 60 };
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,7 +22,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing Claude or Tavily keys' });
   }
 
-  
   const BASE = 'https://eos-agent.vercel.app';
 
   // ── Fetch active goals for context ─────────────────────────────────────
@@ -33,6 +34,7 @@ export default async function handler(req, res) {
       if (gr.ok) activeGoals = await gr.json();
     } catch(e) { console.error('[Orchestrator] Goals fetch failed:', e.message); }
   }
+
   const results = { started_at: new Date().toISOString(), agents: {} };
   const errors = [];
 
@@ -75,16 +77,45 @@ export default async function handler(req, res) {
   const intelData = await runAgent('competitive', '/api/competitive');
   await new Promise(r => setTimeout(r, 1500));
 
-  // ── FASE 4: Notify — alertas Telegram para opps críticas ───────────────
+  // ── FASE 4: Intelligence Core — cerebro estratégico de EOS ─────────────
+  // Fire-and-forget: el Intelligence Core toma ~60s (Claude + 10 tablas Supabase)
+  // Corre en paralelo — no bloqueamos el orchestrator esperando su respuesta
+  console.log('[Orchestrator] Phase 4: Intelligence Core (async fire-and-forget)');
+  if (SB_URL && SB_KEY) {
+    try {
+      fetch(BASE + '/api/intelligence', {
+        headers: {
+          'x-claude-key': CLAUDE,
+          'x-supabase-url': SB_URL,
+          'x-supabase-key': SB_KEY,
+          'x-tg-token': TG_TOKEN || '',
+          'x-tg-chat': TG_CHAT || ''
+        }
+      }).then(r => {
+        console.log('[Orchestrator] Intelligence Core triggered, status:', r.status);
+      }).catch(e => {
+        console.error('[Orchestrator] Intelligence Core fire error:', e.message);
+      });
+      results.agents['intelligence'] = { success: true, status: 'triggered_async', note: 'Running in background — saves to Supabase intelligence_outputs + Telegram' };
+    } catch(e) {
+      errors.push('intelligence_trigger: ' + e.message);
+      results.agents['intelligence'] = { success: false, error: e.message };
+    }
+  } else {
+    results.agents['intelligence'] = { success: false, error: 'Missing Supabase keys' };
+  }
+  await new Promise(r => setTimeout(r, 500));
+
+  // ── FASE 5: Notify — alertas Telegram para opps críticas ───────────────
   let notifyData = null;
   if (TG_TOKEN && TG_CHAT && SB_URL && SB_KEY) {
-    console.log('[Orchestrator] Phase 4: Telegram Notify');
+    console.log('[Orchestrator] Phase 5: Telegram Notify');
     notifyData = await runAgent('notify', '/api/notify');
     await new Promise(r => setTimeout(r, 800));
   }
 
-  // ── FASE 5: Brief final con Claude ─────────────────────────────────────
-  console.log('[Orchestrator] Phase 5: Generating intelligence brief');
+  // ── FASE 6: Brief final con Claude ─────────────────────────────────────
+  console.log('[Orchestrator] Phase 6: Generating intelligence brief');
   let brief = null;
   try {
     const scoutSummary = scoutData?.opps > 0
@@ -97,17 +128,18 @@ export default async function handler(req, res) {
 
     const gaps = intelData?.analysis?.market_gaps?.filter(g => g.priority === 'critical' || g.priority === 'high').slice(0,2) || [];
 
-    const briefPrompt = `Eres EOS Agent, el sistema de inteligencia artística de EOS (Νέα Αρχή). 
+    const briefPrompt = `Eres EOS Agent, el sistema de inteligencia artística de EOS (Νέα Αρχή).
 Genera un brief de inteligencia diario conciso, estratégico y cinematográfico.
 
-OBJETIVOS ACTIVOS DE EOS (evalúa cada insight contra estas metas):
+OBJETIVOS ACTIVOS DE EOS (
 ${activeGoals.length > 0 ? activeGoals.map(g => '- [' + g.priority.toUpperCase() + '] ' + g.title + (g.description ? ': ' + g.description.substring(0,80) : '')).join('\n') : 'Sin objetivos registrados aún'}
 
 DATOS DEL SISTEMA HOY:
 - Scout: ${scoutSummary}
-- Tendencias: ${trendsSummary}  
+- Tendencias: ${trendsSummary}
 - Posición de mercado: ${intelSummary}
 - Brechas críticas: ${gaps.map(g => g.gap).join(' | ') || 'En evaluación'}
+- Intelligence Core: Análisis estratégico profundo ejecutándose en paralelo
 - Errores: ${errors.length > 0 ? errors.join(', ') : 'Ninguno'}
 
 Genera un brief en exactamente este formato JSON:
@@ -137,20 +169,21 @@ Responde SOLO JSON válido.`;
     errors.push('brief: ' + e.message);
   }
 
-  // ── FASE 6: Enviar brief por Telegram ──────────────────────────────────
+  // ── FASE 7: Enviar brief por Telegram ──────────────────────────────────
   if (TG_TOKEN && TG_CHAT && brief) {
     try {
-      const statusEmoji = { optimal: '🟢', active: '🔵', alert: '🔴' }[brief.status] || '⚡';
-      let tgMsg = `${statusEmoji} *EOS INTELLIGENCE BRIEF*\n_${new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' })}_\n\n`;
+      const statusEmoji = { optimal: '🟢`, active: '🔵', alert: '🔴' }[brief.status] || '⚡';
+      let tgMsg = `${statusEmoji} *EOS INTELLIGENCE BRIEF*\n_${new Date().toLocaleDateString('es-ES', { weekday:'leng', day:'numeric', month:'long' })}_\n\n`;
       tgMsg += `*"${brief.headline}"*\n\n`;
-      tgMsg += `📊 *SISTEMA HOY:*\n`;
-      tgMsg += `• Scout: ${scoutSummary}\n`;
+      tgMsg += `📊&�statusEmoji *SISTEMA HOY:*\n`;
+      tgMsg += `• Scout: ${scoutSummary || 'Completado'}\n`;
+      tgMsg += `• Intelligence Core: análisis estratégico en ejecución ⚡\n`;
       if (notifyData?.notified > 0) tgMsg += `• ${notifyData.notified} opp(s) notificadas\n`;
       tgMsg += `\n💡 *INSIGHTS:*\n`;
       (brief.insights || []).forEach(i => { tgMsg += `• ${i}\n`; });
-      tgMsg += `\n⚡ *ACCIÓN HOY:* ${brief.priority_action}\n`;
+      tgMsg += `\n⚡ *ACCIÓN CHOY:* ${brief.priority_action}\n`;
       tgMsg += `\n🎭 *SEÑAL EOS:* ${brief.eos_signal}\n`;
-      tgMsg += `\n_EOS Νέα Αρχή — Sistema Operativo Artístico_`;
+      tgMsg += `\n_EOS Νέα Αρχή — Sistema Operativo Artístico v2.0_`;
 
       await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
         method: 'POST',
