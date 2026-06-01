@@ -109,7 +109,7 @@
   function observeChatOutput() {
     // Common container selectors in EOS dashboard
     const selectors = [
-      '#floatMessages', '#chatMessages', '#mainMessages',
+      '#chatHistory', '#floatMessages', '#chatMessages', '#mainMessages',
       '.chat-messages', '.chat-output', '.messages-container',
       '[id*="message"]', '[class*="message"]'
     ];
