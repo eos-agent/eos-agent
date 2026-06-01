@@ -1,127 +1,248 @@
-// EOS JARVIS Memory System v1.0
-// Intercepts Anthropic API calls — injects context + saves conversations
-;(function() {
-  "use strict";
-  const SB = () => localStorage.getItem("eos_supabase_url");
-  const KEY = () => localStorage.getItem("eos_supabase_anon");
-  const SID = "sess_" + Date.now();
-  const OF = window.fetch.bind(window);
+// EOS JARVIS Memory System v2.0
+// DOM-based approach: hooks send button + observes chat output
+// Works regardless of how the chat calls Anthropic internally
 
-  async function sbGet(tbl, qs) {
-    try {
-      const r = await OF(SB() + "/rest/v1/" + tbl + "?" + (qs||""), {
-        headers: { "apikey": KEY(), "Authorization": "Bearer " + KEY() }
-      });
-      return r.ok ? r.json() : [];
-    } catch(e) { return []; }
+(function() {
+  'use strict';
+
+  const SB_URL = localStorage.getItem('eos_supabase_url');
+  const SB_KEY = localStorage.getItem('eos_supabase_anon');
+  const SESSION_ID = 'session_' + Date.now();
+
+  if (!SB_URL || !SB_KEY) {
+    console.warn('[JARVIS] Supabase keys not found — memory offline');
+    return;
   }
 
-  async function sbSave(tbl, data) {
+  // ─── Supabase helpers ───────────────────────────────────────────
+  async function saveConversation(role, content, context) {
     try {
-      await OF(SB() + "/rest/v1/" + tbl, {
-        method: "POST",
-        headers: { "apikey": KEY(), "Authorization": "Bearer " + KEY(),
-          "Content-Type": "application/json", "Prefer": "return=minimal" },
-        body: JSON.stringify(data)
+      await fetch(SB_URL + '/rest/v1/conversations', {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY,
+          'Authorization': 'Bearer ' + SB_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ role, content, context: context || null, session_id: SESSION_ID })
+      });
+    } catch(e) {
+      console.warn('[JARVIS] Save failed:', e.message);
+    }
+  }
+
+  async function saveDecision(content, keywords) {
+    try {
+      await fetch(SB_URL + '/rest/v1/decisions', {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY,
+          'Authorization': 'Bearer ' + SB_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          content: content.substring(0, 500),
+          category: 'auto-learned',
+          why: 'Auto-detected from conversation — keywords: ' + keywords.join(', '),
+          impact: 'medium'
+        })
       });
     } catch(e) {}
   }
 
-  async function loadCtx() {
-    const [id, goals, decs, convs, tasks] = await Promise.all([
-      sbGet("eos_identity", "limit=1"),
-      sbGet("goals", "status=eq.active&order=priority.desc&limit=5"),
-      sbGet("decisions", "order=created_at.desc&limit=5"),
-      sbGet("conversations", "order=created_at.desc&limit=20"),
-      sbGet("tasks", "status=eq.pending&order=due_date.asc&limit=5")
-    ]);
-    return { id: id[0], goals, decs, convs, tasks };
-  }
+  // ─── Auto-learning: detect decisions/ideas ──────────────────────
+  const DECISION_KEYWORDS = [
+    'decidimos', 'vamos a', 'la estrategia es', 'objetivo:', 'meta:',
+    'importante:', 'recordar', 'prioritario', 'next step', 'decided',
+    'we will', 'the plan', 'going to build', 'quiero que', 'hagamos'
+  ];
 
-  function buildSysPrompt(ctx) {
-    const id = ctx.id || {};
-    let p = "Eres EOS — sistema de inteligencia artistica de KDK.\n";
-    if (id.mission) p += "Mision: " + id.mission.substring(0,200) + "\n";
-    if (id.orkis) p += "Los 5 Orkis: " + JSON.stringify(id.orkis).substring(0,300) + "\n";
-    if (ctx.goals && ctx.goals.length) {
-      p += "\nGOALS ACTIVOS:\n" + ctx.goals.map(g => "- [" + (g.priority||"").toUpperCase() + "] " + g.title).join("\n");
+  function checkForDecisions(text) {
+    const lower = text.toLowerCase();
+    const matched = DECISION_KEYWORDS.filter(k => lower.includes(k));
+    if (matched.length > 0 && text.length > 80) {
+      saveDecision(text, matched);
     }
-    if (ctx.decs && ctx.decs.length) {
-      p += "\n\nULTIMAS DECISIONES:\n" + ctx.decs.map(d => "- " + (d.title||d.content||"")).join("\n");
+  }
+
+  // ─── Track last seen assistant message ─────────────────────────
+  let lastAssistantText = '';
+  let lastUserText = '';
+
+  // ─── Hook send button ───────────────────────────────────────────
+  function hookSendButton() {
+    const btn = document.getElementById('floatSendBtn') || document.getElementById('mainSendBtn');
+    const input = document.getElementById('floatChatInput') || document.getElementById('mainChatInput');
+
+    if (!btn || !input) {
+      setTimeout(hookSendButton, 1000);
+      return;
     }
-    if (ctx.tasks && ctx.tasks.length) {
-      p += "\n\nTAREAS URGENTES:\n" + ctx.tasks.map(t => "- " + t.title + " (due: " + (t.due_date||"pronto") + ")").join("\n");
-    }
-    p += "\n\nEres el companero cognitivo de KDK. Recuerdas las conversaciones previas. Respondes con inteligencia artistica, estrategica y emocional.";
-    return p;
-  }
 
-  function buildMsgs(orig, convs) {
-    if (!convs || !convs.length) return orig;
-    const hist = convs.slice().reverse().map(c => ({
-      role: c.role === "user" ? "user" : "assistant",
-      content: c.content
-    }));
-    const cur = (orig || []).filter(m => m.role === "user").slice(-1)[0];
-    if (!cur) return orig;
-    return [...hist, cur];
-  }
-
-  async function autoLearn(userMsg, aiMsg) {
-    const both = (userMsg + " " + aiMsg).toLowerCase();
-    const isDecision = ["decidi","decidimos","vamos a","va a ser","confirmado","el plan es"].some(k => both.includes(k));
-    const isIdea = ["idea:","se me ocurre","que tal si","podriamos","concepto:"].some(k => both.includes(k));
-    if (isDecision) await sbSave("decisions", {
-      title: "Auto: " + userMsg.substring(0,80),
-      content: userMsg.substring(0,500),
-      rationale: "Auto-detectado por EOS JARVIS",
-      created_at: new Date().toISOString()
-    });
-    if (isIdea) await sbSave("ideas", {
-      title: "Auto: " + userMsg.substring(0,80),
-      content: userMsg.substring(0,500),
-      created_at: new Date().toISOString()
-    });
-  }
-
-  window._eosFetch = OF;
-  window.fetch = async function(url, opts) {
-    const u = typeof url === "string" ? url : (url && url.url) || "";
-    if (u.includes("api.anthropic.com/v1/messages") && opts && opts.method === "POST") {
-      try {
-        const body = JSON.parse(opts.body || "{}");
-        const ctx = await loadCtx();
-        const sysPrompt = buildSysPrompt(ctx);
-        const msgs = buildMsgs(body.messages, ctx.convs);
-        const userMsg = (body.messages || []).filter(m => m.role === "user").slice(-1)[0];
-        const userTxt = typeof userMsg === "string" ? userMsg : (userMsg && userMsg.content) || "";
-        if (userTxt) sbSave("conversations", { role: "user", content: userTxt.substring(0,8000), session_id: SID });
-        const enhanced = Object.assign({}, body, { system: sysPrompt, messages: msgs });
-        const resp = await OF(url, Object.assign({}, opts, { body: JSON.stringify(enhanced) }));
-        const resp2 = resp.clone();
-        resp2.json().then(d => {
-          const aiTxt = d && d.content && d.content[0] && d.content[0].text || "";
-          if (aiTxt) {
-            sbSave("conversations", { role: "assistant", content: aiTxt.substring(0,8000), session_id: SID });
-            autoLearn(userTxt, aiTxt);
-          }
-        }).catch(function(){});
-        return resp;
-      } catch(e) {
-        console.warn("[EOS JARVIS]", e);
-        return OF(url, opts);
+    // Intercept send
+    btn.addEventListener('click', function() {
+      const msg = input.value.trim();
+      if (msg) {
+        lastUserText = msg;
+        saveConversation('user', msg);
+        console.log('[JARVIS] Saved user message:', msg.substring(0, 50));
       }
-    }
-    return OF(url, opts);
-  };
+    }, true); // capture phase = fires before existing handlers
 
-  console.log("[EOS JARVIS] Memory System v1.0 ACTIVE — session: " + SID);
-  setTimeout(function() {
-    var el = document.createElement("div");
-    el.style.cssText = "position:fixed;bottom:24px;left:24px;background:rgba(180,0,0,0.92);color:#fff;padding:7px 16px;border-radius:4px;font-size:11px;font-family:Arial,sans-serif;z-index:99999;letter-spacing:1.5px;pointer-events:none;";
-    el.textContent = "EOS JARVIS MEMORY v1.0 — ONLINE";
-    document.body.appendChild(el);
-    setTimeout(function(){ el.remove(); }, 3500);
-  }, 1800);
+    // Also capture Enter key
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        const msg = input.value.trim();
+        if (msg) {
+          lastUserText = msg;
+          saveConversation('user', msg);
+        }
+      }
+    }, true);
+
+    console.log('[JARVIS] Send button hooked ✓');
+  }
+
+  // ─── Observe chat output for assistant responses ─────────────────
+  function observeChatOutput() {
+    // Common container selectors in EOS dashboard
+    const selectors = [
+      '#floatMessages', '#chatMessages', '#mainMessages',
+      '.chat-messages', '.chat-output', '.messages-container',
+      '[id*="message"]', '[class*="message"]'
+    ];
+
+    let container = null;
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el) { container = el; break; }
+    }
+
+    if (!container) {
+      // Try to find any div that grows with chat content
+      setTimeout(observeChatOutput, 2000);
+      return;
+    }
+
+    console.log('[JARVIS] Observing chat output on:', container.id || container.className);
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        // Check for new nodes
+        for (const node of mutation.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          const text = node.textContent || node.innerText || '';
+          if (text.length < 20) continue;
+
+          // Detect if this is an assistant message (not user)
+          const isUser = node.className && (
+            node.className.includes('user') ||
+            node.className.includes('human') ||
+            node.className.includes('you')
+          );
+
+          if (!isUser && text !== lastAssistantText && text !== lastUserText) {
+            lastAssistantText = text;
+            saveConversation('assistant', text.substring(0, 4000));
+            checkForDecisions(text);
+            console.log('[JARVIS] Saved assistant message:', text.substring(0, 60));
+          }
+        }
+
+        // Also check text changes
+        if (mutation.type === 'characterData' || mutation.type === 'childList') {
+          const target = mutation.target;
+          if (!target || target.nodeType !== 1) continue;
+          const text = target.textContent || '';
+          if (text.length > 100 && text !== lastAssistantText && text !== lastUserText) {
+            // Debounce streaming text
+            clearTimeout(target._saveTimer);
+            target._saveTimer = setTimeout(() => {
+              if (text !== lastAssistantText) {
+                lastAssistantText = text;
+                saveConversation('assistant', text.substring(0, 4000));
+                checkForDecisions(text);
+              }
+            }, 2000); // wait 2s for streaming to finish
+          }
+        }
+      }
+    });
+
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  // ─── Load context from Supabase to inject into page ────────────
+  async function loadContext() {
+    try {
+      const [identity, goals, decisions, convos] = await Promise.all([
+        fetch(SB_URL + '/rest/v1/eos_identity?limit=1', {
+          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+        }).then(r => r.json()).catch(() => []),
+
+        fetch(SB_URL + '/rest/v1/goals?status=eq.active&limit=5', {
+          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+        }).then(r => r.json()).catch(() => []),
+
+        fetch(SB_URL + '/rest/v1/decisions?order=created_at.desc&limit=10', {
+          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+        }).then(r => r.json()).catch(() => []),
+
+        fetch(SB_URL + '/rest/v1/conversations?order=created_at.desc&limit=20', {
+          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+        }).then(r => r.json()).catch(() => [])
+      ]);
+
+      window.EOSJarvisContext = { identity, goals, decisions, convos };
+      console.log('[JARVIS] Context loaded — identity:', identity.length, '| goals:', goals.length, '| decisions:', decisions.length, '| convos:', convos.length);
+    } catch(e) {
+      console.warn('[JARVIS] Context load error:', e.message);
+    }
+  }
+
+  // ─── Visual indicator ──────────────────────────────────────────
+  function showIndicator() {
+    const indicator = document.createElement('div');
+    indicator.id = 'eos-jarvis-indicator';
+    indicator.style.cssText = [
+      'position:fixed', 'bottom:20px', 'right:20px', 'z-index:99999',
+      'background:linear-gradient(135deg,#1a0000,#330000)',
+      'border:1px solid #ff2200', 'border-radius:8px',
+      'padding:10px 16px', 'color:#ff4422', 'font-family:monospace',
+      'font-size:12px', 'letter-spacing:1px', 'font-weight:bold',
+      'box-shadow:0 0 20px rgba(255,34,0,0.4)',
+      'animation:jarvisPulse 2s infinite'
+    ].join(';');
+    indicator.textContent = '⬡ EOS JARVIS MEMORY v2.0 — ONLINE';
+
+    const style = document.createElement('style');
+    style.textContent = '@keyframes jarvisPulse{0%,100%{box-shadow:0 0 20px rgba(255,34,0,0.4)}50%{box-shadow:0 0 30px rgba(255,34,0,0.8)}}';
+    document.head.appendChild(style);
+    document.body.appendChild(indicator);
+
+    setTimeout(() => { if (indicator.parentNode) indicator.parentNode.removeChild(indicator); }, 3500);
+  }
+
+  // ─── Boot sequence ──────────────────────────────────────────────
+  function boot() {
+    console.log('[JARVIS MEMORY v2.0] Booting...');
+    hookSendButton();
+    observeChatOutput();
+    loadContext();
+    showIndicator();
+    console.log('[JARVIS MEMORY v2.0] Online ✓ | Session:', SESSION_ID);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 
 })();
