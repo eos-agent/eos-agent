@@ -3,7 +3,7 @@
 ;(function() {
   "use strict";
   const SB = () => localStorage.getItem("eos_supabase_url");
-  const KEY = () => localStorage.getItem("eos_supabase_key");
+  const KEY = () => localStorage.getItem("eos_supabase_anon");
   const SID = "sess_" + Date.now();
   const OF = window.fetch.bind(window);
 
