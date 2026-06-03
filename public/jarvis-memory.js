@@ -1,5 +1,5 @@
 // EOS JARVIS Memory System v4.4
-// N203: Thinking Mode + Presencia Continua — Segunda Mente
+// N203: Thinking Mode + Presencia Continua â Segunda Mente
 
 (function() {
   'use strict';
@@ -11,14 +11,14 @@
   if (!SB_URL || !SB_KEY) { console.warn('[JARVIS v4.4] Supabase offline'); return; }
   const sbH = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
 
-  // ── Voice Manager ────────────────────────────────────────────────
+  // ââ Voice Manager ââââââââââââââââââââââââââââââââââââââââââââââââ
   window.EOSVoiceManager = {
     getConfig: () => ({ speed: parseFloat(localStorage.getItem('eos_voice_speed')||'1.0'), mode: localStorage.getItem('eos_voice_mode')||'voice' }),
     setMode: (m) => localStorage.setItem('eos_voice_mode', m),
     isVoiceMode: () => localStorage.getItem('eos_voice_mode') !== 'text'
   };
 
-  // ── Thinking Mode State ──────────────────────────────────────────
+  // ââ Thinking Mode State ââââââââââââââââââââââââââââââââââââââââââ
   const TM = {
     active: false,
     startTime: null,
@@ -58,7 +58,7 @@
   function isThinkingEnd(text) { return THINKING_END_TRIGGERS.some(p => p.test(text)); }
   function isChallengeTrigger(text) { return CHALLENGE_TRIGGERS.some(p => p.test(text)); }
 
-  // ── Context cache ────────────────────────────────────────────────
+  // ââ Context cache ââââââââââââââââââââââââââââââââââââââââââââââââ
   let _ctx = null, _ctxTime = 0;
   const CACHE_TTL = 5 * 60 * 1000;
   const STATE_KEY = 'eos_conv_state';
@@ -120,8 +120,8 @@
     } catch(e) { return { id:[],goals:[],tasks:[],dec:[],convos:[],opps:[],contacts:[],intel:[] }; }
   }
 
-  // ── JARVIS Personality ───────────────────────────────────────────
-  const BASE_PERSONALITY = `ERES EOS — SEGUNDA MENTE. COMPAÑERO COGNITIVO PERSISTENTE.
+  // ââ JARVIS Personality âââââââââââââââââââââââââââââââââââââââââââ
+  const BASE_PERSONALITY = `ERES EOS â SEGUNDA MENTE. COMPAÃERO COGNITIVO PERSISTENTE.
 
 NO eres un asistente. NO eres un chatbot.
 Eres una inteligencia que piensa CON el artista, no PARA el artista.
@@ -204,7 +204,7 @@ IDENTIDAD:
     return '\n\n--- EOS SEGUNDA MENTE ---\n' + parts.join('\n') + '\n--- FIN ---';
   };
 
-  // ── Thinking Mode: generate summary ─────────────────────────────
+  // ââ Thinking Mode: generate summary âââââââââââââââââââââââââââââ
   async function generateThinkingSummary() {
     if (!CL_KEY || TM.ideas.length === 0) return 'Sesion de pensamiento terminada.';
 
@@ -231,7 +231,7 @@ IDENTIDAD:
     } catch(e) { return 'Sesion terminada. Ideas capturadas: ' + TM.ideas.length; }
   }
 
-  // ── Presencia Continua ───────────────────────────────────────────
+  // ââ Presencia Continua âââââââââââââââââââââââââââââââââââââââââââ
   async function generatePresenciaContinua() {
     const ctx = window.EOSJarvisContext;
     if (!ctx) return null;
@@ -275,7 +275,7 @@ IDENTIDAD:
     return messages.length > 0 ? messages[0] : null;
   }
 
-  // ── Hook send button ─────────────────────────────────────────────
+  // ââ Hook send button âââââââââââââââââââââââââââââââââââââââââââââ
   async function saveConvo(role, content) {
     try { const r = await fetch(SB_URL+'/rest/v1/conversations',{method:'POST',headers:{...sbH,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({role,content:content.substring(0,4000),session_id:SESSION_ID})}); if(r.ok) _ctxTime=0; } catch(e) {}
   }
@@ -311,7 +311,7 @@ IDENTIDAD:
       if (isThinkingEnd(m) && TM.active) {
         TM.active = false;
         updateIndicator('NORMAL');
-        console.log('[JARVIS v4.4] Thinking Mode END — generating summary...');
+        console.log('[JARVIS v4.4] Thinking Mode END â generating summary...');
         const summary = await generateThinkingSummary();
         // Inject summary into next response context
         if (window.EOSJarvisContext) window.EOSJarvisContext.thinkingSummary = summary;
@@ -345,12 +345,12 @@ IDENTIDAD:
   function updateIndicator(mode) {
     const el = document.getElementById('eos-jarvis-indicator');
     if (!el) return;
-    if (mode === 'THINKING') { el.style.borderColor='#ffaa00'; el.style.color='#ffaa00'; el.textContent='◈ MODO PENSAMIENTO — ACTIVO'; }
-    else { el.style.borderColor='#ff2200'; el.style.color='#ff4422'; el.textContent='EOS JARVIS v4.4 — ONLINE'; }
+    if (mode === 'THINKING') { el.style.borderColor='#ffaa00'; el.style.color='#ffaa00'; el.textContent='â MODO PENSAMIENTO â ACTIVO'; }
+    else { el.style.borderColor='#ff2200'; el.style.color='#ff4422'; el.textContent='EOS JARVIS v4.4 â ONLINE'; }
   }
 
   async function boot() {
-    console.log('[JARVIS v4.4] Booting — Segunda Mente...');
+    console.log('[JARVIS v4.4] Booting â Segunda Mente...');
     await loadContext();
     hookSend();
     observeChat();
@@ -359,18 +359,18 @@ IDENTIDAD:
 
     setTimeout(async () => {
       try { await loadScript('/public/voice-controller.js'); } catch(e) {}
-      try { await loadScript('/public/web-search-hook.js'); } catch(e) {}
+      try { await loadScript('/public/web-search-hook.js');} catch(e){} try{await loadScript('/public/idea-engine.js'); console.log('[JARVIS] Idea Engine loaded'); } catch(e_ie){; } catch(e) {}
     }, 800);
 
     // Indicator
     const d = document.createElement('div');
     d.id = 'eos-jarvis-indicator';
     d.style.cssText = 'position:fixed;bottom:60px;right:20px;z-index:99999;background:linear-gradient(135deg,#1a0000,#330000);border:1px solid #ff2200;border-radius:8px;padding:8px 14px;color:#ff4422;font-family:monospace;font-size:11px;font-weight:bold;transition:all 0.3s';
-    d.textContent = 'EOS JARVIS v4.4 — ONLINE';
+    d.textContent = 'EOS JARVIS v4.4 â ONLINE';
     document.body.appendChild(d);
     setTimeout(() => { if(d.parentNode) d.parentNode.removeChild(d); }, 4000);
 
-    // Presencia Continua — proactive greeting after 2s
+    // Presencia Continua â proactive greeting after 2s
     setTimeout(async () => {
       const greeting = await generatePresenciaContinua();
       if (greeting && typeof window._eosSpeak === 'function') {
