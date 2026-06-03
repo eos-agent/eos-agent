@@ -1,14 +1,21 @@
-// EOS Fish Audio Proxy v1.1 — Voz JARVIS MCU oficial fija
-// VOZ OFICIAL EOS: JARVIS MCU (Fish Audio 612b878b113047d9a770c069c8b4fdfe)
-
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+  if (req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
 
   const fishKey = req.headers['x-fish-key'];
-  if (!fishKey) return res.status(401).json({ error: 'Missing x-fish-key' });
+  if (!fishKey) return res.status(400).json({error:'Missing x-fish-key'});
 
-  const { text, format, latency } = req.body || {};
-  if (!text || text.length < 2) return res.status(400).json({ error: 'Text too short' });
+  let body;
+  try { body = req.body; } catch(e) { return res.status(400).json({error:'Invalid body'}); }
+
+  const text = body.text || '';
+  if (!text || text.trim().length < 1) return res.status(400).json({error:'Empty text'});
+
+  // Voice Manager config from request
+  const speed = parseFloat(body.speed || '1.0');
+  const stability = parseFloat(body.stability || '0.7');
+  const expressivity = parseFloat(body.expressivity || '0.8');
+
+  const OFFICIAL_VOICE = '612b878b113047d9a770c069c8b4fdfe'; // JARVIS MCU — NUNCA CAMBIAR
 
   try {
     const fishRes = await fetch('https://api.fish.audio/v1/tts', {
@@ -18,25 +25,35 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        text,
-        reference_id: '612b878b113047d9a770c069c8b4fdfe',
-        format: format || 'mp3',
-        latency: latency || 'balanced'
+        text: text.trim(),
+        reference_id: OFFICIAL_VOICE,
+        format: body.format || 'mp3',
+        mp3_bitrate: 192,
+        // Natural voice settings — mas expresivo, menos robotico
+        latency: 'normal',       // 'normal' suena mas natural que 'balanced'
+        prosody: {
+          speed: speed,           // 1.0 = normal, 0.9 = ligeramente mas pausado (mas JARVIS)
+          volume: 0,
+          normalize_loudness: true
+        },
+        // No usar chunk_length pequeno — afecta la prosodia
+        streaming: false
       })
     });
 
     if (!fishRes.ok) {
-      const err = await fishRes.text();
-      return res.status(fishRes.status).json({ error: err });
+      const errText = await fishRes.text();
+      console.error('[fish-tts v2.0] Error', fishRes.status, errText);
+      return res.status(fishRes.status).json({error: errText});
     }
 
     const audioBuffer = await fishRes.arrayBuffer();
     res.setHeader('Content-Type', 'audio/mpeg');
     res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    return res.send(Buffer.from(audioBuffer));
+    res.send(Buffer.from(audioBuffer));
 
   } catch(e) {
-    return res.status(500).json({ error: e.message });
+    console.error('[fish-tts v2.0] Network error:', e.message);
+    res.status(500).json({error: e.message});
   }
 }
