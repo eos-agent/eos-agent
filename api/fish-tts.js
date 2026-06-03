@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const stability = parseFloat(body.stability || '0.7');
   const expressivity = parseFloat(body.expressivity || '0.8');
 
-  const OFFICIAL_VOICE = '612b878b113047d9a770c069c8b4fdfe'; // JARVIS MCU — NUNCA CAMBIAR
+  const OFFICIAL_VOICE = '41f0953d7a6b4c078445c7e65d620eeb'; // JARVIS MCU â NUNCA CAMBIAR
 
   try {
     const fishRes = await fetch('https://api.fish.audio/v1/tts', {
@@ -29,14 +29,14 @@ export default async function handler(req, res) {
         reference_id: OFFICIAL_VOICE,
         format: body.format || 'mp3',
         mp3_bitrate: 192,
-        // Natural voice settings — mas expresivo, menos robotico
+        // Natural voice settings â mas expresivo, menos robotico
         latency: 'normal',       // 'normal' suena mas natural que 'balanced'
         prosody: {
           speed: speed,           // 1.0 = normal, 0.9 = ligeramente mas pausado (mas JARVIS)
           volume: 0,
           normalize_loudness: true
         },
-        // No usar chunk_length pequeno — afecta la prosodia
+        // No usar chunk_length pequeno â afecta la prosodia
         streaming: false
       })
     });
