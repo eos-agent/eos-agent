@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOS AGENT — Zeus</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#cc2200;--red-bright:#ff3311;--red-glow:#ff4422;--red-dim:#661100;
+  --bg:#000000;--bg2:#050505;--bg3:#0a0000;
+  --text:#e0e0e0;--text-dim:#666;--text-red:#ff6644;
+  --border:#1a0500;--border-red:#330800;
+  --font:'Courier New',monospace;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font)}
+
+/* ── BOOT SCREEN ── */
+#bootScreen{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px}
+#bootLogo{font-size:72px;font-weight:100;letter-spacing:24px;color:var(--red-bright);text-shadow:0 0 60px var(--red),0 0 120px var(--red-dim);animation:bootPulse 2s ease-in-out infinite}
+#bootSub{font-size:13px;letter-spacing:8px;color:var(--text-dim)}
+#bootAccess{display:flex;flex-direction:column;align-items:center;gap:16px}
+#bootInput{background:transparent;border:none;border-bottom:1px solid var(--red-dim);color:var(--text);font-family:var(--font);font-size:18px;letter-spacing:8px;text-align:center;width:200px;outline:none;padding:8px 0}
+#bootInput::placeholder{color:#333;letter-spacing:4px}
+#bootMsg{font-size:11px;letter-spacing:3px;color:var(--red-bright);opacity:0;transition:opacity 0.3s}
+@keyframes bootPulse{0%,100%{text-shadow:0 0 40px var(--red),0 0 80px var(--red-dim)}50%{text-shadow:0 0 80px var(--red-bright),0 0 160px var(--red)}}
+
+/* ── ACCESS TRANSITION ── */
+#accessTransition{position:fixed;inset:0;background:#000;z-index:9998;pointer-events:none;opacity:0}
+
+/* ── MAIN INTERFACE ── */
+#app{width:100%;height:100%;display:grid;grid-template-rows:44px 1fr 72px;grid-template-columns:280px 1fr 300px;opacity:0;transition:opacity 1s ease}
+#app.visible{opacity:1}
+
+/* ── TOP BAR ── */
+#topBar{grid-column:1/-1;grid-row:1;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--border-red);background:rgba(5,0,0,0.8)}
+#topLeft{display:flex;align-items:center;gap:16px}
+#topLogo{font-size:13px;letter-spacing:4px;color:var(--text-dim)}
+#zeusStatus{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:2px;color:var(--red-bright)}
+#zeusOnlineDot{width:6px;height:6px;border-radius:50%;background:var(--red-bright);animation:dotPulse 1.5s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1;box-shadow:0 0 6px var(--red-bright)}50%{opacity:0.4;box-shadow:none}}
+#topCenter{font-size:11px;letter-spacing:2px;color:var(--text-dim);text-align:center}
+#topRight{display:flex;align-items:center;gap:20px;font-size:11px;letter-spacing:1px;color:var(--text-dim)}
+#listeningIndicator{display:flex;align-items:center;gap:6px;color:var(--red-bright);opacity:0;transition:opacity 0.3s}
+#listeningIndicator.active{opacity:1}
+#topTime{color:var(--text-dim)}
+
+/* ── LEFT PANEL ── */
+#leftPanel{grid-column:1;grid-row:2;padding:16px;display:flex;flex-direction:column;gap:14px;border-right:1px solid var(--border-red);overflow-y:auto;background:rgba(5,0,0,0.5)}
+.panel-section{display:flex;flex-direction:column;gap:8px}
+.section-title{font-size:9px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.zeus-status-main{display:flex;align-items:center;gap:12px}
+.status-circle{width:64px;height:64px;border-radius:50%;border:2px solid var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.status-circle::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--red-dim);animation:circlePulse 3s ease-in-out infinite}
+@keyframes circlePulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:1}}
+.status-num{font-size:20px;font-weight:bold;color:var(--red-bright);line-height:1}
+.status-label{font-size:8px;letter-spacing:1px;color:var(--text-dim)}
+.status-items{display:flex;flex-direction:column;gap:4px;flex:1}
+.status-item{display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:1px;color:var(--text-dim)}
+.status-dot{width:4px;height:4px;border-radius:50%;background:var(--red-bright);flex-shrink:0}
+.orki-list{display:flex;flex-direction:column;gap:6px}
+.orki-row{display:flex;align-items:center;gap:8px}
+.orki-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.orki-name{font-size:10px;color:var(--text-dim);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.orki-bar-bg{width:80px;height:2px;background:var(--border-red);border-radius:1px;flex-shrink:0}
+.orki-bar{height:100%;border-radius:1px;transition:width 1s ease}
+.orki-pct{font-size:9px;color:var(--text-dim);width:28px;text-align:right}
+.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sys-item{display:flex;align-items:center;gap:4px;font-size:9px;letter-spacing:1px;padding:4px 6px;border:1px solid var(--border);border-radius:3px}
+.sys-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sys-on{background:#00aa44;box-shadow:0 0 6px #00aa44}
+.sys-off{background:#333}
+.sys-name{color:var(--text-dim)}
+.opp-count{font-size:36px;font-weight:100;color:var(--red-bright);line-height:1}
+.opp-sub{font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:2px}
+.opp-bars{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.opp-bar-row{display:flex;align-items:center;gap:8px;font-size:9px;color:var(--text-dim)}
+.opp-bar-track{flex:1;height:2px;background:var(--border-red);border-radius:1px}
+.opp-bar-fill{height:100%;background:var(--red);border-radius:1px}
+
+/* ── CENTER ── */
+#center{grid-column:2;grid-row:2;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+#zeusCanvas{position:absolute;inset:0;width:100%;height:100%}
+#zeusCore{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
+#zeusName{font-size:36px;letter-spacing:12px;color:var(--red-bright);text-shadow:0 0 40px var(--red),0 0 80px var(--red-dim);font-weight:100}
+#zeusSub{font-size:9px;letter-spacing:6px;color:var(--text-dim)}
+#zeusState{font-size:11px;letter-spacing:4px;color:var(--red-bright);opacity:0;transition:opacity 0.5s;margin-top:4px}
+/* Orbital */
+#orbitalSystem{position:absolute;inset:0;pointer-events:none}
+.orbital-ring{position:absolute;border-radius:50%;border:1px solid rgba(204,34,0,0.15);top:50%;left:50%;transform:translate(-50%,-50%);animation:ringRotate linear infinite}
+.orbital-module{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;pointer-events:all;transition:all 0.3s;opacity:0.5}
+.orbital-module:hover,.orbital-module.active{opacity:1}
+.orbital-module.active .mod-icon{box-shadow:0 0 20px var(--red-bright)}
+.mod-icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--red-dim);background:rgba(20,5,0,0.9);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.3s}
+.orbital-module:hover .mod-icon,.orbital-module.active .mod-icon{border-color:var(--red-bright);background:rgba(40,10,0,0.95)}
+.mod-label{font-size:7px;letter-spacing:2px;color:var(--text-dim);white-space:nowrap;text-align:center}
+@keyframes ringRotate{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes ringRotateReverse{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(-360deg)}}
+
+/* ── RIGHT PANEL ── */
+#rightPanel{grid-column:3;grid-row:2;padding:16px;display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--border-red);overflow-y:auto;background:rgba(5,0,0,0.5)}
+.insight-item{padding:10px;border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;gap:4px;cursor:default;transition:border-color 0.3s}
+.insight-item:hover{border-color:var(--red-dim)}
+.insight-type{font-size:8px;letter-spacing:3px;text-transform:uppercase}
+.insight-type.urgente{color:#ffaa00}
+.insight-type.oportunidad{color:var(--red-bright)}
+.insight-type.riesgo{color:#ff6600}
+.insight-type.networking{color:#0088ff}
+.insight-type.info{color:var(--text-dim)}
+.insight-text{font-size:10px;color:var(--text);line-height:1.5}
+.focus-card{border:1px solid var(--border-red);border-radius:6px;overflow:hidden}
+.focus-header{padding:8px 12px;background:rgba(204,34,0,0.1);font-size:9px;letter-spacing:3px;color:var(--text-dim)}
+.focus-body{padding:12px;display:flex;flex-direction:column;gap:6px}
+.focus-title{font-size:13px;letter-spacing:2px;color:var(--text)}
+.focus-sub{font-size:9px;color:var(--text-dim);letter-spacing:1px}
+.focus-progress{height:2px;background:var(--border-red);border-radius:1px;margin-top:4px}
+.focus-bar{height:100%;background:linear-gradient(90deg,var(--red-dim),var(--red-bright));border-radius:1px;transition:width 1s ease}
+.action-card{border:1px solid var(--red-dim);border-radius:6px;padding:12px;background:rgba(40,5,0,0.3)}
+.action-text{font-size:10px;color:var(--text);line-height:1.5}
+.action-impact{margin-top:8px;display:flex;align-items:center;gap:8px}
+.impact-label{font-size:8px;letter-spacing:2px;color:var(--text-dim)}
+.impact-bar-bg{flex:1;height:2px;background:var(--border-red);border-radius:1px}
+.impact-bar{height:100%;background:var(--red-bright);border-radius:1px}
+.impact-pct{font-size:10px;color:var(--red-bright);font-weight:bold}
+
+/* ── BOTTOM CONVERSATION ── */
+#bottomBar{grid-column:1/-1;grid-row:3;display:flex;align-items:center;gap:12px;padding:0 24px;border-top:1px solid var(--border-red);background:rgba(5,0,0,0.9)}
+#micBtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--red-dim);background:rgba(20,5,0,0.8);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0;font-size:18px}
+#micBtn:hover,#micBtn.listening{border-color:var(--red-bright);box-shadow:0 0 20px var(--red)}
+#micBtn.listening{animation:micPulse 1s ease-in-out infinite}
+@keyframes micPulse{0%,100%{box-shadow:0 0 10px var(--red)}50%{box-shadow:0 0 30px var(--red-bright)}}
+#convWrapper{flex:1;display:flex;flex-direction:column;gap:4px;max-height:64px;overflow:hidden}
+#convHint{font-size:9px;letter-spacing:3px;color:var(--text-dim)}
+#convInput{background:transparent;border:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;width:100%;letter-spacing:1px}
+#convInput::placeholder{color:#2a2a2a}
+#waveform{width:80px;height:24px;flex-shrink:0}
+#sendBtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--red-dim);background:rgba(20,5,0,0.8);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0;font-size:14px;color:var(--red-bright)}
+#sendBtn:hover{border-color:var(--red-bright);box-shadow:0 0 10px var(--red)}
+
+/* ── CHAT HISTORY ── */
+#chatHistory{display:none}
+
+/* ── RESPONSE OVERLAY ── */
+#responseArea{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);max-width:700px;width:90%;z-index:100;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.chat-bubble{padding:12px 16px;border-radius:8px;font-size:12px;line-height:1.7;letter-spacing:0.5px;pointer-events:all;animation:bubbleIn 0.3s ease}
+@keyframes bubbleIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.bubble-user{background:rgba(30,5,0,0.9);border:1px solid var(--border-red);color:var(--text-dim);text-align:right;align-self:flex-end;max-width:80%}
+.bubble-zeus{background:rgba(5,0,0,0.95);border:1px solid var(--red-dim);color:var(--text);max-width:90%}
+.bubble-zeus-name{font-size:8px;letter-spacing:3px;color:var(--red-bright);margin-bottom:6px}
+
+/* ── THINKING MODE ── */
+#thinkingMode{position:fixed;top:0;left:0;right:0;padding:8px 24px;background:rgba(30,20,0,0.95);border-bottom:1px solid #ffaa00;display:none;align-items:center;justify-content:space-between;z-index:200}
+#thinkingMode.active{display:flex}
+#tmLabel{font-size:10px;letter-spacing:4px;color:#ffaa00}
+#tmCount{font-size:10px;color:var(--text-dim)}
+#tmEnd{font-size:9px;letter-spacing:2px;color:#ffaa00;cursor:pointer;text-decoration:underline}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--red-dim);border-radius:2px}
+
+/* ── UTILS ── */
+.loading-dots::after{content:'...';animation:dots 1.5s steps(4,end) infinite}
+@keyframes dots{0%,100%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+</style>
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+<div id="bootScreen">
+  <div id="bootLogo">ZEUS</div>
+  <div id="bootSub">EOS AGENT — SEGUNDA MENTE</div>
+  <div id="bootAccess">
+    <input id="bootInput" type="password" placeholder="ACCESO" autocomplete="off" autofocus>
+    <div id="bootMsg">ACCESO DENEGADO</div>
+  </div>
+</div>
+
+<!-- ACCESS TRANSITION -->
+<div id="accessTransition"></div>
+
+<!-- THINKING MODE BAR -->
+<div id="thinkingMode">
+  <div id="tmLabel">◈ MODO PENSAMIENTO ACTIVO</div>
+  <div id="tmCount">0 ideas capturadas</div>
+  <div id="tmEnd" onclick="endThinkingMode()">Finalizar y generar resumen</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div id="topBar">
+    <div id="topLeft">
+      <div id="topLogo">EOS AGENT ECOSYSTEM</div>
+      <div id="zeusStatus"><div id="zeusOnlineDot"></div>ZEUS ONLINE</div>
+    </div>
+    <div id="topCenter" id="topCenter">MIÉ, 3 JUN · <span id="topTime">--:--</span></div>
+    <div id="topRight">
+      <div id="listeningIndicator">◎ ESCUCHANDO</div>
+      <div id="topDateFull">--</div>
+    </div>
+  </div>
+
+  <!-- LEFT PANEL -->
+  <div id="leftPanel">
+
+    <div class="panel-section">
+      <div class="section-title">Zeus Status</div>
+      <div class="zeus-status-main">
+        <div class="status-circle">
+          <div class="status-num" id="momentumNum">--</div>
+          <div class="status-label">THINKING</div>
+        </div>
+        <div class="status-items">
+          <div class="status-item"><div class="status-dot"></div>CONEXIÓN ACTIVA</div>
+          <div class="status-item"><div class="status-dot"></div>MEMORIA CARGADA</div>
+          <div class="status-item"><div class="status-dot" id="intDot"></div>INTELIGENCIA <span id="intStatus">CARGANDO</span></div>
+          <div class="status-item"><div class="status-dot"></div>APRENDIZAJE CONTINUO</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">5 Orkis · Estado Emocional</div>
+      <div class="orki-list" id="orkiList">
+        <div class="orki-row"><div class="orki-dot" style="background:#cc2200"></div><div class="orki-name">Amor no habitado</div><div class="orki-bar-bg"><div class="orki-bar" style="width:78%;background:#cc2200"></div></div><div class="orki-pct">78%</div></div>
+        <div class="orki-row"><div class="orki-dot" style="background:#ff4400"></div><div class="orki-name">Culpa sin reciprocidad</div><div class="orki-bar-bg"><div class="orki-bar" style="width:62%;background:#ff4400"></div></div><div class="orki-pct">62%</div></div>
+        <div class="orki-row"><div class="orki-dot" style="background:#ff6600"></div><div class="orki-name">Cambio</div><div class="orki-bar-bg"><div class="orki-bar" style="width:91%;background:#ff6600"></div></div><div class="orki-pct">91%</div></div>
+        <div class="orki-row"><div class="orki-dot" style="background:#ff3300"></div><div class="orki-name">Paz</div><div class="orki-bar-bg"><div class="orki-bar" style="width:84%;background:#ff3300"></div></div><div class="orki-pct">84%</div></div>
+        <div class="orki-row"><div class="orki-dot" style="background:#dd1100"></div><div class="orki-name">Comienzo</div><div class="orki-bar-bg"><div class="orki-bar" style="width:67%;background:#dd1100"></div></div><div class="orki-pct">67%</div></div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">Oportunidades Activas</div>
+      <div class="opp-count" id="oppCount">--</div>
+      <div class="opp-sub">DETECTADAS</div>
+      <div class="opp-bars">
+        <div class="opp-bar-row">FESTIVALES<div class="opp-bar-track"><div class="opp-bar-fill" id="oppFestival" style="width:30%"></div></div></div>
+        <div class="opp-bar-row">PLAYLISTS<div class="opp-bar-track"><div class="opp-bar-fill" id="oppPlaylist" style="width:60%"></div></div></div>
+        <div class="opp-bar-row">MEDIA/BLOGS<div class="opp-bar-track"><div class="opp-bar-fill" id="oppMedia" style="width:20%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">Sistema</div>
+      <div class="sys-grid">
+        <div class="sys-item"><div class="sys-indicator sys-on"></div><div class="sys-name">SCOUT</div></div>
+        <div class="sys-item"><div class="sys-indicator" id="voiceDot"></div><div class="sys-name">VOICE</div></div>
+        <div class="sys-item"><div class="sys-indicator sys-on"></div><div class="sys-name">MEMORY</div></div>
+        <div class="sys-item"><div class="sys-indicator sys-on"></div><div class="sys-name">API</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CENTER: ZEUS -->
+  <div id="center">
+    <canvas id="zeusCanvas"></canvas>
+    <div id="orbitalSystem"></div>
+    <div id="zeusCore">
+      <div id="zeusName">ZEUS</div>
+      <div id="zeusSub">SEGUNDA MENTE</div>
+      <div id="zeusState"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div id="rightPanel">
+
+    <div class="panel-section">
+      <div class="section-title">Zeus Insights</div>
+      <div id="insightsList">
+        <div class="insight-item"><div class="insight-type info">CARGANDO</div><div class="insight-text loading-dots">Analizando contexto</div></div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">Focus Actual</div>
+      <div class="focus-card">
+        <div class="focus-header">PROYECTO PRINCIPAL</div>
+        <div class="focus-body">
+          <div class="focus-title" id="focusTitle">EP Νέα Αρχή</div>
+          <div class="focus-sub" id="focusSub">DOCUMENTAL + MÚSICA</div>
+          <div class="focus-progress"><div class="focus-bar" id="focusBar" style="width:67%"></div></div>
+          <div style="font-size:9px;color:var(--text-dim);margin-top:4px" id="focusPct">67%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">Próxima Acción Sugerida</div>
+      <div class="action-card" id="actionCard">
+        <div class="action-text" id="actionText loading-dots">Analizando prioridades...</div>
+        <div class="action-impact">
+          <div class="impact-label">IMPACTO</div>
+          <div class="impact-bar-bg"><div class="impact-bar" id="impactBar" style="width:0%"></div></div>
+          <div class="impact-pct" id="impactPct">--%</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM CONVERSATION -->
+  <div id="bottomBar">
+    <div id="micBtn" onclick="toggleMic()">🎙</div>
+    <div id="convWrapper">
+      <div id="convHint">Zeus, ¿qué tienes en mente?</div>
+      <input id="convInput" id="floatChatInput" placeholder="Habla libremente. Estoy escuchando." autocomplete="off">
+    </div>
+    <canvas id="waveform" width="80" height="24"></canvas>
+    <div id="sendBtn" onclick="sendMessage()">▶</div>
+  </div>
+
+</div>
+
+<!-- CHAT HISTORY (hidden, for compatibility with jarvis-memory.js) -->
+<div id="chatHistory" style="display:none"></div>
+<div id="floatMessages" style="display:none"></div>
+
+<!-- RESPONSE OVERLAY -->
+<div id="responseArea"></div>
+
+<!-- LOAD INTELLIGENCE SCRIPTS -->
+<script src="/public/jarvis-memory.js"></script>
+<script src="/public/fish-tts.js"></script>
+<script src="/public/voice-controller.js"></script>
+<script src="/public/web-search-hook.js"></script>
+<script src="/public/idea-engine.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ZEUS — SEGUNDA MENTE
+// EOS Agent Interface v1.0
+// ═══════════════════════════════════════════════════════════════
+
+const DEF_PASS = 'eos2025';
+let _sessionValid = false;
+let _zeusState = 'idle'; // idle | listening | thinking | speaking
+let _thinkingMode = false;
+let _thinkingIdeas = [];
+
+// ── TIME ────────────────────────────────────────────────────────
+function updateTime() {
+  const now = new Date();
+  const t = now.toLocaleTimeString('es-CO', {hour:'2-digit', minute:'2-digit'});
+  const d = now.toLocaleDateString('es-CO', {weekday:'short', day:'numeric', month:'short'});
+  document.getElementById('topTime').textContent = t;
+  document.getElementById('topDateFull').textContent = d.toUpperCase();
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// ── BOOT / ACCESS ────────────────────────────────────────────────
+const stored = localStorage.getItem('zeus_session');
+const storedTime = parseInt(localStorage.getItem('zeus_session_ts') || '0');
+if (stored === 'valid' && Date.now() - storedTime < 7200000) {
+  bootAccess();
+} else {
+  document.getElementById('bootInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const val = e.target.value;
+      if (val === DEF_PASS) {
+        localStorage.setItem('zeus_session', 'valid');
+        localStorage.setItem('zeus_session_ts', Date.now().toString());
+        bootAccess();
+      } else {
+        const msg = document.getElementById('bootMsg');
+        msg.style.opacity = '1';
+        setTimeout(() => msg.style.opacity = '0', 2000);
+        e.target.value = '';
+      }
+    }
+  });
+}
+
+function bootAccess() {
+  _sessionValid = true;
+  const boot = document.getElementById('bootScreen');
+  const trans = document.getElementById('accessTransition');
+  const app = document.getElementById('app');
+
+  // Flash transition
+  boot.style.transition = 'opacity 0.6s';
+  boot.style.opacity = '0';
+  setTimeout(() => {
+    boot.style.display = 'none';
+    app.classList.add('visible');
+    initZeus();
+  }, 700);
+}
+
+// ── ZEUS CANVAS ──────────────────────────────────────────────────
+let canvas, ctx, animFrame;
+let particles = [];
+let time = 0;
+
+function initCanvas() {
+  canvas = document.getElementById('zeusCanvas');
+  ctx = canvas.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  createParticles();
+  animateZeus();
+}
+
+function resizeCanvas() {
+  if (!canvas) return;
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+
+function createParticles() {
+  particles = [];
+  const count = 80;
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 80 + Math.random() * 140;
+    particles.push({
+      angle,
+      radius,
+      speed: (Math.random() - 0.5) * 0.005,
+      size: Math.random() * 1.5 + 0.5,
+      opacity: Math.random() * 0.6 + 0.1,
+      drift: Math.random() * 0.001
+    });
+  }
+}
+
+function animateZeus() {
+  if (!canvas || !ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  time += 0.008;
+
+  const states = {
+    idle: { pulse: 0.05, glowSize: 100, speed: 0.003 },
+    listening: { pulse: 0.12, glowSize: 140, speed: 0.006 },
+    thinking: { pulse: 0.08, glowSize: 120, speed: 0.012 },
+    speaking: { pulse: 0.15, glowSize: 160, speed: 0.005 }
+  };
+  const s = states[_zeusState] || states.idle;
+
+  const pulseR = s.glowSize + Math.sin(time * 2) * s.glowSize * s.pulse;
+
+  // Outer glow rings
+  for (let i = 3; i >= 1; i--) {
+    const r = pulseR + i * 35;
+    const grad = ctx.createRadialGradient(cx, cy, r - 20, cx, cy, r + 20);
+    grad.addColorStop(0, `rgba(204,34,0,${0.04 / i})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  // Main sphere glow
+  const mainGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR);
+  mainGrad.addColorStop(0, 'rgba(255,80,40,0.25)');
+  mainGrad.addColorStop(0.4, 'rgba(204,34,0,0.15)');
+  mainGrad.addColorStop(0.8, 'rgba(100,10,0,0.08)');
+  mainGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, pulseR, 0, Math.PI * 2);
+  ctx.fillStyle = mainGrad;
+  ctx.fill();
+
+  // Core ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, pulseR * 0.55, 0, Math.PI * 2);
+  ctx.strokeStyle = `rgba(255,50,20,${0.3 + Math.sin(time * 3) * 0.1})`;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Inner bright core
+  const innerGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR * 0.3);
+  innerGrad.addColorStop(0, 'rgba(255,120,60,0.4)');
+  innerGrad.addColorStop(0.5, 'rgba(204,34,0,0.2)');
+  innerGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, pulseR * 0.3, 0, Math.PI * 2);
+  ctx.fillStyle = innerGrad;
+  ctx.fill();
+
+  // Particles
+  particles.forEach(p => {
+    p.angle += s.speed + p.drift;
+    const x = cx + Math.cos(p.angle) * p.radius;
+    const y = cy + Math.sin(p.angle) * p.radius;
+    const flicker = Math.sin(time * 3 + p.angle * 5) * 0.3 + 0.7;
+    ctx.beginPath();
+    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,60,20,${p.opacity * flicker})`;
+    ctx.fill();
+  });
+
+  // Speaking waves
+  if (_zeusState === 'speaking') {
+    for (let w = 1; w <= 3; w++) {
+      const wR = pulseR + w * 25 + Math.sin(time * 8 + w) * 10;
+      ctx.beginPath();
+      ctx.arc(cx, cy, wR, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,50,20,${0.15 - w * 0.04})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+
+  animFrame = requestAnimationFrame(animateZeus);
+}
+
+// ── ORBITAL SYSTEM ───────────────────────────────────────────────
+const MODULES = [
+  { id: 'pensamiento', icon: '🧠', label: 'PENSAMIENTO', angle: -90, ring: 1 },
+  { id: 'memoria',     icon: '💾', label: 'MEMORIA',     angle: -30, ring: 1 },
+  { id: 'relaciones',  icon: '👥', label: 'RELACIONES',  angle: 30,  ring: 1 },
+  { id: 'oportunidades',icon:'🎯', label: 'OPORTUNIDADES', angle: 90, ring: 1 },
+  { id: 'intelligence', icon: '∞', label: 'INTELLIGENCE CORE', angle: 150, ring: 1 },
+  { id: 'agentes',     icon: '⚡', label: 'AGENTES',     angle: 210, ring: 1 }
+];
+
+function initOrbital() {
+  const sys = document.getElementById('orbitalSystem');
+  const cx = sys.offsetWidth / 2;
+  const cy = sys.offsetHeight / 2;
+  const R = Math.min(cx, cy) * 0.62;
+
+  MODULES.forEach(m => {
+    const el = document.createElement('div');
+    el.className = 'orbital-module';
+    el.id = 'mod-' + m.id;
+    el.innerHTML = `<div class="mod-icon">${m.icon}</div><div class="mod-label">${m.label}</div>`;
+
+    const rad = (m.angle * Math.PI) / 180;
+    const x = cx + Math.cos(rad) * R;
+    const y = cy + Math.sin(rad) * R;
+    el.style.position = 'absolute';
+    el.style.left = (x - 18) + 'px';
+    el.style.top = (y - 18) + 'px';
+    el.style.transform = 'translate(-50%, -50%)';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+
+    sys.appendChild(el);
+  });
+
+  // Slow orbital rotation of the whole system
+  let rotation = 0;
+  setInterval(() => {
+    rotation += 0.05;
+    MODULES.forEach((m, i) => {
+      const el = document.getElementById('mod-' + m.id);
+      if (!el) return;
+      const baseRad = ((m.angle + rotation) * Math.PI) / 180;
+      const x = cx + Math.cos(baseRad) * R;
+      const y = cy + Math.sin(baseRad) * R;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+    });
+  }, 50);
+}
+
+// ── ZEUS STATE MANAGEMENT ────────────────────────────────────────
+function setZeusState(state) {
+  _zeusState = state;
+  const stateEl = document.getElementById('zeusState');
+  const listeningEl = document.getElementById('listeningIndicator');
+  const voiceDot = document.getElementById('voiceDot');
+
+  const labels = { idle: '', listening: 'TE ESCUCHO', thinking: 'PENSANDO...', speaking: 'ZEUS' };
+  stateEl.textContent = labels[state] || '';
+  stateEl.style.opacity = state !== 'idle' ? '1' : '0';
+
+  if (state === 'listening') {
+    listeningEl.classList.add('active');
+    voiceDot.classList.add('sys-on');
+  } else {
+    listeningEl.classList.remove('active');
+    if (state === 'idle') voiceDot.classList.remove('sys-on');
+  }
+}
+
+// ── CONVERSATION ─────────────────────────────────────────────────
+const CL_KEY = () => localStorage.getItem('eos_claude_key');
+let _lastMessages = [];
+
+async function sendMessage(textOverride) {
+  const input = document.getElementById('convInput');
+  const text = textOverride || input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  addBubble(text, 'user');
+
+  if (!CL_KEY()) { addBubble('Configura tu Claude API key en el sistema.', 'zeus'); return; }
+
+  // Check triggers
+  if (/modo\s*(pensamiento|pensar)|quiero\s*pensar\s*contigo/i.test(text)) {
+    startThinkingMode();
+  } else if (/fin\s*(del\s*modo|pensamiento)|genera.*resumen|que\s*detectaste/i.test(text) && _thinkingMode) {
+    endThinkingMode();
+    return;
+  }
+  if (_thinkingMode) {
+    _thinkingIdeas.push(text);
+    document.getElementById('tmCount').textContent = _thinkingIdeas.length + ' ideas capturadas';
+  }
+
+  setZeusState('thinking');
+
+  // Build context
+  const ctx = window.buildSystemContext ? window.buildSystemContext() : '';
+
+  // Determine challenge mode
+  const challengeMode = /desafia\s*(esta|la)\s*idea|cuestiona\s*(esto|esta)/i.test(text);
+  const challengeAddition = challengeMode ? '\n[MODO DESAFÍO: busca riesgos, contradicciones y puntos débiles. No valides — cuestiona.]' : '';
+
+  try {
+    _lastMessages.push({ role: 'user', content: text });
+    if (_lastMessages.length > 10) _lastMessages = _lastMessages.slice(-10);
+
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': CL_KEY(), 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 300,
+        system: ctx + challengeAddition,
+        messages: _lastMessages
+      })
+    });
+    const d = await r.json();
+    const reply = d.content?.[0]?.text || 'No respuesta';
+    _lastMessages.push({ role: 'assistant', content: reply });
+
+    addBubble(reply, 'zeus');
+    setZeusState('speaking');
+
+    // Speak
+    if (window._eosSpeak) window._eosSpeak(reply);
+    else if (window.EOSVoice) window.EOSVoice.speak(reply);
+
+    setTimeout(() => setZeusState('idle'), 4000);
+
+  } catch(e) {
+    addBubble('Error de conexión: ' + e.message, 'zeus');
+    setZeusState('idle');
+  }
+}
+
+// Create compatible floatSend for jarvis-memory.js
+window.floatSend = sendMessage;
+
+// Compatible input IDs
+const realInput = document.getElementById('convInput');
+realInput.id = 'floatChatInput';
+realInput.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey) sendMessage(); });
+document.getElementById('sendBtn').id = 'floatSendBtn';
+
+function addBubble(text, who) {
+  const area = document.getElementById('responseArea');
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble bubble-' + (who === 'zeus' ? 'zeus' : 'user');
+  if (who === 'zeus') {
+    bubble.innerHTML = '<div class="bubble-zeus-name">ZEUS</div>' + text.replace(/\n/g, '<br>');
+  } else {
+    bubble.textContent = text;
+  }
+  area.appendChild(bubble);
+
+  // Keep only last 4 messages visible
+  while (area.children.length > 4) area.removeChild(area.firstChild);
+
+  // Also add to hidden chatHistory for jarvis-memory observer
+  const hidden = document.getElementById('chatHistory');
+  const div = document.createElement('div');
+  div.className = who === 'zeus' ? 'assistant-msg' : 'user-msg';
+  div.textContent = text;
+  hidden.appendChild(div);
+}
+
+// ── THINKING MODE ────────────────────────────────────────────────
+function startThinkingMode() {
+  _thinkingMode = true;
+  _thinkingIdeas = [];
+  document.getElementById('thinkingMode').classList.add('active');
+  setZeusState('listening');
+  addBubble('Modo pensamiento activado. Habla libremente — estoy escuchando y registrando todo. Cuando termines di "genera el resumen".', 'zeus');
+  if (window._eosSpeak) window._eosSpeak('Modo pensamiento activado. Te escucho.');
+}
+
+async function endThinkingMode() {
+  _thinkingMode = false;
+  document.getElementById('thinkingMode').classList.remove('active');
+  setZeusState('thinking');
+  addBubble('Generando resumen de la sesión de pensamiento...', 'zeus');
+
+  if (_thinkingIdeas.length === 0) {
+    addBubble('No capturé ideas en esta sesión.', 'zeus');
+    setZeusState('idle'); return;
+  }
+
+  try {
+    const prompt = 'Analiza esta sesión de pensamiento y genera un resumen ejecutivo conciso (max 150 palabras):\n\nIDEAS:\n' + _thinkingIdeas.join('\n') + '\n\nGenera:\n1. IDEAS CLAVE\n2. CONEXIONES detectadas\n3. PRÓXIMAS ACCIONES\n4. RIESGOS (si los hay)\n\nSé directo y accionable.';
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': CL_KEY(), 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 300, messages: [{ role: 'user', content: prompt }] })
+    });
+    const d = await r.json();
+    const summary = d.content?.[0]?.text || 'No se pudo generar el resumen.';
+    addBubble(summary, 'zeus');
+    setZeusState('speaking');
+    if (window._eosSpeak) window._eosSpeak('Sesión de pensamiento completada. He generado el resumen.');
+    setTimeout(() => setZeusState('idle'), 3000);
+  } catch(e) {
+    addBubble('Error al generar resumen.', 'zeus');
+    setZeusState('idle');
+  }
+}
+
+// ── MIC TOGGLE ───────────────────────────────────────────────────
+function toggleMic() {
+  const btn = document.getElementById('micBtn');
+  if (window.EOSVoice) {
+    if (window.EOSVoiceController && window.EOSVoiceController.listening) {
+      window.EOSVoice.mute();
+      btn.classList.remove('listening');
+      setZeusState('idle');
+    } else {
+      window.EOSVoice.unmute();
+      window.EOSVoice.activate();
+      btn.classList.add('listening');
+      setZeusState('listening');
+    }
+  } else {
+    btn.classList.toggle('listening');
+    setZeusState(btn.classList.contains('listening') ? 'listening' : 'idle');
+  }
+}
+
+// ── WAVEFORM ANIMATION ───────────────────────────────────────────
+function animateWaveform() {
+  const cv = document.getElementById('waveform');
+  if (!cv) return;
+  const c = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const t = Date.now() / 200;
+  c.clearRect(0, 0, w, h);
+  if (_zeusState === 'listening' || _zeusState === 'speaking') {
+    c.strokeStyle = '#cc2200';
+    c.lineWidth = 1.5;
+    c.beginPath();
+    for (let x = 0; x < w; x++) {
+      const amp = _zeusState === 'speaking' ? 8 : 4;
+      const y = h/2 + Math.sin(x/8 + t) * amp + Math.sin(x/4 + t*1.5) * (amp/2);
+      x === 0 ? c.moveTo(x, y) : c.lineTo(x, y);
+    }
+    c.stroke();
+  } else {
+    c.strokeStyle = '#330800';
+    c.lineWidth = 1;
+    c.beginPath();
+    c.moveTo(0, h/2);
+    c.lineTo(w, h/2);
+    c.stroke();
+  }
+  requestAnimationFrame(animateWaveform);
+}
+
+// ── LOAD DATA INTO PANELS ────────────────────────────────────────
+async function loadPanelData() {
+  const ctx = window.EOSJarvisContext;
+  if (!ctx) { setTimeout(loadPanelData, 2000); return; }
+
+  // Opportunities count
+  const oppCount = ctx.opps ? ctx.opps.length : 0;
+  document.getElementById('oppCount').textContent = oppCount;
+
+  // Intelligence insights
+  if (ctx.intel && ctx.intel.length > 0 && ctx.intel[0].context) {
+    try {
+      const parsed = JSON.parse(ctx.intel[0].context);
+
+      // Insights list
+      const insightsList = document.getElementById('insightsList');
+      insightsList.innerHTML = '';
+      const insights = parsed.insights || [];
+      if (insights.length > 0) {
+        insights.slice(0,4).forEach(ins => {
+          const div = document.createElement('div');
+          div.className = 'insight-item';
+          div.innerHTML = `<div class="insight-type ${(ins.type||'info').toLowerCase()}">${ins.type || 'INFO'}</div><div class="insight-text">${ins.message}</div>`;
+          insightsList.appendChild(div);
+        });
+      } else if (ctx.intel[0].brief) {
+        const div = document.createElement('div');
+        div.className = 'insight-item';
+        div.innerHTML = `<div class="insight-type info">INTELLIGENCE V2</div><div class="insight-text">${ctx.intel[0].brief.substring(0,120)}...</div>`;
+        insightsList.appendChild(div);
+      }
+
+      // Next action from brief
+      if (ctx.intel[0].brief) {
+        const brief = ctx.intel[0].brief;
+        const prioMatch = brief.match(/PRIORIDAD #1[:\s]+([^\n]{20,100})/i);
+        if (prioMatch) {
+          document.getElementById('actionText').textContent = prioMatch[1].trim();
+          document.getElementById('impactBar').style.width = '89%';
+          document.getElementById('impactPct').textContent = '89%';
+        }
+      }
+
+      document.getElementById('intStatus').textContent = 'ENFOCADA';
+    } catch(e) {}
+  }
+
+  // Goals / Focus
+  if (ctx.goals && ctx.goals.length > 0) {
+    const g = ctx.goals[0];
+    document.getElementById('focusTitle').textContent = g.title || g.goal || 'EP Νέα Αρχή';
+  }
+
+  // Momentum
+  const momentum = 87;
+  document.getElementById('momentumNum').textContent = momentum + '%';
+}
+
+// ── PRESENCIA CONTINUA ───────────────────────────────────────────
+function presenciaContinua() {
+  // Wait for jarvis-memory to load context
+  setTimeout(() => {
+    if (window._presenciaGreeting) {
+      addBubble(window._presenciaGreeting, 'zeus');
+    } else {
+      // Generate from context
+      const ctx = window.EOSJarvisContext;
+      if (ctx && ctx.intel && ctx.intel.length > 0 && ctx.intel[0].context) {
+        try {
+          const parsed = JSON.parse(ctx.intel[0].context);
+          if (parsed.insights && parsed.insights.length > 0) {
+            const urgent = parsed.insights.find(i => i.priority === 'high');
+            if (urgent) addBubble(urgent.message, 'zeus');
+          }
+        } catch(e) {}
+      }
+    }
+  }, 3500);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+function initZeus() {
+  initCanvas();
+  setTimeout(initOrbital, 100);
+  animateWaveform();
+  setZeusState('idle');
+
+  // Load panel data when context is ready
+  setTimeout(loadPanelData, 3000);
+
+  // Presencia continua
+  presenciaContinua();
+
+  // Override EOSVoice to update Zeus state
+  const _origSpeak = window._eosSpeak;
+  window._eosSpeak = function(text) {
+    setZeusState('speaking');
+    if (_origSpeak) _origSpeak(text);
+    setTimeout(() => setZeusState('idle'), Math.min(text.length * 60, 8000));
+  };
+
+  // Listen for voice controller state
+  setInterval(() => {
+    if (window.EOSVoiceController) {
+      const vc = window.EOSVoiceController;
+      if (vc.playing && _zeusState !== 'speaking') setZeusState('speaking');
+      else if (vc.listening && _zeusState === 'idle') setZeusState('listening');
+      else if (!vc.playing && !vc.listening && _zeusState !== 'idle' && _zeusState !== 'thinking') {
+        setTimeout(() => { if (_zeusState !== 'thinking') setZeusState('idle'); }, 2000);
+      }
+    }
+  }, 500);
+
+  console.log('[Zeus] Segunda Mente — Online');
+}
+</script>
+</body>
+</html>
