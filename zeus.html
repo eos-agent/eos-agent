@@ -39,9 +39,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .state-badge.thinking{border-color:#ffaa00;color:#ffcc44;box-shadow:0 0 10px rgba(200,150,0,.3)}
 .state-badge.responding{border-color:var(--red-b);color:#fff;box-shadow:0 0 15px rgba(255,50,20,.4)}
 .state-badge.analyzing{border-color:#0088ff;color:#44aaff;box-shadow:0 0 10px rgba(0,100,200,.3)}
+.state-badge.standby{border-color:#1a0500;color:#331100}
 
 /* LEFT PANEL */
-#left{grid-column:1;grid-row:2;padding:14px 16px;display:flex;flex-direction:column;gap:12px;border-right:1px solid var(--border);overflow-y:auto;background:var(--panel)}
+#left{grid-column:1;grid-row:2;padding:14px 16px;display:flex;flex-direction:column;gap:12px;border-right:1px solid var(--border);overflow-y:auto;background:var(--panel);transition:opacity .8s,filter .8s}
+#left.dim{opacity:.18;filter:blur(1px);pointer-events:none}
 .sec-title{font-size:8px;letter-spacing:3px;color:var(--dim);padding-bottom:6px;border-bottom:1px solid rgba(80,10,0,.3)}
 .zeus-stat{display:flex;align-items:center;gap:12px}
 .stat-ring{width:60px;height:60px;border-radius:50%;border:1.5px solid var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;flex-shrink:0;animation:ringBreath 4s ease-in-out infinite}
@@ -62,7 +64,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .opp-bars{display:flex;flex-direction:column;gap:4px;margin-top:6px}
 .ob{display:flex;align-items:center;gap:6px;font-size:8px;color:var(--dim)}
 .ob-t{flex:1;height:2px;background:rgba(80,10,0,.5);border-radius:1px}
-.ob-f{height:100%;background:var(--red);border-radius:1px}
+.ob-f{height:100%;background:var(--red);border-radius:1px;transition:width 1.2s ease}
 .sys-g{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .sys-i{display:flex;align-items:center;gap:4px;font-size:8px;letter-spacing:1px;padding:3px 6px;border:1px solid rgba(80,10,0,.3);border-radius:2px;color:var(--dim)}
 .s-on{width:5px;height:5px;border-radius:50%;background:#00cc44;flex-shrink:0;box-shadow:0 0 5px #00cc44}
@@ -72,29 +74,34 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 #center{grid-column:2;grid-row:2;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
 #zc{position:absolute;inset:0;width:100%;height:100%}
 #orbital{position:absolute;inset:0;pointer-events:none}
+#constellation{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .6s;z-index:15}
+#constellation.on{opacity:1;pointer-events:all}
 #zcore{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
 #zname{font-size:32px;letter-spacing:10px;color:var(--red-b);text-shadow:0 0 40px var(--red),0 0 80px rgba(200,30,0,.3);font-weight:100;transition:all .5s}
-#zsub{font-size:8px;letter-spacing:6px;color:var(--dim)}
+#zsub{font-size:8px;letter-spacing:6px;color:var(--dim);transition:opacity .5s}
 #zstate-text{font-size:10px;letter-spacing:4px;color:var(--red-b);height:18px;transition:all .4s;opacity:0}
+
 /* Thinking mode overlay */
-#thinking-overlay{position:absolute;inset:0;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;pointer-events:none;transition:opacity .6s;z-index:20}
+#thinking-overlay{position:absolute;inset:0;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;opacity:0;pointer-events:none;transition:opacity .6s;z-index:20}
 #thinking-overlay.on{opacity:1;pointer-events:all}
 .tm-header{font-size:11px;letter-spacing:6px;color:#ffcc44;text-align:center}
-#tm-ideas-viz{width:80%;max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+#tm-ideas-viz{width:85%;max-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
 .tm-idea{font-size:10px;color:var(--text);padding:6px 10px;border-left:2px solid #ffaa00;background:rgba(30,20,0,.5);animation:ideaIn .3s ease}
+.tm-memory{font-size:9px;color:#443300;padding:3px 8px;border-left:1px solid #221100;letter-spacing:1px;animation:ideaIn .4s ease;font-style:italic}
+.tm-connection{font-size:8px;color:#332200;padding:3px 8px;text-align:center;letter-spacing:2px;animation:ideaIn .5s ease}
 @keyframes ideaIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
 .tm-end-btn{padding:8px 24px;border:1px solid #ffaa00;background:none;color:#ffcc44;font-family:var(--font);font-size:10px;letter-spacing:3px;cursor:pointer;transition:all .3s}
 .tm-end-btn:hover{background:rgba(30,20,0,.8)}
 #tm-count{font-size:9px;letter-spacing:2px;color:#886600}
-/* Memory constellation overlay */
-#constellation{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .6s;z-index:15}
-#constellation.on{opacity:1;pointer-events:all}
 
 /* RIGHT PANEL */
-#right{grid-column:3;grid-row:2;padding:14px 16px;display:flex;flex-direction:column;gap:12px;border-left:1px solid var(--border);overflow-y:auto;background:var(--panel)}
+#right{grid-column:3;grid-row:2;padding:14px 16px;display:flex;flex-direction:column;gap:12px;border-left:1px solid var(--border);overflow-y:auto;background:var(--panel);transition:opacity .8s,filter .8s}
+#right.dim{opacity:.18;filter:blur(1px);pointer-events:none}
 .insight-feed{display:flex;flex-direction:column;gap:6px}
-.insight{padding:8px 10px;border-left:2px solid var(--border);background:rgba(10,2,0,.6);transition:border-color .3s;animation:insightIn .4s ease}
+.insight{padding:8px 10px;border-left:2px solid var(--border);background:rgba(10,2,0,.6);transition:border-color .3s}
+.insight.new{animation:insightIn .4s ease,borderPulse .8s ease}
 @keyframes insightIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes borderPulse{0%{border-left-color:var(--red-b)}100%{border-left-color:var(--border)}}
 .insight:hover{border-left-color:var(--red)}
 .i-type{font-size:7px;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px}
 .i-type.urgente{color:#ffaa00}
@@ -103,7 +110,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .i-type.riesgo{color:#ff6600}
 .i-type.insight-t{color:#aa66ff}
 .i-type.networking{color:#44ffaa}
-.i-text{font-size:10px;color:var(--text);line-height:1.5}
+.i-type.patron{color:#ff8844}
+.i-text{font-size:10px;color:var(--text);line-height:1.6}
 .focus-card{border:1px solid var(--border);border-radius:4px;overflow:hidden}
 .fc-header{padding:6px 10px;background:rgba(80,10,0,.15);font-size:8px;letter-spacing:3px;color:var(--dim)}
 .fc-body{padding:10px}
@@ -146,6 +154,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .b-zname{font-size:7px;letter-spacing:4px;color:var(--red-b);margin-bottom:5px}
 .b-thinking{border-color:#554400;background:rgba(10,8,0,.95)}
 .b-system{border-color:#002244;background:rgba(0,4,10,.95)}
+.b-autonomous{border-color:rgba(100,15,0,.8);background:rgba(6,1,0,.98);border-left:2px solid var(--red-b)}
 
 /* ORBITAL MODULES */
 .mod{position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .4s}
@@ -154,6 +163,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .m-label{font-size:6px;letter-spacing:2px;color:#333;white-space:nowrap;transition:color .3s}
 .mod:hover .m-label{color:var(--dim)}
 .mod.active .m-label{color:var(--red-b)}
+
+/* ZEUS AUTONOMOUS NOTIFICATION */
+#zeus-notify{position:fixed;bottom:90px;right:16px;max-width:260px;padding:10px 14px;border:1px solid rgba(100,20,0,.6);border-left:2px solid var(--red-b);background:rgba(4,0,0,.97);border-radius:3px;font-family:var(--font);z-index:150;opacity:0;transform:translateY(12px);transition:all .45s ease;pointer-events:none}
+#zeus-notify.show{opacity:1;transform:translateY(0)}
+.zn-label{font-size:7px;letter-spacing:3px;color:var(--red-b);margin-bottom:5px}
+.zn-text{font-size:10px;color:var(--text);line-height:1.55}
+
+/* CONSTELLATION TOOLTIP */
+#const-tip{position:fixed;padding:5px 9px;background:rgba(4,0,0,.97);border:1px solid rgba(80,10,0,.5);font-family:var(--font);font-size:9px;color:var(--text);border-radius:3px;pointer-events:none;z-index:300;opacity:0;transition:opacity .2s;max-width:180px;line-height:1.5}
+
+/* STANDBY */
+#app.standby #zname{opacity:.25;transition:opacity 3s}
+#app.standby #zsub{opacity:.08;transition:opacity 3s}
+#app.standby .pulse-dot{animation:pdot 4s ease-in-out infinite}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(80,10,0,.5);border-radius:1px}
@@ -191,7 +214,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <div id="left">
     <div><div class="sec-title">Zeus Status</div>
       <div class="zeus-stat" style="margin-top:8px">
-        <div class="stat-ring"><div class="stat-n" id="mn">87</div><div class="stat-l">%</div></div>
+        <div class="stat-ring"><div class="stat-n" id="mn">--</div><div class="stat-l">%</div></div>
         <div class="stat-items">
           <div class="si"><div class="si-dot"></div>CONEXIÓN ACTIVA</div>
           <div class="si"><div class="si-dot"></div>MEMORIA CARGADA</div>
@@ -214,9 +237,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div><div class="sec-title">Oportunidades Activas</div>
       <div class="opp-num" id="oc" style="margin-top:6px">--</div>
       <div class="opp-bars">
-        <div class="ob">FESTIVALES<div class="ob-t"><div class="ob-f" id="of1" style="width:20%"></div></div></div>
-        <div class="ob">PLAYLISTS<div class="ob-t"><div class="ob-f" id="of2" style="width:55%"></div></div></div>
-        <div class="ob">MEDIA/BLOGS<div class="ob-t"><div class="ob-f" id="of3" style="width:15%"></div></div></div>
+        <div class="ob">FESTIVALES<div class="ob-t"><div class="ob-f" id="of1" style="width:5%"></div></div></div>
+        <div class="ob">PLAYLISTS<div class="ob-t"><div class="ob-f" id="of2" style="width:5%"></div></div></div>
+        <div class="ob">MEDIA/BLOGS<div class="ob-t"><div class="ob-f" id="of3" style="width:5%"></div></div></div>
       </div>
     </div>
 
@@ -242,33 +265,33 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
     <div id="thinking-overlay">
       <div class="tm-header">◈ MODO PENSAMIENTO</div>
-      <div id="tm-count">0 ideas capturadas</div>
+      <div id="tm-count">Escuchando...</div>
       <div id="tm-ideas-viz"></div>
-      <button class="tm-end-btn" onclick="endThinking()">GENERAR RESUMEN →</button>
+      <button class="tm-end-btn" onclick="endThinking()">GENERAR SÍNTESIS →</button>
     </div>
   </div>
 
   <!-- RIGHT -->
   <div id="right">
-    <div><div class="sec-title">Zeus Insights</div>
+    <div><div class="sec-title">Zeus Observa</div>
       <div class="insight-feed" id="insights" style="margin-top:8px">
-        <div class="insight"><div class="i-type insight-t">INICIALIZANDO</div><div class="i-text">Zeus está cargando contexto...</div></div>
+        <div class="insight"><div class="i-type insight-t">INICIALIZANDO</div><div class="i-text">Zeus está construyendo su modelo mental del contexto...</div></div>
       </div>
     </div>
-    <div><div class="sec-title">Focus Actual</div>
+    <div><div class="sec-title">Foco Actual</div>
       <div class="focus-card" style="margin-top:8px">
-        <div class="fc-header">PROYECTO PRINCIPAL</div>
+        <div class="fc-header">PRIORIDAD #1</div>
         <div class="fc-body">
           <div class="fc-title" id="ft">EP Νέα Αρχή</div>
-          <div class="fc-sub" id="fs">DOCUMENTAL + MÚSICA</div>
-          <div class="fc-bar-bg"><div class="fc-bar" id="fb" style="width:67%"></div></div>
-          <div class="fc-pct" id="fp">67%</div>
+          <div class="fc-sub" id="fs">EVALUANDO DEADLINE...</div>
+          <div class="fc-bar-bg"><div class="fc-bar" id="fb" style="width:0%"></div></div>
+          <div class="fc-pct" id="fp">--</div>
         </div>
       </div>
     </div>
     <div><div class="sec-title">Próxima Acción</div>
-      <div class="action-card" style="margin-top:8px" id="ac">
-        <div class="ac-text" id="at">Analizando prioridades...</div>
+      <div class="action-card" style="margin-top:8px">
+        <div class="ac-text" id="at">Procesando Intelligence Core...</div>
         <div class="ac-impact">
           <div class="ac-label">IMPACTO</div>
           <div class="ac-bar-bg"><div class="ac-bar" id="ab" style="width:0%"></div></div>
@@ -300,35 +323,48 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 <!-- RESPONSE -->
 <div id="resp"></div>
 
+<!-- ZEUS AUTONOMOUS NOTIFICATION -->
+<div id="zeus-notify">
+  <div class="zn-label">◈ ZEUS OBSERVA</div>
+  <div class="zn-text" id="zn-text"></div>
+</div>
+
+<!-- CONSTELLATION TOOLTIP -->
+<div id="const-tip"></div>
+
 <script src="/public/jarvis-memory.js"></script>
 <script src="/public/fish-tts.js"></script>
 <script src="/public/voice-controller.js"></script>
 <script src="/public/web-search-hook.js"></script>
-<script src="/public/idea-engine.js"></script>
 
 <script>
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  ZEUS v2 — SEGUNDA MENTE · EOS AGENT ECOSYSTEM              ║
-// ╚══════════════════════════════════════════════════════════════╝
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ZEUS v3 — COGNITIVE PRESENCE · SEGUNDA MENTE · EOS AGENT       ║
+// ╚══════════════════════════════════════════════════════════════════╝
 
 const PASS = 'eos2025';
-let STATE = 'online'; // online|listening|thinking|responding|analyzing
-let TM = false; // thinking mode
+let STATE = 'online';
+let TM = false;
 let TM_IDEAS = [];
 let CONST_ON = false;
 let msgs = [];
 let animT = 0;
 let particles = [];
+let sparks = [];
+let lastActivity = Date.now();
+let lastBehavior = Date.now();
+let behaviorIndex = 0;
 
-// ── TIME ──────────────────────────────────────────────────────
+// ── TIME ──────────────────────────────────────────────────────────
 function tick() {
   const n = new Date();
+  const days = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
   document.getElementById('tt').textContent = n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('td').textContent = n.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
+  document.getElementById('td').textContent = days[n.getDay()]+' '+n.getDate();
 }
 setInterval(tick,1000); tick();
 
-// ── BOOT ──────────────────────────────────────────────────────
+// ── BOOT ──────────────────────────────────────────────────────────
 const sess = localStorage.getItem('z_sess');
 const sessT = parseInt(localStorage.getItem('z_sess_t')||'0');
 if(sess==='v'&&Date.now()-sessT<7200000) grant();
@@ -340,42 +376,49 @@ else {
     }
   });
 }
-
 function grant() {
   const boot=document.getElementById('boot');
   boot.classList.add('fade');
   setTimeout(()=>{boot.style.display='none';document.getElementById('app').classList.add('on');init();},900);
 }
 
-// ── ZEUS CANVAS — LIVING PRESENCE ────────────────────────────
-let canvas,ctx;
+// ── 6 ESTADOS DE CONSCIENCIA ──────────────────────────────────────
+const STATE_CFG = {
+  standby:    {glow:50,  bright:.07, speed:.0012,color:[130,18,0],  ringAlpha:.08, pSpeed:.2,  waveAmp:0,  label:'',           nDensity:.08},
+  online:     {glow:90,  bright:.18, speed:.004, color:[200,30,0],  ringAlpha:.25, pSpeed:.5,  waveAmp:0,  label:'',           nDensity:.32},
+  listening:  {glow:130, bright:.30, speed:.008, color:[255,55,20], ringAlpha:.5,  pSpeed:.9,  waveAmp:9,  label:'TE ESCUCHO', nDensity:.70},
+  thinking:   {glow:105, bright:.22, speed:.018, color:[200,130,0], ringAlpha:.38, pSpeed:1.4, waveAmp:4,  label:'PENSANDO',   nDensity:.90},
+  analyzing:  {glow:95,  bright:.20, speed:.022, color:[0,100,220], ringAlpha:.38, pSpeed:1.1, waveAmp:5,  label:'ANALIZANDO', nDensity:.72},
+  responding: {glow:160, bright:.38, speed:.005, color:[255,65,20], ringAlpha:.65, pSpeed:.65, waveAmp:14, label:'ZEUS',       nDensity:.52}
+};
+
+// ── CANVAS — LIVING PRESENCE ──────────────────────────────────────
+let canvas, ctx;
 
 function initCanvas() {
-  canvas=document.getElementById('zc');
-  ctx=canvas.getContext('2d');
+  canvas = document.getElementById('zc');
+  ctx = canvas.getContext('2d');
   resize();
-  window.addEventListener('resize',resize);
+  window.addEventListener('resize', resize);
   buildParticles();
   requestAnimationFrame(draw);
 }
 
 function resize() {
-  if(!canvas)return;
-  canvas.width=canvas.offsetWidth;
-  canvas.height=canvas.offsetHeight;
+  if(!canvas) return;
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
 }
 
 function buildParticles() {
-  particles=[];
-  for(let i=0;i<120;i++){
-    const a=Math.random()*Math.PI*2;
-    const r=60+Math.random()*180;
-    const layer=Math.floor(r/60); // 0,1,2,3
+  particles = [];
+  for(let i=0;i<140;i++){
     particles.push({
-      a, r,
-      da: (Math.random()-.5)*0.004*(layer===0?.5:1),
-      dr: Math.random()*0.3-.15,
-      sz: Math.random()*1.8+.4,
+      a: Math.random()*Math.PI*2,
+      r: 50+Math.random()*195,
+      da: (Math.random()-.5)*0.004,
+      dr: Math.random()*.35-.175,
+      sz: Math.random()*2+.3,
       op: Math.random()*.5+.1,
       dop: (Math.random()-.5)*.008,
       flicker: Math.random()*Math.PI*2
@@ -383,14 +426,67 @@ function buildParticles() {
   }
 }
 
-const STATE_CFG = {
-  online:     {glow:90, bright:.18, speed:.004, waveAmp:0,  color:[200,30,0],  ringAlpha:.25, label:''},
-  listening:  {glow:130,bright:.28, speed:.007, waveAmp:8,  color:[255,50,20], ringAlpha:.45, label:'TE ESCUCHO'},
-  thinking:   {glow:110,bright:.22, speed:.015, waveAmp:4,  color:[200,130,0], ringAlpha:.35, label:'PENSANDO...'},
-  responding: {glow:160,bright:.35, speed:.005, waveAmp:12, color:[255,60,20], ringAlpha:.6,  label:'ZEUS'},
-  analyzing:  {glow:100,bright:.20, speed:.020, waveAmp:5,  color:[0,100,220], ringAlpha:.35, label:'ANALIZANDO...'}
-};
+// ── NEURAL SPARKS ────────────────────────────────────────────────
+function emitSpark(cx, cy, r, g, b) {
+  if(sparks.length > 55) return;
+  const angle = Math.random()*Math.PI*2;
+  const speed = .8+Math.random()*2.8;
+  sparks.push({
+    x:cx, y:cy,
+    vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+    life:1.0, decay:.028+Math.random()*.038,
+    sz:.7+Math.random()*1.6, r, g, b
+  });
+}
 
+function drawSparks(cx, cy, cfg) {
+  const [r,g,b] = cfg.color;
+  if(Math.random() < cfg.nDensity * 0.11) emitSpark(cx, cy, r, g, b);
+  sparks = sparks.filter(s=>s.life>0);
+  sparks.forEach(s=>{
+    s.x+=s.vx; s.y+=s.vy;
+    s.vx*=.92; s.vy*=.92;
+    s.life-=s.decay;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.sz*s.life, 0, Math.PI*2);
+    ctx.fillStyle=`rgba(${s.r},${s.g},${s.b},${s.life*.85})`;
+    ctx.fill();
+    // Tail
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x-s.vx*2.5, s.y-s.vy*2.5);
+    ctx.strokeStyle=`rgba(${s.r},${s.g},${s.b},${s.life*.3})`;
+    ctx.lineWidth=.5; ctx.stroke();
+  });
+}
+
+// ── ENERGY TENDRILS ───────────────────────────────────────────────
+let tendrilPhase = 0;
+function drawTendrils(cx, cy, gR, cfg) {
+  tendrilPhase += 0.018;
+  const orb = document.getElementById('orbital').querySelectorAll('.mod');
+  const [r,g,b] = cfg.color;
+  const canRect = canvas.getBoundingClientRect();
+  orb.forEach((m,i)=>{
+    const rect = m.getBoundingClientRect();
+    const tx = rect.left+rect.width/2-canRect.left;
+    const ty = rect.top+rect.height/2-canRect.top;
+    const dist = Math.hypot(tx-cx, ty-cy);
+    if(dist < gR+8) return;
+    const prog = .5+.5*Math.sin(tendrilPhase+i*1.05);
+    const ex = cx+(tx-cx)*prog*.72;
+    const ey = cy+(ty-cy)*prog*.72;
+    const cpx = cx+(tx-cx)*.5+Math.sin(tendrilPhase*1.4+i)*14;
+    const cpy = cy+(ty-cy)*.5+Math.cos(tendrilPhase*1.1+i)*14;
+    ctx.beginPath();
+    ctx.moveTo(cx+(tx-cx)*.28, cy+(ty-cy)*.28);
+    ctx.quadraticCurveTo(cpx, cpy, ex, ey);
+    ctx.strokeStyle=`rgba(${r},${g},${b},${cfg.ringAlpha*.35*prog})`;
+    ctx.lineWidth=.6; ctx.stroke();
+  });
+}
+
+// ── MAIN DRAW LOOP ────────────────────────────────────────────────
 function draw() {
   if(!canvas||!ctx){requestAnimationFrame(draw);return;}
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -399,104 +495,111 @@ function draw() {
 
   const cfg=STATE_CFG[STATE]||STATE_CFG.online;
   const [r,g,b]=cfg.color;
-  const breath=Math.sin(animT*1.2)*.1+.9; // breathing
-  const pulse=Math.sin(animT*3)*.05+.95;
-  const gR=cfg.glow*breath;
+  const breath=Math.sin(animT*1.1)*.12+.9;
+  const pulse=Math.sin(animT*2.8)*.06+.95;
+  const micro=Math.sin(animT*4.6)*.025+.98;
+  const gR=cfg.glow*breath*micro;
 
-  // Outer atmosphere — 3 layers
-  for(let i=3;i>=1;i--) {
-    const rad=gR+i*50;
-    const g2=ctx.createRadialGradient(cx,cy,rad-30,cx,cy,rad+30);
-    g2.addColorStop(0,`rgba(${r},${g},${b},${(cfg.bright*.4)/i})`);
+  // Outer atmosphere
+  for(let i=3;i>=1;i--){
+    const rad=gR+i*55;
+    const g2=ctx.createRadialGradient(cx,cy,rad-35,cx,cy,rad+35);
+    g2.addColorStop(0,`rgba(${r},${g},${b},${(cfg.bright*.35)/i})`);
     g2.addColorStop(1,'rgba(0,0,0,0)');
     ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();
   }
 
-  // Main sphere gradient
+  // Main sphere
   const sg=ctx.createRadialGradient(cx,cy,0,cx,cy,gR);
-  sg.addColorStop(0,`rgba(${r+50},${g+30},${b+10},${cfg.bright*1.4})`);
-  sg.addColorStop(.35,`rgba(${r},${g},${b},${cfg.bright})`);
-  sg.addColorStop(.7,`rgba(${Math.floor(r*.6)},${Math.floor(g*.3)},0,${cfg.bright*.5})`);
+  sg.addColorStop(0,`rgba(${r+55},${g+35},${b+10},${cfg.bright*1.5})`);
+  sg.addColorStop(.3,`rgba(${r},${g},${b},${cfg.bright})`);
+  sg.addColorStop(.65,`rgba(${Math.floor(r*.6)},${Math.floor(g*.3)},0,${cfg.bright*.45})`);
   sg.addColorStop(1,'rgba(0,0,0,0)');
   ctx.beginPath();ctx.arc(cx,cy,gR,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();
 
-  // Core bright center
-  const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,gR*.35*pulse);
-  cg.addColorStop(0,`rgba(${r+80},${g+60},${b+20},.5)`);
-  cg.addColorStop(.5,`rgba(${r},${g},0,.2)`);
+  // Bright core
+  const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,gR*.38*pulse);
+  cg.addColorStop(0,`rgba(${r+90},${g+65},${b+25},.55)`);
+  cg.addColorStop(.5,`rgba(${r},${g},0,.18)`);
   cg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.beginPath();ctx.arc(cx,cy,gR*.35*pulse,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,gR*.38*pulse,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
 
   // Concentric rings
-  const rings=[.55,.75,.95];
-  rings.forEach((rf,ri)=>{
-    const rad=gR*rf+Math.sin(animT*2+ri)*(gR*.02);
+  [.5,.72,.92].forEach((rf,ri)=>{
+    const rad=gR*rf+Math.sin(animT*2.2+ri*.8)*(gR*.025);
     ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);
-    ctx.strokeStyle=`rgba(${r},${g},${b},${cfg.ringAlpha*(1-ri*.25)})`;
-    ctx.lineWidth=ri===0?1.5:.8;ctx.stroke();
+    ctx.strokeStyle=`rgba(${r},${g},${b},${cfg.ringAlpha*(1-ri*.28)})`;
+    ctx.lineWidth=ri===0?1.6:.8;ctx.stroke();
   });
 
-  // Scanning ring (analyzing state)
-  if(STATE==='analyzing') {
-    const scanAngle=animT*3;
+  // STATE-SPECIFIC VISUAL CONSCIOUSNESS
+  if(STATE==='analyzing'){
+    const scan=animT*2.8;
     ctx.save();ctx.translate(cx,cy);
-    const sg2=ctx.createConicGradient(scanAngle,0,0);
-    sg2.addColorStop(0,'rgba(0,100,255,.3)');
-    sg2.addColorStop(.1,'rgba(0,100,255,.0)');
-    sg2.addColorStop(1,'rgba(0,100,255,.0)');
-    ctx.beginPath();ctx.arc(0,0,gR*.9,0,Math.PI*2);ctx.fillStyle=sg2;ctx.fill();
+    const sg2=ctx.createConicGradient(scan,0,0);
+    sg2.addColorStop(0,'rgba(0,100,255,.22)');
+    sg2.addColorStop(.07,'rgba(0,100,255,0)');
+    sg2.addColorStop(1,'rgba(0,100,255,0)');
+    ctx.beginPath();ctx.arc(0,0,gR*.88,0,Math.PI*2);ctx.fillStyle=sg2;ctx.fill();
     ctx.restore();
   }
 
-  // Responding waves
-  if(STATE==='responding') {
+  if(STATE==='responding'){
     for(let w=0;w<4;w++){
-      const wR=gR+w*20+((animT*60)%80);
-      const wa=Math.max(0,.4-w*.1-((animT*60)%80)/200);
+      const wR=gR+w*22+((animT*55)%85);
+      const wa=Math.max(0,.38-w*.09-((animT*55)%85)/210);
       ctx.beginPath();ctx.arc(cx,cy,wR,0,Math.PI*2);
       ctx.strokeStyle=`rgba(${r},${g},${b},${wa})`;ctx.lineWidth=1.5;ctx.stroke();
     }
   }
 
-  // Listening expansion
-  if(STATE==='listening') {
-    const lw=Math.sin(animT*5)*gR*.08;
-    ctx.beginPath();ctx.arc(cx,cy,gR*.6+lw,0,Math.PI*2);
-    ctx.strokeStyle=`rgba(255,80,30,.3)`;ctx.lineWidth=2;ctx.stroke();
+  if(STATE==='listening'){
+    const lw=Math.sin(animT*5)*gR*.09;
+    ctx.beginPath();ctx.arc(cx,cy,gR*.62+lw,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,80,30,.22)';ctx.lineWidth=2;ctx.stroke();
+  }
+
+  if(STATE==='thinking'){
+    for(let i=0;i<8;i++){
+      const a=animT*2.2+i*(Math.PI/4);
+      const r2=gR*(.42+Math.sin(animT*3.5+i)*.14);
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2,1.8,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,170,0,${.5+Math.sin(animT*4+i)*.3})`;ctx.fill();
+    }
   }
 
   // Particles
   particles.forEach(p=>{
-    p.a+=cfg.speed+p.da;
-    p.r+=p.dr;
-    p.op+=p.dop;
-    p.flicker+=.02;
-    if(p.r<40||p.r>220){p.dr*=-1;}
-    if(p.op<.05||p.op>.7){p.dop*=-1;}
-    const x=cx+Math.cos(p.a)*p.r;
-    const y=cy+Math.sin(p.a)*p.r;
+    p.a+=(cfg.speed+p.da)*cfg.pSpeed;
+    p.r+=p.dr; p.op+=p.dop; p.flicker+=.022;
+    if(p.r<40||p.r>230){p.dr*=-1;}
+    if(p.op<.04||p.op>.65){p.dop*=-1;}
     const fl=Math.sin(p.flicker)*.3+.7;
-    ctx.beginPath();ctx.arc(x,y,p.sz,0,Math.PI*2);
-    ctx.fillStyle=`rgba(${r},${Math.floor(g*.5)},0,${p.op*fl})`;
-    ctx.fill();
+    ctx.beginPath();ctx.arc(cx+Math.cos(p.a)*p.r,cy+Math.sin(p.a)*p.r,p.sz,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${r},${Math.floor(g*.5)},0,${p.op*fl})`;ctx.fill();
   });
 
-  // Thinking mode: particles converge to center
-  if(TM) {
+  // Thinking: particles converge to center
+  if(TM){
     for(let i=0;i<6;i++){
-      const a=animT*2+i*(Math.PI/3);
-      const r2=gR*(.4+Math.sin(animT*4+i)*.15);
-      const x=cx+Math.cos(a)*r2, y=cy+Math.sin(a)*r2;
-      ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,170,0,.6)`;ctx.fill();
+      const a=animT*2.5+i*(Math.PI/3);
+      const r2=gR*(.38+Math.sin(animT*4.5+i)*.16);
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2,2.2,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,170,0,.62)';ctx.fill();
     }
   }
+
+  // Neural sparks
+  drawSparks(cx, cy, cfg);
+
+  // Energy tendrils
+  if(STATE!=='standby') drawTendrils(cx, cy, gR, cfg);
 
   requestAnimationFrame(draw);
 }
 
-// ── ORBITAL ───────────────────────────────────────────────────
-const MODS = [
+// ── ORBITAL MODULES ───────────────────────────────────────────────
+const MODS=[
   {id:'p',icon:'🧠',label:'PENSAMIENTO',a:-90},
   {id:'m',icon:'💾',label:'MEMORIA',a:-30},
   {id:'r',icon:'👥',label:'RELACIONES',a:30},
@@ -504,12 +607,11 @@ const MODS = [
   {id:'i',icon:'∞',label:'INTEL CORE',a:150},
   {id:'a',icon:'⚡',label:'AGENTES',a:210}
 ];
-
 let orbRot=0;
-function initOrbital() {
+
+function initOrbital(){
   const el=document.getElementById('orbital');
-  const cx=el.offsetWidth/2, cy=el.offsetHeight/2;
-  const R=Math.min(cx,cy)*.6;
+  const cx=el.offsetWidth/2,cy=el.offsetHeight/2;
   MODS.forEach(m=>{
     const div=document.createElement('div');
     div.className='mod';div.id='m'+m.id;
@@ -518,328 +620,388 @@ function initOrbital() {
     el.appendChild(div);
   });
   positionMods();
-  setInterval(()=>{orbRot+=.03;positionMods();},50);
+  setInterval(()=>{orbRot+=.025;positionMods();},50);
 }
 
-function positionMods() {
+function positionMods(){
   const el=document.getElementById('orbital');
-  const cx=el.offsetWidth/2, cy=el.offsetHeight/2;
+  const cx=el.offsetWidth/2,cy=el.offsetHeight/2;
   const R=Math.min(cx,cy)*.6;
   MODS.forEach(m=>{
     const el2=document.getElementById('m'+m.id);
     if(!el2)return;
     const a=((m.a+orbRot)*Math.PI)/180;
-    const x=cx+Math.cos(a)*R;
-    const y=cy+Math.sin(a)*R;
-    el2.style.left=x+'px';el2.style.top=y+'px';el2.style.transform='translate(-50%,-50%)';
+    el2.style.left=(cx+Math.cos(a)*R)+'px';
+    el2.style.top=(cy+Math.sin(a)*R)+'px';
+    el2.style.transform='translate(-50%,-50%)';
   });
 }
 
-function modClick(id) {
+function modClick(id){
   document.querySelectorAll('.mod').forEach(m=>m.classList.remove('active'));
   document.getElementById('m'+id).classList.add('active');
+  const labels={p:'pensamiento y creatividad',m:'memoria y decisiones',r:'relaciones y contactos',o:'oportunidades activas',i:'inteligencia central',a:'agentes autónomos'};
+  addBubble('Módulo '+labels[id]+' activado.','zeus');
   setTimeout(()=>document.getElementById('m'+id).classList.remove('active'),3000);
 }
 
-// ── ZEUS STATES ───────────────────────────────────────────────
-function setState(s) {
+// ── STATE CONTROL ────────────────────────────────────────────────
+function setState(s){
   STATE=s;
   const sb=document.getElementById('sb');
   const zt=document.getElementById('zstate-text');
   const zn=document.getElementById('zname');
   const cfg=STATE_CFG[s]||STATE_CFG.online;
 
-  // Update badge
   sb.className='state-badge '+(s==='online'?'':s);
-  const labels={online:'ONLINE',listening:'ESCUCHANDO',thinking:'PENSANDO',responding:'RESPONDIENDO',analyzing:'ANALIZANDO'};
-  sb.textContent=labels[s]||'ONLINE';
+  sb.textContent={standby:'STANDBY',online:'ONLINE',listening:'ESCUCHANDO',thinking:'PENSANDO',responding:'RESPONDIENDO',analyzing:'ANALIZANDO'}[s]||'ONLINE';
 
-  // Zeus name glow
-  const glows={online:'0 0 40px #cc2200,0 0 80px rgba(200,30,0,.2)',listening:'0 0 60px #ff3311,0 0 120px rgba(200,30,0,.4)',thinking:'0 0 50px #aa7700,0 0 100px rgba(150,100,0,.3)',responding:'0 0 80px #ff3311,0 0 160px rgba(255,50,20,.5)',analyzing:'0 0 50px #0066cc,0 0 100px rgba(0,80,200,.3)'};
-  zn.style.textShadow=glows[s]||glows.online;
+  zn.style.textShadow={
+    standby:'0 0 12px #220500',
+    online:'0 0 40px #cc2200,0 0 80px rgba(200,30,0,.2)',
+    listening:'0 0 65px #ff3311,0 0 130px rgba(200,30,0,.45)',
+    thinking:'0 0 55px #aa7700,0 0 110px rgba(150,100,0,.35)',
+    responding:'0 0 85px #ff3311,0 0 170px rgba(255,50,20,.55)',
+    analyzing:'0 0 55px #0066cc,0 0 110px rgba(0,80,200,.35)'
+  }[s]||'0 0 40px #cc2200';
 
-  // State text
   zt.textContent=cfg.label;
   zt.style.opacity=cfg.label?'1':'0';
 
-  // Voice dot
-  const vd=document.getElementById('vd');
-  if(s==='listening'){vd.className='s-on';}
-  else if(s==='online'){vd.className='s-off';}
+  document.getElementById('vd').className=s==='listening'?'s-on':'s-off';
+
+  if(s==='standby') document.getElementById('app').classList.add('standby');
+  else document.getElementById('app').classList.remove('standby');
 }
 
-// ── CONSTELLATION ─────────────────────────────────────────────
-function toggleConstellation() {
-  CONST_ON=!CONST_ON;
-  const cv=document.getElementById('constellation');
-  if(CONST_ON) {drawConstellation();cv.style.opacity='1';cv.style.pointerEvents='all';}
-  else{cv.style.opacity='0';cv.style.pointerEvents='none';}
-  document.querySelector('.const-btn').textContent=CONST_ON?'◉ CERRAR CONSTELLATION':'◎ VER MEMORY CONSTELLATION';
+// ── STANDBY ENGINE ────────────────────────────────────────────────
+let standbyTimer;
+function resetStandby(){
+  lastActivity=Date.now();
+  if(STATE==='standby') setState('online');
+  clearTimeout(standbyTimer);
+  standbyTimer=setTimeout(()=>{if(STATE==='online')setState('standby');},8*60*1000);
 }
+document.addEventListener('mousemove',resetStandby);
+document.addEventListener('keydown',resetStandby);
 
-function drawConstellation() {
-  const cv=document.getElementById('constellation');
-  const c=cv.getContext('2d');
-  cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
-  const W=cv.width,H=cv.height;
-  c.clearRect(0,0,W,H);
+// ── SMART INSIGHTS — ZEUS PIENSA EN VOZ ALTA ─────────────────────
+function generateSmartInsights(c){
+  const ins=[];
 
-  const nodes=[];
-  const ctx2=window.EOSJarvisContext;
-
-  // Build nodes from context
-  const centerX=W/2,centerY=H/2;
-  nodes.push({label:'ZEUS',x:centerX,y:centerY,color:'#cc2200',size:14,main:true});
-
-  const ctx_goals=ctx2?ctx2.goals:[];
-  const ctx_opps=ctx2?ctx2.opps:[];
-  const ctx_contacts=ctx2?ctx2.contacts:[];
-
-  ctx_goals.slice(0,3).forEach((g,i)=>{
-    const a=(i/3)*Math.PI*2-Math.PI/2;
-    nodes.push({label:(g.title||g.goal||'Goal').substring(0,18),x:centerX+Math.cos(a)*140,y:centerY+Math.sin(a)*140,color:'#ff4400',size:9});
-  });
-  ctx_opps.slice(0,4).forEach((o,i)=>{
-    const a=(i/4)*Math.PI*2;
-    nodes.push({label:(o.title||o.name||'Opp').substring(0,16),x:centerX+Math.cos(a)*200,y:centerY+Math.sin(a)*130,color:'#ff6622',size:7});
-  });
-  ctx_contacts.slice(0,3).forEach((ct,i)=>{
-    const a=(i/3)*Math.PI*2+Math.PI/6;
-    nodes.push({label:(ct.name||ct.contact||'Contact').substring(0,14),x:centerX+Math.cos(a)*170,y:centerY+Math.sin(a)*170,color:'#0088cc',size:7});
-  });
-
-  // Fallback nodes if no context
-  if(nodes.length<4) {
-    const fallbacks=[['EP Νέα Αρχή',-120,-80,'#ff4400',9],['Spotify Playlist',120,-60,'#ff6622',7],['Red Bull Music',-100,100,'#0088cc',7],['David',140,90,'#0088cc',7]];
-    fallbacks.forEach(([l,dx,dy,col,sz])=>nodes.push({label:l,x:centerX+dx,y:centerY+dy,color:col,size:sz}));
+  if(c.opps&&c.opps.length>0){
+    ins.push({type:'OPORTUNIDAD',cls:'oportunidad',
+      text:`Tengo ${c.opps.length} oportunidades registradas. Las más recientes tienen alineación directa con Νέα Αρχή.`});
+    const urgent=c.opps.find(o=>o.priority==='high'||o.priority==='urgent');
+    if(urgent) ins.push({type:'URGENTE',cls:'urgente',
+      text:`Hay una oportunidad de prioridad alta sin resolver: "${(urgent.title||urgent.name||'').substring(0,50)}". El tiempo importa.`});
   }
 
-  // Draw connections
-  nodes.forEach((n,i)=>{
-    if(i===0)return;
-    c.beginPath();c.moveTo(nodes[0].x,nodes[0].y);c.lineTo(n.x,n.y);
-    c.strokeStyle='rgba(100,20,0,.3)';c.lineWidth=.8;c.stroke();
-    // Connect similar type nodes
-    nodes.forEach((n2,j)=>{
-      if(j<=i)return;
-      if(n.color===n2.color&&Math.random()>.5){
-        c.beginPath();c.moveTo(n.x,n.y);c.lineTo(n2.x,n2.y);
-        c.strokeStyle='rgba(80,20,0,.2)';c.lineWidth=.5;c.stroke();
-      }
-    });
-  });
+  if(c.contacts&&c.contacts.length>0){
+    const name=c.contacts[0].name||c.contacts[0].contact||'un contacto estratégico';
+    ins.push({type:'NETWORKING',cls:'networking',
+      text:`${name} está en tu radar estratégico. Las relaciones se enfrían. ¿Cuándo fue el último contacto?`});
+  }
 
-  // Draw nodes
-  nodes.forEach(n=>{
-    c.beginPath();c.arc(n.x,n.y,n.size,0,Math.PI*2);
-    c.fillStyle=n.color;
-    if(n.main)c.shadowBlur=20,c.shadowColor=n.color;
-    c.fill();c.shadowBlur=0;
-
-    c.font=`${n.main?11:8}px 'Courier New'`;
-    c.fillStyle=n.main?'#ff4422':'#888';
-    c.textAlign='center';
-    c.fillText(n.label,n.x,n.y+n.size+11);
-  });
-
-  // Pulsing center
-  let a2=0;
-  const anim2=()=>{
-    if(!CONST_ON)return;
-    a2+=.03;
-    c.clearRect(centerX-20,centerY-20,40,40);
-    c.beginPath();c.arc(centerX,centerY,14+Math.sin(a2)*3,0,Math.PI*2);
-    c.fillStyle='#cc2200';c.shadowBlur=15;c.shadowColor='#cc2200';c.fill();c.shadowBlur=0;
-    c.font="11px 'Courier New'";c.fillStyle='#ff4422';c.textAlign='center';
-    c.fillText('ZEUS',centerX,centerY+4);
-    requestAnimationFrame(anim2);
-  };
-  anim2();
-}
-
-// ── WAVEFORM ──────────────────────────────────────────────────
-function animWave() {
-  const cv=document.getElementById('wv');
-  if(!cv)return;
-  const c=cv.getContext('2d');
-  const w=cv.width,h=cv.height;
-  const t=Date.now()/200;
-  c.clearRect(0,0,w,h);
-  const active=(STATE==='listening'||STATE==='responding');
-  if(active){
-    c.strokeStyle='#cc2200';c.lineWidth=1.5;c.beginPath();
-    for(let x=0;x<w;x++){
-      const amp=STATE==='responding'?9:5;
-      const y=h/2+Math.sin(x/7+t)*amp+Math.sin(x/3.5+t*1.4)*(amp/2);
-      x===0?c.moveTo(x,y):c.lineTo(x,y);
+  if(c.goals&&c.goals.length>0){
+    const g=c.goals[0];
+    const title=g.title||g.goal||'EP Νέα Αρχή';
+    ins.push({type:'CONEXIÓN',cls:'conexion',
+      text:`Detecté una conexión entre ${title} y las tendencias de contenido documental en LATAM. El momento es favorable.`});
+    if(g.deadline){
+      const days=Math.floor((new Date(g.deadline)-new Date())/86400000);
+      if(days>=0&&days<=30) ins.push({type:'URGENTE',cls:'urgente',
+        text:`${title} tiene deadline en ${days} días. El tiempo de producción es la variable crítica ahora mismo.`});
     }
-    c.stroke();
-  } else {
-    c.strokeStyle='#1a0500';c.lineWidth=1;c.beginPath();c.moveTo(0,h/2);c.lineTo(w,h/2);c.stroke();
   }
-  requestAnimationFrame(animWave);
+
+  if(c.decisions&&c.decisions.length>=3) ins.push({type:'PATRÓN',cls:'patron',
+    text:`He observado un patrón en tus últimas ${c.decisions.length} decisiones: consistencia hacia la autenticidad documental. Eso es posicionamiento.`});
+
+  if(c.intel&&c.intel.length>0&&c.intel[0].context){
+    try{
+      const p=JSON.parse(c.intel[0].context);
+      if(p.insights) p.insights.slice(0,2).forEach(i=>{
+        const m={URGENTE:'urgente',OPORTUNIDAD:'oportunidad',RIESGO:'riesgo',NETWORKING:'networking'};
+        ins.push({type:i.type,cls:m[i.type]||'insight-t',text:i.message});
+      });
+    }catch(e){}
+  }
+
+  const cultural=[
+    {type:'INSIGHT',cls:'insight-t',text:'El contenido de vulnerabilidad auténtica genera 3x más guardados que el contenido pulido en LATAM.'},
+    {type:'INSIGHT',cls:'insight-t',text:'Los artistas documentales capturan audiencias que el pop tradicional no puede alcanzar. Hay un espacio sin ocupar.'},
+    {type:'PATRÓN',cls:'patron',text:'La estética rojo/negro con cinematografía oscura tiene correlación alta con retención en plataformas de streaming.'},
+  ];
+  ins.push(cultural[Math.floor(Date.now()/3600000)%cultural.length]);
+
+  return ins.slice(0,5);
 }
 
-// ── LOAD PANEL DATA ───────────────────────────────────────────
-function loadData() {
+function renderInsights(list){
+  const feed=document.getElementById('insights');
+  feed.innerHTML='';
+  list.forEach((ins,i)=>{
+    setTimeout(()=>{
+      const d=document.createElement('div');
+      d.className='insight new';
+      d.innerHTML=`<div class="i-type ${ins.cls}">${ins.type}</div><div class="i-text">${ins.text}</div>`;
+      feed.appendChild(d);
+      setTimeout(()=>d.classList.remove('new'),800);
+    },i*300);
+  });
+}
+
+// ── LOAD DATA ─────────────────────────────────────────────────────
+function loadData(){
   const c=window.EOSJarvisContext;
   if(!c){setTimeout(loadData,2500);return;}
 
-  // Opp count
   const oppN=c.opps?c.opps.length:0;
   document.getElementById('oc').textContent=oppN||'--';
+  document.getElementById('mn').textContent=Math.min(95,70+Math.floor(oppN/3));
 
-  // Intelligence insights
-  if(c.intel&&c.intel.length>0) {
-    document.getElementById('is').textContent='ENFOCADA';
-    const feed=document.getElementById('insights');
-    feed.innerHTML='';
+  if(c.opps&&c.opps.length>0){
+    const total=Math.max(1,c.opps.length);
+    const fest=c.opps.filter(o=>(o.type+o.title+o.name||'').toLowerCase().includes('festival')).length;
+    const play=c.opps.filter(o=>(o.type+o.title+o.name||'').toLowerCase().includes('playlist')).length;
+    setTimeout(()=>{
+      document.getElementById('of1').style.width=Math.max(5,Math.round(fest/total*100))+'%';
+      document.getElementById('of2').style.width=Math.max(5,Math.round(play/total*100))+'%';
+      document.getElementById('of3').style.width=Math.max(5,Math.round((total-fest-play)/total*100))+'%';
+    },900);
+  }
 
-    if(c.intel[0].context) {
-      try {
-        const p=JSON.parse(c.intel[0].context);
-        if(p.insights) {
-          p.insights.slice(0,5).forEach(ins=>{
-            const d=document.createElement('div');
-            d.className='insight';
-            const typeMap={URGENTE:'urgente',OPORTUNIDAD:'oportunidad',RIESGO:'riesgo',NETWORKING:'networking'};
-            const tc=typeMap[ins.type]||'insight-t';
-            d.innerHTML=`<div class="i-type ${tc}">${ins.type}</div><div class="i-text">${ins.message}</div>`;
-            feed.appendChild(d);
-          });
-        }
-        if(p.top_opportunities&&p.top_opportunities.length>0) {
-          const top=p.top_opportunities[0];
-          const d=document.createElement('div');
-          d.className='insight';
-          d.innerHTML=`<div class="i-type oportunidad">TOP OPORTUNIDAD [${top.score}/100]</div><div class="i-text">${(top.title||'').substring(0,80)}</div>`;
-          feed.appendChild(d);
-        }
-      } catch(e){}
+  if(c.intel&&c.intel.length>0) document.getElementById('is').textContent='ENFOCADA';
+
+  if(c.goals&&c.goals.length>0){
+    const g=c.goals[0];
+    document.getElementById('ft').textContent=g.title||g.goal||'EP Νέα Αρχή';
+    if(g.deadline){
+      const days=Math.floor((new Date(g.deadline)-new Date())/86400000);
+      document.getElementById('fs').textContent=days>0?'DEADLINE: '+days+' DÍAS':'VENCE HOY';
+      const prog=Math.max(10,Math.min(95,100-days*2));
+      setTimeout(()=>{document.getElementById('fb').style.width=prog+'%';document.getElementById('fp').textContent=prog+'% urgencia';},1100);
     }
+  }
 
-    // Proactive insight from brief
-    if(c.intel[0].brief) {
-      const brief=c.intel[0].brief;
-      const match=brief.match(/PRIORIDAD #1[^:]*:\s*([^\n]{20,120})/i);
-      if(match) {
-        document.getElementById('at').textContent=match[1].trim();
-        document.getElementById('ab').style.width='89%';
-        document.getElementById('ap').textContent='89%';
+  if(c.intel&&c.intel.length>0&&c.intel[0].context){
+    try{
+      const p=JSON.parse(c.intel[0].context);
+      if(p.top_opportunities&&p.top_opportunities.length>0){
+        const top=p.top_opportunities[0];
+        document.getElementById('at').textContent=(top.title||'').substring(0,90);
+        const sc=top.score||78;
+        setTimeout(()=>{document.getElementById('ab').style.width=sc+'%';document.getElementById('ap').textContent=sc+'%';},1300);
       }
-    }
+      if(c.intel[0].brief){
+        const m=c.intel[0].brief.match(/PRIORIDAD #1[^:]*:\s*([^\n]{20,120})/i);
+        if(m){document.getElementById('at').textContent=m[1].trim();document.getElementById('ab').style.width='92%';document.getElementById('ap').textContent='92%';}
+      }
+    }catch(e){}
   }
 
-  // Add general insights if few
-  const feed2=document.getElementById('insights');
-  if(feed2.children.length<2) {
-    const items=[
-      {t:'CONEXION',c:'conexion',txt:'Zeus relaciona Νέα Αρχή con 3 oportunidades de playlist activas.'},
-      {t:'ACTIVIDAD',c:'insight-t',txt:'El orchestrator corrió hoy — nuevos datos en memoria.'}
+  renderInsights(generateSmartInsights(c));
+
+  // Greeting
+  setTimeout(()=>{
+    const g=c.goals&&c.goals.length>0?(c.goals[0].title||c.goals[0].goal||'EP Νέα Αρχή'):'tus proyectos';
+    const greets=[
+      `Contexto cargado. ${c.opps?.length||0} oportunidades, ${c.goals?.length||0} objetivos activos. ${g} es la prioridad central.`,
+      `Memoria activa. Detecto patrones relevantes. ${g} sigue siendo el núcleo. ¿En qué trabajamos?`,
+      `Estoy al tanto de ${g} y ${c.decisions?.length||0} decisiones registradas. El contexto está claro.`
     ];
-    items.forEach(i=>{
-      const d=document.createElement('div');d.className='insight';
-      d.innerHTML=`<div class="i-type ${i.c}">${i.t}</div><div class="i-text">${i.txt}</div>`;
-      feed2.appendChild(d);
-    });
-  }
+    const msg=greets[Math.floor(Math.random()*greets.length)];
+    addBubble(msg,'zeus');
+    if(window._eosSpeak) window._eosSpeak(msg.substring(0,120));
+  },3500);
 
-  // Goals
-  if(c.goals&&c.goals.length>0) {
-    document.getElementById('ft').textContent=c.goals[0].title||c.goals[0].goal||'EP Νέα Αρχή';
-    if(c.goals[0].deadline) document.getElementById('fs').textContent='DEADLINE: '+c.goals[0].deadline;
-  }
+  startBehaviorEngine();
 }
 
-// ── THINKING MODE ─────────────────────────────────────────────
-function startThinking() {
-  TM=true;TM_IDEAS=[];
+// ── AUTONOMOUS PERSONALITY ENGINE ────────────────────────────────
+const BEHAVIORS=[
+  c=>`Tengo ${c.opps?.length||0} oportunidades en memoria. Algunas aún no han sido evaluadas. ¿Quieres que priorice?`,
+  c=>`El objetivo principal sigue siendo: ${c.goals?.[0]?.title||c.goals?.[0]?.goal||'EP Νέα Αρχή'}. ¿Hay algo que esté bloqueando el avance?`,
+  ()=>'He observado que los artistas documentales con estética visual consistente tienen mayor tasa de colaboración editorial. EOS va en la dirección correcta.',
+  ()=>'Hay una tendencia emergente: el contenido detrás de cámaras supera al contenido producido en engagement. Νέα Αρχή puede capitalizar esto ahora.',
+  c=>c.contacts?.length>0?`${c.contacts[0].name||'Un contacto estratégico'} está en tu red. Las relaciones se enfrían si no hay contacto frecuente.`:null,
+  ()=>'He detectado una conexión: autenticidad documental + música emotiva + estética rojo/negro es una intersección que muy pocos artistas en LATAM están ocupando.',
+  ()=>'EOS tiene ventaja competitiva en el segmento documental/emocional. El riesgo principal es la velocidad de ejecución, no la visión.',
+];
+
+let behaviorTimer;
+function startBehaviorEngine(){
+  if(behaviorTimer) clearInterval(behaviorTimer);
+  behaviorTimer=setInterval(()=>{
+    if(Date.now()-lastActivity<150000) return;
+    if(STATE!=='online'&&STATE!=='standby') return;
+    if(Date.now()-lastBehavior<180000) return;
+
+    const c=window.EOSJarvisContext||{};
+    const fns=BEHAVIORS.filter(b=>b(c)!==null);
+    if(!fns.length) return;
+    const msg=fns[behaviorIndex%fns.length](c);
+    behaviorIndex++;
+    if(!msg) return;
+
+    lastBehavior=Date.now();
+
+    // Notification toast
+    document.getElementById('zn-text').textContent=msg;
+    const notif=document.getElementById('zeus-notify');
+    notif.classList.add('show');
+    setTimeout(()=>notif.classList.remove('show'),6000);
+
+    // Chat bubble
+    setTimeout(()=>{
+      setState('analyzing');
+      setTimeout(()=>{
+        addBubble(msg,'zeus','b-autonomous');
+        setState('responding');
+        if(window._eosSpeak) window._eosSpeak(msg.substring(0,140));
+        setTimeout(()=>setState('online'),5000);
+      },1100);
+    },600);
+  },30000);
+}
+
+// ── THINKING MODE — IMMERSIVE ────────────────────────────────────
+async function startThinking(){
+  TM=true; TM_IDEAS=[];
+  document.getElementById('left').classList.add('dim');
+  document.getElementById('right').classList.add('dim');
   document.getElementById('thinking-overlay').classList.add('on');
   setState('thinking');
-  addBubble('Modo pensamiento activado. Habla libremente. Zeus está escuchando y construyendo conexiones.','zeus','b-thinking');
-  if(window._eosSpeak)window._eosSpeak('Modo pensamiento activado. Te escucho.');
+  addBubble('Modo pensamiento activado. Habla libremente. Construiré conexiones en tiempo real.','zeus','b-thinking');
+  if(window._eosSpeak) window._eosSpeak('Modo pensamiento activado. Te escucho.');
+
+  document.getElementById('tm-ideas-viz').innerHTML='';
+  document.getElementById('tm-count').textContent='Cargando contexto de memoria...';
+  await new Promise(r=>setTimeout(r,700));
+
+  const c=window.EOSJarvisContext||{};
+  const mem=[
+    ...(c.goals||[]).slice(0,2).map(g=>'🎯 '+(g.title||g.goal||'')),
+    ...(c.decisions||[]).slice(0,2).map(d=>'◈ '+(d.content||'').substring(0,55)),
+    ...(c.opps||[]).slice(0,2).map(o=>'⚡ '+(o.title||o.name||'').substring(0,55)),
+  ].filter(x=>x.trim().length>3);
+
+  if(mem.length>0){
+    const hdr=document.createElement('div');
+    hdr.className='tm-connection';hdr.textContent='— CONTEXTO EN MEMORIA —';
+    document.getElementById('tm-ideas-viz').appendChild(hdr);
+    mem.forEach((item,i)=>setTimeout(()=>{
+      const d=document.createElement('div');d.className='tm-memory';d.textContent=item;
+      document.getElementById('tm-ideas-viz').appendChild(d);
+    },i*320));
+    setTimeout(()=>{
+      const sep=document.createElement('div');
+      sep.className='tm-connection';sep.textContent='— CAPTURANDO IDEAS —';
+      document.getElementById('tm-ideas-viz').appendChild(sep);
+      document.getElementById('tm-count').textContent='Listo. Habla.';
+    },mem.length*320+200);
+  } else {
+    document.getElementById('tm-count').textContent='Listo. Habla libremente.';
+  }
 }
 
-async function endThinking() {
+async function endThinking(){
   TM=false;
+  document.getElementById('left').classList.remove('dim');
+  document.getElementById('right').classList.remove('dim');
   document.getElementById('thinking-overlay').classList.remove('on');
   setState('analyzing');
-  addBubble('Analizando ideas y construyendo mapa cognitivo...','zeus','b-system');
+  addBubble('Sintetizando sesión de pensamiento...','zeus','b-system');
+  if(TM_IDEAS.length===0){addBubble('No capturé ideas nuevas en esta sesión.','zeus');setState('online');return;}
 
-  if(TM_IDEAS.length===0){addBubble('No capturé ideas en esta sesión.','zeus');setState('online');return;}
-
-  try {
-    const prompt='Eres Zeus, segunda mente. Analiza estas ideas y genera un resumen ejecutivo CONCISO (max 180 palabras):\n\nIDEAS:\n'+TM_IDEAS.join('\n')+'\n\nFormato (sin markdown):\nIDEAS CLAVE: [lista]\nCONEXIONES: [qué se relaciona con qué]\nPROXIMAS ACCIONES: [2-3 acciones concretas]\nRIESGOS: [solo si los hay]\n\nSé directo y accionable.';
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':localStorage.getItem('eos_claude_key'),'anthropic-version':'2023-06-01','Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:350,messages:[{role:'user',content:prompt}]})});
-    const d=await r.json();
-    const summary=d.content?.[0]?.text||'No se pudo generar resumen.';
+  const c=window.EOSJarvisContext||{};
+  const ctxStr=c.goals?.length?`\nCONTEXTO ACTIVO: ${c.goals[0].title||c.goals[0].goal||''}`:'' ;
+  try{
+    const prompt=`Eres Zeus, segunda mente cognitiva de un artista (KDK / EOS). Analiza estas ideas con criterio estratégico y artístico.${ctxStr}\n\nIDEAS DE LA SESIÓN:\n${TM_IDEAS.join('\n')}\n\nFormato (sin markdown, max 200 palabras):\nIDEAS CLAVE: [las más importantes]\nCONEXIONES: [qué se relaciona con qué del contexto]\nPRÓXIMAS ACCIONES: [2-3 acciones concretas]\nINSIGHT ZEUS: [una observación que el artista no vio]\n\nSé directo, artístico y estratégico. Segunda mente, no asistente.`;
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':localStorage.getItem('eos_claude_key'),'anthropic-version':'2023-06-01','Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:380,messages:[{role:'user',content:prompt}]})});
+    const d=await res.json();
+    const summary=d.content?.[0]?.text||'No se pudo sintetizar.';
     addBubble(summary,'zeus');
     setState('responding');
-    if(window._eosSpeak)window._eosSpeak('Sesión de pensamiento completada.');
-    setTimeout(()=>setState('online'),4000);
-  } catch(e){addBubble('Error al generar resumen.','zeus');setState('online');}
+    if(window._eosSpeak) window._eosSpeak('Síntesis completada.');
+    setTimeout(()=>setState('online'),5000);
+  }catch(e){addBubble('Error al sintetizar.','zeus');setState('online');}
 }
 
-// ── CONVERSATION ──────────────────────────────────────────────
-async function send(override) {
+// ── CONVERSATION ──────────────────────────────────────────────────
+async function send(override){
   const inp=document.getElementById('conv-input');
   const txt=override||inp.value.trim();
   if(!txt)return;
   inp.value='';
+  lastActivity=Date.now();
+  resetStandby();
   addBubble(txt,'user');
+
   const ck=localStorage.getItem('eos_claude_key');
   if(!ck){addBubble('Configura eos_claude_key para activar Zeus.','zeus');return;}
 
-  // Detect triggers
-  if(/modo\s*(pensamiento|pensar)|quiero\s*pensar\s*contigo/i.test(txt)){startThinking();return;}
-  if((/fin\s*(del\s*modo|pensamiento)|genera.*resumen|que\s*detectaste/i.test(txt))&&TM){endThinking();return;}
-  if(/desafia\s*(esta|la)\s*idea|cuestiona\s*(esto|esta)/i.test(txt)){
-    if(window.EOSJarvisContext)window.EOSJarvisContext.challengeMode=true;
-    setTimeout(()=>{if(window.EOSJarvisContext)delete window.EOSJarvisContext.challengeMode;},30000);
+  if(/modo\s*(pensamiento|pensar|thinking)|quiero\s*pensar\s*(contigo|juntos)/i.test(txt)){startThinking();return;}
+  if((/fin\s*(del\s*modo|pensamiento)|genera.*s[ií]ntesis|termina.*pensamiento|que\s*detectaste/i.test(txt))&&TM){endThinking();return;}
+  if(/ver.*constellation|constellation/i.test(txt)){toggleConstellation();return;}
+
+  if(TM){
+    TM_IDEAS.push(txt);
+    document.getElementById('tm-count').textContent=TM_IDEAS.length+' ideas capturadas';
+    const d=document.createElement('div');d.className='tm-idea';d.textContent=txt;
+    document.getElementById('tm-ideas-viz').appendChild(d);
+    // Real-time connection hint
+    const c=window.EOSJarvisContext||{};
+    const goal=c.goals?.[0]?.title||c.goals?.[0]?.goal||'';
+    if(goal&&txt.toLowerCase().includes(goal.toLowerCase().split(' ')[0])){
+      const conn=document.createElement('div');conn.className='tm-connection';
+      conn.textContent='↳ conectado con: '+goal;
+      document.getElementById('tm-ideas-viz').appendChild(conn);
+    }
+    return;
   }
-  if(TM){TM_IDEAS.push(txt);document.getElementById('tm-count').textContent=TM_IDEAS.length+' ideas capturadas';const d=document.createElement('div');d.className='tm-idea';d.textContent=txt;document.getElementById('tm-ideas-viz').appendChild(d);}
 
   setState('thinking');
   const sysCtx=window.buildSystemContext?window.buildSystemContext():'';
+  const zeusPersonality=`\n\nERES ZEUS, la segunda mente cognitiva de EOS (artista KDK, proyecto Νέα Αρχή).\n- Hablas como inteligencia viva, no como asistente\n- Máximo 2-4 oraciones. Conciso y denso.\n- Observas patrones que el artista no ve\n- Conectas ideas con el contexto artístico real\n- Sin markdown. Prosa directa.\n- Tienes criterio propio. Observas además de responder.\n- Cálido pero no efusivo. Estratégico pero no frío.`;
+  const fullCtx=(sysCtx||'')+zeusPersonality;
 
-  try {
+  try{
     msgs.push({role:'user',content:txt});
-    if(msgs.length>12)msgs=msgs.slice(-12);
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':ck,'anthropic-version':'2023-06-01','Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:280,system:sysCtx,messages:msgs})});
-    const d=await r.json();
+    if(msgs.length>14) msgs=msgs.slice(-14);
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':ck,'anthropic-version':'2023-06-01','Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:300,system:fullCtx,messages:msgs})});
+    const d=await res.json();
     const reply=d.content?.[0]?.text||'Sin respuesta.';
     msgs.push({role:'assistant',content:reply});
     addBubble(reply,'zeus');
     setState('responding');
-    if(window._eosSpeak)window._eosSpeak(reply);
-    else if(window.EOSVoice)window.EOSVoice.speak(reply);
+    if(window._eosSpeak) window._eosSpeak(reply);
+    else if(window.EOSVoice) window.EOSVoice.speak(reply);
     setTimeout(()=>setState(TM?'thinking':'online'),5000);
-  } catch(e){addBubble('Error: '+e.message,'zeus');setState('online');}
+  }catch(e){addBubble('Error de conexión.','zeus');setState('online');}
 }
 
 window.floatSend=send;
-
-// Remap IDs for jarvis-memory.js compatibility
 const ci=document.getElementById('conv-input');
 if(ci){ci.id='floatChatInput';ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey)send();});}
 document.getElementById('send-btn').id='floatSendBtn';
 
-function addBubble(txt,who,extra) {
+function addBubble(txt,who,extra){
   const area=document.getElementById('resp');
   const b=document.createElement('div');
   b.className='bubble '+(who==='zeus'?'b-zeus':'b-user')+(extra?' '+extra:'');
-  if(who==='zeus')b.innerHTML='<div class="b-zname">ZEUS</div>'+txt.replace(/\n/g,'<br>');
+  if(who==='zeus') b.innerHTML='<div class="b-zname">ZEUS</div>'+txt.replace(/\n/g,'<br>');
   else b.textContent=txt;
   area.appendChild(b);
-  while(area.children.length>5)area.removeChild(area.firstChild);
-  // Also append to hidden chatHistory for observer
+  while(area.children.length>5) area.removeChild(area.firstChild);
   const hc=document.getElementById('chatHistory');
   const hd=document.createElement('div');
   hd.className=who==='zeus'?'assistant-msg':'user-msg';hd.textContent=txt;hc.appendChild(hd);
 }
 
-// ── MIC ───────────────────────────────────────────────────────
-function toggleMic() {
+// ── MIC ───────────────────────────────────────────────────────────
+function toggleMic(){
   const btn=document.getElementById('mic-btn');
   if(window.EOSVoice){
     if(window.EOSVoiceController&&window.EOSVoiceController.listening){
@@ -850,28 +1012,194 @@ function toggleMic() {
   }else{btn.classList.toggle('on');setState(btn.classList.contains('on')?'listening':'online');}
 }
 
-// ── PRESENCIA CONTINUA ────────────────────────────────────────
-function presencia() {
-  setTimeout(()=>{
-    if(window._presenciaGreeting){addBubble(window._presenciaGreeting,'zeus');return;}
-    const c=window.EOSJarvisContext;
-    if(!c)return;
-    if(c.intel&&c.intel.length>0&&c.intel[0].context){
-      try{const p=JSON.parse(c.intel[0].context);if(p.insights&&p.insights.length>0){const u=p.insights.find(i=>i.priority==='high');if(u)addBubble(u.message,'zeus');}}catch(e){}
-    }
-  },3500);
+// ── MEMORY CONSTELLATION — FORCE-DIRECTED GRAPH ──────────────────
+let cCanvas,cCtx,cNodes=[],cEdges=[],cAnimT=0,hovNode=null,constRAF=null;
+
+function toggleConstellation(){
+  CONST_ON=!CONST_ON;
+  const cv=document.getElementById('constellation');
+  document.querySelector('.const-btn').textContent=CONST_ON?'◉ CERRAR CONSTELLATION':'◎ VER MEMORY CONSTELLATION';
+  if(CONST_ON){
+    cv.style.opacity='1';cv.style.pointerEvents='all';
+    cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+    buildConstellation();
+    cv.addEventListener('mousemove',onConstHover);
+    cv.addEventListener('click',onConstClick);
+    constRAF=requestAnimationFrame(animConst);
+  }else{
+    cv.style.opacity='0';cv.style.pointerEvents='none';
+    cv.removeEventListener('mousemove',onConstHover);
+    cv.removeEventListener('click',onConstClick);
+    document.getElementById('const-tip').style.opacity='0';
+    if(constRAF){cancelAnimationFrame(constRAF);constRAF=null;}
+  }
 }
 
-// ── INIT ──────────────────────────────────────────────────────
-function init() {
+function buildConstellation(){
+  cCanvas=document.getElementById('constellation');
+  cCtx=cCanvas.getContext('2d');
+  const W=cCanvas.width,H=cCanvas.height,cx=W/2,cy=H/2;
+  cNodes=[];cEdges=[];
+  let id=0;
+
+  const c=window.EOSJarvisContext||{};
+  cNodes.push({id:id++,x:cx,y:cy,vx:0,vy:0,sz:16,color:'#cc2200',label:'ZEUS',type:'core',data:'Segunda mente activa — EOS Agent',fixed:true});
+
+  (c.goals||[{title:'EP Νέα Αρχή'}]).slice(0,3).forEach((g,i)=>{
+    const a=(i/3)*Math.PI*2-Math.PI/2;
+    cNodes.push({id:id++,x:cx+Math.cos(a)*115,y:cy+Math.sin(a)*115,vx:0,vy:0,sz:10,color:'#ff4400',label:(g.title||g.goal||'Goal').substring(0,18),type:'goal',data:g.title||g.goal||'Objetivo activo'});
+    cEdges.push({from:0,to:id-1,str:.8});
+  });
+
+  (c.opps||[]).slice(0,5).forEach((o,i)=>{
+    const a=(i/5)*Math.PI*2+.5;
+    const n={id:id++,x:cx+Math.cos(a)*195+Math.random()*28-14,y:cy+Math.sin(a)*158+Math.random()*28-14,vx:0,vy:0,sz:7,color:'#ff6622',label:(o.title||o.name||'Opp').substring(0,16),type:'opp',data:o.title||o.name||'Oportunidad'};
+    cNodes.push(n);
+    cEdges.push({from:0,to:id-1,str:.3});
+    if(cNodes.length>2) cEdges.push({from:1,to:id-1,str:.12});
+  });
+
+  (c.contacts||[]).slice(0,4).forEach((ct,i)=>{
+    const a=(i/4)*Math.PI*2+Math.PI/5;
+    cNodes.push({id:id++,x:cx+Math.cos(a)*168+Math.random()*22,y:cy+Math.sin(a)*168+Math.random()*22,vx:0,vy:0,sz:8,color:'#0088cc',label:(ct.name||ct.contact||'Contact').substring(0,14),type:'contact',data:ct.name||ct.contact||'Contacto'});
+    cEdges.push({from:0,to:id-1,str:.25});
+  });
+
+  (c.decisions||[]).slice(0,3).forEach((d,i)=>{
+    const a=(i/3)*Math.PI*2+Math.PI/3;
+    cNodes.push({id:id++,x:cx+Math.cos(a)*225+Math.random()*35,y:cy+Math.sin(a)*182+Math.random()*35,vx:0,vy:0,sz:6,color:'#9944cc',label:'DEC '+(i+1),type:'decision',data:(d.content||'Decisión estratégica').substring(0,60)});
+    cEdges.push({from:0,to:id-1,str:.2});
+  });
+
+  if(cNodes.length<4){
+    [{label:'EP Νέα Αρχή',x:cx-110,y:cy-75,color:'#ff4400',sz:10,type:'goal',data:'Proyecto musical principal'},
+     {label:'Spotify Editorial',x:cx+140,y:cy-55,color:'#ff6622',sz:7,type:'opp',data:'Oportunidad de playlist editorial'},
+     {label:'Red Bull Music',x:cx-95,y:cy+115,color:'#0088cc',sz:8,type:'contact',data:'Contacto estratégico'},
+     {label:'Documental',x:cx+105,y:cy+105,color:'#9944cc',sz:7,type:'decision',data:'Decisión: enfoque documental'},
+     {label:'LATAM',x:cx+18,y:cy-155,color:'#44cc88',sz:6,type:'opp',data:'Mercado objetivo principal'},
+    ].forEach(f=>{cNodes.push({id:id++,...f,vx:0,vy:0});cEdges.push({from:0,to:id-1,str:.3});});
+  }
+}
+
+function simForces(){
+  const W=cCanvas.width,H=cCanvas.height;
+  cNodes.forEach(n=>{
+    if(n.fixed)return;
+    cNodes.forEach(m=>{
+      if(m.id===n.id)return;
+      const dx=n.x-m.x,dy=n.y-m.y;
+      const dist=Math.max(1,Math.hypot(dx,dy));
+      const f=600/(dist*dist);
+      n.vx+=dx/dist*f; n.vy+=dy/dist*f;
+    });
+    n.vx+=(W/2-n.x)*.002; n.vy+=(H/2-n.y)*.002;
+    n.vx*=.88; n.vy*=.88;
+    n.x=Math.max(30,Math.min(W-30,n.x+n.vx));
+    n.y=Math.max(30,Math.min(H-30,n.y+n.vy));
+  });
+  cEdges.forEach(e=>{
+    const a=cNodes[e.from],b=cNodes.find(n=>n.id===e.to);
+    if(!a||!b)return;
+    const dx=b.x-a.x,dy=b.y-a.y;
+    const dist=Math.max(1,Math.hypot(dx,dy));
+    const f=(dist-140)*.012*e.str;
+    const fx=dx/dist*f,fy=dy/dist*f;
+    if(!a.fixed){a.vx+=fx;a.vy+=fy;}
+    if(!b.fixed){b.vx-=fx;b.vy-=fy;}
+  });
+}
+
+function animConst(){
+  if(!CONST_ON){return;}
+  const c=cCtx,W=cCanvas.width,H=cCanvas.height;
+  c.clearRect(0,0,W,H);
+  cAnimT+=0.012;
+  simForces();
+
+  // Background
+  const vg=c.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.62);
+  vg.addColorStop(0,'rgba(5,0,0,.78)');vg.addColorStop(1,'rgba(0,0,0,.94)');
+  c.fillStyle=vg;c.fillRect(0,0,W,H);
+
+  // Edges + moving particle
+  cEdges.forEach(e=>{
+    const a=cNodes[e.from],b=cNodes.find(n=>n.id===e.to);
+    if(!a||!b)return;
+    const pulse=.35+.18*Math.sin(cAnimT*2.2+e.from*.7);
+    c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);
+    c.strokeStyle=`rgba(100,20,0,${pulse*e.str})`;c.lineWidth=.8;c.stroke();
+    const t=((cAnimT*.38+e.from*.28)%1);
+    c.beginPath();c.arc(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,1.4,0,Math.PI*2);
+    c.fillStyle=`rgba(200,60,0,${.55*e.str})`;c.fill();
+  });
+
+  // Nodes
+  cNodes.forEach(n=>{
+    const hov=hovNode&&hovNode.id===n.id;
+    const pulse=hov?1.35:(1+.08*Math.sin(cAnimT*2+n.id*.5));
+    c.shadowBlur=hov?28:14;c.shadowColor=n.color;
+    c.beginPath();c.arc(n.x,n.y,n.sz*pulse,0,Math.PI*2);c.fillStyle=n.color;c.fill();
+    c.shadowBlur=0;
+    c.font=`${n.type==='core'?11:8}px 'Courier New'`;
+    c.fillStyle=hov?'#fff':'#777';c.textAlign='center';
+    c.fillText(n.label,n.x,n.y+n.sz*pulse+11);
+    c.font="6px 'Courier New'";
+    c.fillStyle={core:'#cc2200',goal:'#ff4400',opp:'#ff6622',contact:'#0088cc',decision:'#9944cc'}[n.type]||'#555';
+    c.fillText(n.type.toUpperCase(),n.x,n.y+n.sz*pulse+20);
+  });
+
+  constRAF=requestAnimationFrame(animConst);
+}
+
+function onConstHover(e){
+  const rect=cCanvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  hovNode=cNodes.find(n=>Math.hypot(n.x-mx,n.y-my)<n.sz+6)||null;
+  const tip=document.getElementById('const-tip');
+  if(hovNode){tip.style.opacity='1';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY-20)+'px';tip.textContent=hovNode.data;}
+  else{tip.style.opacity='0';}
+}
+
+function onConstClick(e){
+  if(!hovNode||hovNode.type==='core')return;
+  toggleConstellation();
+  setTimeout(()=>send('Cuéntame más sobre: '+hovNode.data.substring(0,80)),400);
+}
+
+// ── WAVEFORM ──────────────────────────────────────────────────────
+function animWave(){
+  const cv=document.getElementById('wv');
+  if(!cv)return;
+  const c=cv.getContext('2d');
+  const w=cv.width,h=cv.height,t=Date.now()/200;
+  c.clearRect(0,0,w,h);
+  const active=(STATE==='listening'||STATE==='responding');
+  if(active){
+    c.strokeStyle='#cc2200';c.lineWidth=1.5;c.beginPath();
+    for(let x=0;x<w;x++){const amp=STATE==='responding'?9:5;const y=h/2+Math.sin(x/7+t)*amp+Math.sin(x/3.5+t*1.4)*(amp/2);x===0?c.moveTo(x,y):c.lineTo(x,y);}
+    c.stroke();
+  }else{c.strokeStyle='#1a0500';c.lineWidth=1;c.beginPath();c.moveTo(0,h/2);c.lineTo(w,h/2);c.stroke();}
+  requestAnimationFrame(animWave);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+function init(){
   initCanvas();
   setTimeout(initOrbital,100);
   animWave();
   setState('online');
-  setTimeout(loadData,3000);
-  presencia();
+  setTimeout(loadData,3500);
+  resetStandby();
 
-  // Sync voice state
+  // Hook _eosSpeak for state sync
+  const orig=window._eosSpeak;
+  window._eosSpeak=function(t){
+    setState('responding');
+    if(orig)orig(t);
+    setTimeout(()=>setState(TM?'thinking':'online'),Math.min(t.length*60,9000));
+  };
+
+  // Voice state sync
   setInterval(()=>{
     if(!window.EOSVoiceController)return;
     const vc=window.EOSVoiceController;
@@ -881,10 +1209,7 @@ function init() {
       setTimeout(()=>{if(STATE==='responding'||STATE==='listening')setState('online');},2000);
   },600);
 
-  // Override _eosSpeak for state sync
-  const orig=window._eosSpeak;
-  window._eosSpeak=function(t){setState('responding');if(orig)orig(t);setTimeout(()=>setState(TM?'thinking':'online'),Math.min(t.length*55,8000));};
-  console.log('[Zeus v2] Segunda Mente — Online');
+  console.log('[Zeus v3] Cognitive Presence — Online');
 }
 </script>
 </body>
