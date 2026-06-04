@@ -237,11 +237,14 @@
 
     // ── DECISIONES RECIENTES (prioridad 3) ──
     if (ctx.decisions && ctx.decisions.length > 0) {
-      const validDecisions = ctx.decisions.filter(d => d.content && d.content.trim().length > 5);
+      const validDecisions = ctx.decisions.filter(d => d.title && d.title.trim().length > 5);
       if (validDecisions.length > 0) {
         parts.push('\nDECISIONES RECIENTES:');
         validDecisions.slice(0, 4).forEach(d => {
-          parts.push('• ' + d.content.substring(0, 120));
+          parts.push('• ' + d.title.substring(0, 120));
+          if (d.description && d.description !== d.title) {
+            parts.push('  → ' + d.description.substring(0, 100));
+          }
         });
       }
     }
@@ -330,18 +333,20 @@
     const matched = DECISION_KEYWORDS.filter(k => lower.includes(k));
     if (matched.length > 0 && text.length > 60) {
       try {
+        // Schema real: title, description, rationale, date_made
+        const title = text.substring(0, 180).split('\n')[0].trim();
         await fetch(SB_URL + '/rest/v1/decisions', {
           method: 'POST',
           headers: { ...sbHeaders, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
           body: JSON.stringify({
-            content: text.substring(0, 500),
-            category: 'auto-learned',
-            why: 'Detectado en conversación — keywords: ' + matched.join(', '),
-            impact: 'medium'
+            title: title,
+            description: text.substring(0, 500),
+            rationale: 'Auto-detectado en conversación — keywords: ' + matched.join(', '),
+            date_made: new Date().toISOString().split('T')[0]
           })
         });
-        console.log('[JARVIS v4] Decision auto-saved ✓');
-      } catch(e) {}
+        console.log('[JARVIS v4] Decision auto-saved ✓', title.substring(0, 60));
+      } catch(e) { console.warn('[JARVIS v4] Decision save error:', e.message); }
     }
   }
 
