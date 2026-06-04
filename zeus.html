@@ -7,322 +7,299 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --red:#cc2200;--red-bright:#ff3311;--red-glow:#ff4422;--red-dim:#661100;
-  --bg:#000000;--bg2:#050505;--bg3:#0a0000;
-  --text:#e0e0e0;--text-dim:#666;--text-red:#ff6644;
-  --border:#1a0500;--border-red:#330800;
-  --font:'Courier New',monospace;
+  --red:#cc2200;--red-b:#ff3311;--red-g:#ff4422;--red-d:#661100;--red-x:#330800;
+  --bg:#000;--panel:rgba(4,0,0,0.85);--border:rgba(80,10,0,0.4);
+  --text:#ddd;--dim:#555;--font:'Courier New',monospace;
 }
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font)}
 
-/* ── BOOT SCREEN ── */
-#bootScreen{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px}
-#bootLogo{font-size:72px;font-weight:100;letter-spacing:24px;color:var(--red-bright);text-shadow:0 0 60px var(--red),0 0 120px var(--red-dim);animation:bootPulse 2s ease-in-out infinite}
-#bootSub{font-size:13px;letter-spacing:8px;color:var(--text-dim)}
-#bootAccess{display:flex;flex-direction:column;align-items:center;gap:16px}
-#bootInput{background:transparent;border:none;border-bottom:1px solid var(--red-dim);color:var(--text);font-family:var(--font);font-size:18px;letter-spacing:8px;text-align:center;width:200px;outline:none;padding:8px 0}
-#bootInput::placeholder{color:#333;letter-spacing:4px}
-#bootMsg{font-size:11px;letter-spacing:3px;color:var(--red-bright);opacity:0;transition:opacity 0.3s}
-@keyframes bootPulse{0%,100%{text-shadow:0 0 40px var(--red),0 0 80px var(--red-dim)}50%{text-shadow:0 0 80px var(--red-bright),0 0 160px var(--red)}}
+/* BOOT */
+#boot{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transition:opacity .8s}
+#boot.fade{opacity:0;pointer-events:none}
+.boot-logo{font-size:80px;font-weight:100;letter-spacing:20px;color:var(--red-b);text-shadow:0 0 80px var(--red),0 0 160px rgba(200,30,0,.3);animation:glow 2.5s ease-in-out infinite}
+.boot-sub{font-size:11px;letter-spacing:8px;color:#333}
+.boot-form{display:flex;flex-direction:column;align-items:center;gap:12px}
+.boot-input{background:none;border:none;border-bottom:1px solid #331100;color:var(--text);font-family:var(--font);font-size:20px;letter-spacing:10px;text-align:center;width:180px;outline:none;padding:8px 0}
+.boot-err{font-size:10px;letter-spacing:3px;color:var(--red-b);height:16px;transition:opacity .3s}
+@keyframes glow{0%,100%{text-shadow:0 0 60px var(--red),0 0 120px rgba(200,30,0,.2)}50%{text-shadow:0 0 100px var(--red-b),0 0 200px rgba(200,30,0,.4)}}
 
-/* ── ACCESS TRANSITION ── */
-#accessTransition{position:fixed;inset:0;background:#000;z-index:9998;pointer-events:none;opacity:0}
+/* LAYOUT */
+#app{width:100%;height:100%;display:grid;grid-template-rows:42px 1fr 70px;grid-template-columns:270px 1fr 290px;opacity:0;transition:opacity 1.2s}
+#app.on{opacity:1}
 
-/* ── MAIN INTERFACE ── */
-#app{width:100%;height:100%;display:grid;grid-template-rows:44px 1fr 72px;grid-template-columns:280px 1fr 300px;opacity:0;transition:opacity 1s ease}
-#app.visible{opacity:1}
+/* TOP BAR */
+#top{grid-column:1/-1;grid-row:1;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--border);background:rgba(3,0,0,.9)}
+.t-left,.t-right{display:flex;align-items:center;gap:14px;font-size:10px;letter-spacing:3px;color:var(--dim)}
+.t-center{font-size:10px;letter-spacing:2px;color:var(--dim)}
+.zeus-online{display:flex;align-items:center;gap:6px;color:var(--red-b)}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--red-b);animation:pdot 1.8s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1;box-shadow:0 0 8px var(--red-b)}50%{opacity:.3;box-shadow:none}}
+.state-badge{padding:2px 8px;border:1px solid var(--border);border-radius:10px;font-size:9px;letter-spacing:2px;color:var(--dim);transition:all .4s}
+.state-badge.listening{border-color:var(--red);color:var(--red-b);box-shadow:0 0 10px rgba(200,30,0,.3)}
+.state-badge.thinking{border-color:#ffaa00;color:#ffcc44;box-shadow:0 0 10px rgba(200,150,0,.3)}
+.state-badge.responding{border-color:var(--red-b);color:#fff;box-shadow:0 0 15px rgba(255,50,20,.4)}
+.state-badge.analyzing{border-color:#0088ff;color:#44aaff;box-shadow:0 0 10px rgba(0,100,200,.3)}
 
-/* ── TOP BAR ── */
-#topBar{grid-column:1/-1;grid-row:1;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--border-red);background:rgba(5,0,0,0.8)}
-#topLeft{display:flex;align-items:center;gap:16px}
-#topLogo{font-size:13px;letter-spacing:4px;color:var(--text-dim)}
-#zeusStatus{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:2px;color:var(--red-bright)}
-#zeusOnlineDot{width:6px;height:6px;border-radius:50%;background:var(--red-bright);animation:dotPulse 1.5s ease-in-out infinite}
-@keyframes dotPulse{0%,100%{opacity:1;box-shadow:0 0 6px var(--red-bright)}50%{opacity:0.4;box-shadow:none}}
-#topCenter{font-size:11px;letter-spacing:2px;color:var(--text-dim);text-align:center}
-#topRight{display:flex;align-items:center;gap:20px;font-size:11px;letter-spacing:1px;color:var(--text-dim)}
-#listeningIndicator{display:flex;align-items:center;gap:6px;color:var(--red-bright);opacity:0;transition:opacity 0.3s}
-#listeningIndicator.active{opacity:1}
-#topTime{color:var(--text-dim)}
+/* LEFT PANEL */
+#left{grid-column:1;grid-row:2;padding:14px 16px;display:flex;flex-direction:column;gap:12px;border-right:1px solid var(--border);overflow-y:auto;background:var(--panel)}
+.sec-title{font-size:8px;letter-spacing:3px;color:var(--dim);padding-bottom:6px;border-bottom:1px solid rgba(80,10,0,.3)}
+.zeus-stat{display:flex;align-items:center;gap:12px}
+.stat-ring{width:60px;height:60px;border-radius:50%;border:1.5px solid var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;flex-shrink:0;animation:ringBreath 4s ease-in-out infinite}
+@keyframes ringBreath{0%,100%{box-shadow:0 0 10px rgba(200,30,0,.3),inset 0 0 10px rgba(200,30,0,.1)}50%{box-shadow:0 0 25px rgba(200,30,0,.6),inset 0 0 20px rgba(200,30,0,.2)}}
+.stat-n{font-size:18px;font-weight:bold;color:var(--red-b);line-height:1}
+.stat-l{font-size:7px;letter-spacing:1px;color:var(--dim)}
+.stat-items{display:flex;flex-direction:column;gap:3px;flex:1}
+.si{display:flex;align-items:center;gap:5px;font-size:8px;letter-spacing:.5px;color:var(--dim)}
+.si-dot{width:4px;height:4px;border-radius:50%;background:var(--red-b);flex-shrink:0;animation:pdot 2s ease-in-out infinite}
+.orki-list{display:flex;flex-direction:column;gap:5px}
+.orki{display:flex;align-items:center;gap:6px}
+.o-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.o-name{font-size:9px;color:var(--dim);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.o-track{width:70px;height:2px;background:rgba(80,10,0,.5);border-radius:1px;flex-shrink:0}
+.o-fill{height:100%;border-radius:1px;transition:width 1.5s ease}
+.o-pct{font-size:8px;color:var(--dim);width:24px;text-align:right}
+.opp-num{font-size:32px;font-weight:100;color:var(--red-b);line-height:1}
+.opp-bars{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.ob{display:flex;align-items:center;gap:6px;font-size:8px;color:var(--dim)}
+.ob-t{flex:1;height:2px;background:rgba(80,10,0,.5);border-radius:1px}
+.ob-f{height:100%;background:var(--red);border-radius:1px}
+.sys-g{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.sys-i{display:flex;align-items:center;gap:4px;font-size:8px;letter-spacing:1px;padding:3px 6px;border:1px solid rgba(80,10,0,.3);border-radius:2px;color:var(--dim)}
+.s-on{width:5px;height:5px;border-radius:50%;background:#00cc44;flex-shrink:0;box-shadow:0 0 5px #00cc44}
+.s-off{width:5px;height:5px;border-radius:50%;background:#333;flex-shrink:0}
 
-/* ── LEFT PANEL ── */
-#leftPanel{grid-column:1;grid-row:2;padding:16px;display:flex;flex-direction:column;gap:14px;border-right:1px solid var(--border-red);overflow-y:auto;background:rgba(5,0,0,0.5)}
-.panel-section{display:flex;flex-direction:column;gap:8px}
-.section-title{font-size:9px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.zeus-status-main{display:flex;align-items:center;gap:12px}
-.status-circle{width:64px;height:64px;border-radius:50%;border:2px solid var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;flex-shrink:0}
-.status-circle::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--red-dim);animation:circlePulse 3s ease-in-out infinite}
-@keyframes circlePulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:1}}
-.status-num{font-size:20px;font-weight:bold;color:var(--red-bright);line-height:1}
-.status-label{font-size:8px;letter-spacing:1px;color:var(--text-dim)}
-.status-items{display:flex;flex-direction:column;gap:4px;flex:1}
-.status-item{display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:1px;color:var(--text-dim)}
-.status-dot{width:4px;height:4px;border-radius:50%;background:var(--red-bright);flex-shrink:0}
-.orki-list{display:flex;flex-direction:column;gap:6px}
-.orki-row{display:flex;align-items:center;gap:8px}
-.orki-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.orki-name{font-size:10px;color:var(--text-dim);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.orki-bar-bg{width:80px;height:2px;background:var(--border-red);border-radius:1px;flex-shrink:0}
-.orki-bar{height:100%;border-radius:1px;transition:width 1s ease}
-.orki-pct{font-size:9px;color:var(--text-dim);width:28px;text-align:right}
-.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.sys-item{display:flex;align-items:center;gap:4px;font-size:9px;letter-spacing:1px;padding:4px 6px;border:1px solid var(--border);border-radius:3px}
-.sys-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.sys-on{background:#00aa44;box-shadow:0 0 6px #00aa44}
-.sys-off{background:#333}
-.sys-name{color:var(--text-dim)}
-.opp-count{font-size:36px;font-weight:100;color:var(--red-bright);line-height:1}
-.opp-sub{font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:2px}
-.opp-bars{display:flex;flex-direction:column;gap:4px;margin-top:8px}
-.opp-bar-row{display:flex;align-items:center;gap:8px;font-size:9px;color:var(--text-dim)}
-.opp-bar-track{flex:1;height:2px;background:var(--border-red);border-radius:1px}
-.opp-bar-fill{height:100%;background:var(--red);border-radius:1px}
+/* CENTER */
+#center{grid-column:2;grid-row:2;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#zc{position:absolute;inset:0;width:100%;height:100%}
+#orbital{position:absolute;inset:0;pointer-events:none}
+#zcore{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+#zname{font-size:32px;letter-spacing:10px;color:var(--red-b);text-shadow:0 0 40px var(--red),0 0 80px rgba(200,30,0,.3);font-weight:100;transition:all .5s}
+#zsub{font-size:8px;letter-spacing:6px;color:var(--dim)}
+#zstate-text{font-size:10px;letter-spacing:4px;color:var(--red-b);height:18px;transition:all .4s;opacity:0}
+/* Thinking mode overlay */
+#thinking-overlay{position:absolute;inset:0;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;pointer-events:none;transition:opacity .6s;z-index:20}
+#thinking-overlay.on{opacity:1;pointer-events:all}
+.tm-header{font-size:11px;letter-spacing:6px;color:#ffcc44;text-align:center}
+#tm-ideas-viz{width:80%;max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.tm-idea{font-size:10px;color:var(--text);padding:6px 10px;border-left:2px solid #ffaa00;background:rgba(30,20,0,.5);animation:ideaIn .3s ease}
+@keyframes ideaIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.tm-end-btn{padding:8px 24px;border:1px solid #ffaa00;background:none;color:#ffcc44;font-family:var(--font);font-size:10px;letter-spacing:3px;cursor:pointer;transition:all .3s}
+.tm-end-btn:hover{background:rgba(30,20,0,.8)}
+#tm-count{font-size:9px;letter-spacing:2px;color:#886600}
+/* Memory constellation overlay */
+#constellation{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .6s;z-index:15}
+#constellation.on{opacity:1;pointer-events:all}
 
-/* ── CENTER ── */
-#center{grid-column:2;grid-row:2;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-#zeusCanvas{position:absolute;inset:0;width:100%;height:100%}
-#zeusCore{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
-#zeusName{font-size:36px;letter-spacing:12px;color:var(--red-bright);text-shadow:0 0 40px var(--red),0 0 80px var(--red-dim);font-weight:100}
-#zeusSub{font-size:9px;letter-spacing:6px;color:var(--text-dim)}
-#zeusState{font-size:11px;letter-spacing:4px;color:var(--red-bright);opacity:0;transition:opacity 0.5s;margin-top:4px}
-/* Orbital */
-#orbitalSystem{position:absolute;inset:0;pointer-events:none}
-.orbital-ring{position:absolute;border-radius:50%;border:1px solid rgba(204,34,0,0.15);top:50%;left:50%;transform:translate(-50%,-50%);animation:ringRotate linear infinite}
-.orbital-module{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;pointer-events:all;transition:all 0.3s;opacity:0.5}
-.orbital-module:hover,.orbital-module.active{opacity:1}
-.orbital-module.active .mod-icon{box-shadow:0 0 20px var(--red-bright)}
-.mod-icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--red-dim);background:rgba(20,5,0,0.9);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.3s}
-.orbital-module:hover .mod-icon,.orbital-module.active .mod-icon{border-color:var(--red-bright);background:rgba(40,10,0,0.95)}
-.mod-label{font-size:7px;letter-spacing:2px;color:var(--text-dim);white-space:nowrap;text-align:center}
-@keyframes ringRotate{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-@keyframes ringRotateReverse{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(-360deg)}}
+/* RIGHT PANEL */
+#right{grid-column:3;grid-row:2;padding:14px 16px;display:flex;flex-direction:column;gap:12px;border-left:1px solid var(--border);overflow-y:auto;background:var(--panel)}
+.insight-feed{display:flex;flex-direction:column;gap:6px}
+.insight{padding:8px 10px;border-left:2px solid var(--border);background:rgba(10,2,0,.6);transition:border-color .3s;animation:insightIn .4s ease}
+@keyframes insightIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.insight:hover{border-left-color:var(--red)}
+.i-type{font-size:7px;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px}
+.i-type.urgente{color:#ffaa00}
+.i-type.oportunidad{color:var(--red-b)}
+.i-type.conexion{color:#44aaff}
+.i-type.riesgo{color:#ff6600}
+.i-type.insight-t{color:#aa66ff}
+.i-type.networking{color:#44ffaa}
+.i-text{font-size:10px;color:var(--text);line-height:1.5}
+.focus-card{border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.fc-header{padding:6px 10px;background:rgba(80,10,0,.15);font-size:8px;letter-spacing:3px;color:var(--dim)}
+.fc-body{padding:10px}
+.fc-title{font-size:13px;letter-spacing:2px;color:var(--text);margin-bottom:4px}
+.fc-sub{font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:8px}
+.fc-bar-bg{height:2px;background:rgba(80,10,0,.5);border-radius:1px}
+.fc-bar{height:100%;background:linear-gradient(90deg,var(--red-d),var(--red-b));border-radius:1px;transition:width 1.5s ease}
+.fc-pct{font-size:9px;color:var(--dim);margin-top:4px}
+.action-card{border:1px solid var(--red-d);border-radius:4px;padding:10px;background:rgba(15,3,0,.5);cursor:pointer;transition:border-color .3s}
+.action-card:hover{border-color:var(--red)}
+.ac-text{font-size:10px;color:var(--text);line-height:1.5}
+.ac-impact{display:flex;align-items:center;gap:8px;margin-top:8px}
+.ac-label{font-size:7px;letter-spacing:2px;color:var(--dim)}
+.ac-bar-bg{flex:1;height:2px;background:rgba(80,10,0,.5);border-radius:1px}
+.ac-bar{height:100%;background:var(--red-b);border-radius:1px;transition:width 1.5s ease}
+.ac-pct{font-size:10px;color:var(--red-b);font-weight:bold}
+.const-btn{width:100%;padding:8px;border:1px solid var(--border);background:none;color:var(--dim);font-family:var(--font);font-size:8px;letter-spacing:3px;cursor:pointer;transition:all .3s}
+.const-btn:hover{border-color:var(--red);color:var(--red-b)}
 
-/* ── RIGHT PANEL ── */
-#rightPanel{grid-column:3;grid-row:2;padding:16px;display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--border-red);overflow-y:auto;background:rgba(5,0,0,0.5)}
-.insight-item{padding:10px;border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;gap:4px;cursor:default;transition:border-color 0.3s}
-.insight-item:hover{border-color:var(--red-dim)}
-.insight-type{font-size:8px;letter-spacing:3px;text-transform:uppercase}
-.insight-type.urgente{color:#ffaa00}
-.insight-type.oportunidad{color:var(--red-bright)}
-.insight-type.riesgo{color:#ff6600}
-.insight-type.networking{color:#0088ff}
-.insight-type.info{color:var(--text-dim)}
-.insight-text{font-size:10px;color:var(--text);line-height:1.5}
-.focus-card{border:1px solid var(--border-red);border-radius:6px;overflow:hidden}
-.focus-header{padding:8px 12px;background:rgba(204,34,0,0.1);font-size:9px;letter-spacing:3px;color:var(--text-dim)}
-.focus-body{padding:12px;display:flex;flex-direction:column;gap:6px}
-.focus-title{font-size:13px;letter-spacing:2px;color:var(--text)}
-.focus-sub{font-size:9px;color:var(--text-dim);letter-spacing:1px}
-.focus-progress{height:2px;background:var(--border-red);border-radius:1px;margin-top:4px}
-.focus-bar{height:100%;background:linear-gradient(90deg,var(--red-dim),var(--red-bright));border-radius:1px;transition:width 1s ease}
-.action-card{border:1px solid var(--red-dim);border-radius:6px;padding:12px;background:rgba(40,5,0,0.3)}
-.action-text{font-size:10px;color:var(--text);line-height:1.5}
-.action-impact{margin-top:8px;display:flex;align-items:center;gap:8px}
-.impact-label{font-size:8px;letter-spacing:2px;color:var(--text-dim)}
-.impact-bar-bg{flex:1;height:2px;background:var(--border-red);border-radius:1px}
-.impact-bar{height:100%;background:var(--red-bright);border-radius:1px}
-.impact-pct{font-size:10px;color:var(--red-bright);font-weight:bold}
+/* BOTTOM */
+#bottom{grid-column:1/-1;grid-row:3;display:flex;align-items:center;gap:12px;padding:0 24px;border-top:1px solid var(--border);background:rgba(3,0,0,.95);position:relative}
+#mic-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:rgba(10,2,0,.8);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;flex-shrink:0;font-size:16px}
+#mic-btn:hover,#mic-btn.on{border-color:var(--red-b);box-shadow:0 0 20px rgba(200,30,0,.4)}
+#mic-btn.on{animation:micpulse 1.2s ease-in-out infinite}
+@keyframes micpulse{0%,100%{box-shadow:0 0 10px rgba(200,30,0,.4)}50%{box-shadow:0 0 30px rgba(255,50,20,.7)}}
+#conv-wrap{flex:1;display:flex;flex-direction:column;gap:3px}
+#conv-hint{font-size:8px;letter-spacing:3px;color:var(--dim)}
+#conv-input{background:none;border:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;width:100%;letter-spacing:.5px}
+#conv-input::placeholder{color:#1a1a1a}
+#wv{width:80px;height:24px;flex-shrink:0}
+#send-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:rgba(10,2,0,.8);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;flex-shrink:0;color:var(--red-b);font-size:12px}
+#send-btn:hover{border-color:var(--red-b);box-shadow:0 0 10px rgba(200,30,0,.3)}
 
-/* ── BOTTOM CONVERSATION ── */
-#bottomBar{grid-column:1/-1;grid-row:3;display:flex;align-items:center;gap:12px;padding:0 24px;border-top:1px solid var(--border-red);background:rgba(5,0,0,0.9)}
-#micBtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--red-dim);background:rgba(20,5,0,0.8);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0;font-size:18px}
-#micBtn:hover,#micBtn.listening{border-color:var(--red-bright);box-shadow:0 0 20px var(--red)}
-#micBtn.listening{animation:micPulse 1s ease-in-out infinite}
-@keyframes micPulse{0%,100%{box-shadow:0 0 10px var(--red)}50%{box-shadow:0 0 30px var(--red-bright)}}
-#convWrapper{flex:1;display:flex;flex-direction:column;gap:4px;max-height:64px;overflow:hidden}
-#convHint{font-size:9px;letter-spacing:3px;color:var(--text-dim)}
-#convInput{background:transparent;border:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;width:100%;letter-spacing:1px}
-#convInput::placeholder{color:#2a2a2a}
-#waveform{width:80px;height:24px;flex-shrink:0}
-#sendBtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--red-dim);background:rgba(20,5,0,0.8);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0;font-size:14px;color:var(--red-bright)}
-#sendBtn:hover{border-color:var(--red-bright);box-shadow:0 0 10px var(--red)}
+/* RESPONSE AREA */
+#resp{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);max-width:680px;width:88%;z-index:50;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.bubble{padding:11px 15px;border-radius:6px;font-size:11px;line-height:1.7;letter-spacing:.3px;pointer-events:all;animation:bIn .35s ease}
+@keyframes bIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.b-user{background:rgba(20,4,0,.9);border:1px solid rgba(80,10,0,.5);color:var(--dim);align-self:flex-end;max-width:75%}
+.b-zeus{background:rgba(4,0,0,.97);border:1px solid rgba(80,10,0,.4);color:var(--text);max-width:92%}
+.b-zname{font-size:7px;letter-spacing:4px;color:var(--red-b);margin-bottom:5px}
+.b-thinking{border-color:#554400;background:rgba(10,8,0,.95)}
+.b-system{border-color:#002244;background:rgba(0,4,10,.95)}
 
-/* ── CHAT HISTORY ── */
-#chatHistory{display:none}
+/* ORBITAL MODULES */
+.mod{position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .4s}
+.mod:hover .m-icon,.mod.active .m-icon{box-shadow:0 0 20px var(--red-b);border-color:var(--red-b)}
+.m-icon{width:34px;height:34px;border-radius:50%;border:1px solid rgba(80,10,0,.5);background:rgba(8,2,0,.9);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .4s}
+.m-label{font-size:6px;letter-spacing:2px;color:#333;white-space:nowrap;transition:color .3s}
+.mod:hover .m-label{color:var(--dim)}
+.mod.active .m-label{color:var(--red-b)}
 
-/* ── RESPONSE OVERLAY ── */
-#responseArea{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);max-width:700px;width:90%;z-index:100;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.chat-bubble{padding:12px 16px;border-radius:8px;font-size:12px;line-height:1.7;letter-spacing:0.5px;pointer-events:all;animation:bubbleIn 0.3s ease}
-@keyframes bubbleIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.bubble-user{background:rgba(30,5,0,0.9);border:1px solid var(--border-red);color:var(--text-dim);text-align:right;align-self:flex-end;max-width:80%}
-.bubble-zeus{background:rgba(5,0,0,0.95);border:1px solid var(--red-dim);color:var(--text);max-width:90%}
-.bubble-zeus-name{font-size:8px;letter-spacing:3px;color:var(--red-bright);margin-bottom:6px}
-
-/* ── THINKING MODE ── */
-#thinkingMode{position:fixed;top:0;left:0;right:0;padding:8px 24px;background:rgba(30,20,0,0.95);border-bottom:1px solid #ffaa00;display:none;align-items:center;justify-content:space-between;z-index:200}
-#thinkingMode.active{display:flex}
-#tmLabel{font-size:10px;letter-spacing:4px;color:#ffaa00}
-#tmCount{font-size:10px;color:var(--text-dim)}
-#tmEnd{font-size:9px;letter-spacing:2px;color:#ffaa00;cursor:pointer;text-decoration:underline}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--red-dim);border-radius:2px}
-
-/* ── UTILS ── */
-.loading-dots::after{content:'...';animation:dots 1.5s steps(4,end) infinite}
-@keyframes dots{0%,100%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(80,10,0,.5);border-radius:1px}
 </style>
 </head>
 <body>
 
-<!-- BOOT SCREEN -->
-<div id="bootScreen">
-  <div id="bootLogo">ZEUS</div>
-  <div id="bootSub">EOS AGENT — SEGUNDA MENTE</div>
-  <div id="bootAccess">
-    <input id="bootInput" type="password" placeholder="ACCESO" autocomplete="off" autofocus>
-    <div id="bootMsg">ACCESO DENEGADO</div>
+<!-- BOOT -->
+<div id="boot">
+  <div class="boot-logo">ZEUS</div>
+  <div class="boot-sub">EOS AGENT · SEGUNDA MENTE</div>
+  <div class="boot-form">
+    <input class="boot-input" id="bi" type="password" placeholder="·····" autocomplete="off" autofocus>
+    <div class="boot-err" id="berr" style="opacity:0">ACCESO DENEGADO</div>
   </div>
 </div>
 
-<!-- ACCESS TRANSITION -->
-<div id="accessTransition"></div>
-
-<!-- THINKING MODE BAR -->
-<div id="thinkingMode">
-  <div id="tmLabel">◈ MODO PENSAMIENTO ACTIVO</div>
-  <div id="tmCount">0 ideas capturadas</div>
-  <div id="tmEnd" onclick="endThinkingMode()">Finalizar y generar resumen</div>
-</div>
-
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="app">
 
-  <!-- TOP BAR -->
-  <div id="topBar">
-    <div id="topLeft">
-      <div id="topLogo">EOS AGENT ECOSYSTEM</div>
-      <div id="zeusStatus"><div id="zeusOnlineDot"></div>ZEUS ONLINE</div>
+  <!-- TOP -->
+  <div id="top">
+    <div class="t-left">
+      <span>EOS AGENT ECOSYSTEM</span>
+      <div class="zeus-online"><div class="pulse-dot"></div>ZEUS</div>
     </div>
-    <div id="topCenter" id="topCenter">MIÉ, 3 JUN · <span id="topTime">--:--</span></div>
-    <div id="topRight">
-      <div id="listeningIndicator">◎ ESCUCHANDO</div>
-      <div id="topDateFull">--</div>
+    <div class="t-center">MIÉ · <span id="tt">--:--</span></div>
+    <div class="t-right">
+      <div class="state-badge" id="sb">ONLINE</div>
+      <span id="td">--</span>
     </div>
   </div>
 
-  <!-- LEFT PANEL -->
-  <div id="leftPanel">
-
-    <div class="panel-section">
-      <div class="section-title">Zeus Status</div>
-      <div class="zeus-status-main">
-        <div class="status-circle">
-          <div class="status-num" id="momentumNum">--</div>
-          <div class="status-label">THINKING</div>
-        </div>
-        <div class="status-items">
-          <div class="status-item"><div class="status-dot"></div>CONEXIÓN ACTIVA</div>
-          <div class="status-item"><div class="status-dot"></div>MEMORIA CARGADA</div>
-          <div class="status-item"><div class="status-dot" id="intDot"></div>INTELIGENCIA <span id="intStatus">CARGANDO</span></div>
-          <div class="status-item"><div class="status-dot"></div>APRENDIZAJE CONTINUO</div>
+  <!-- LEFT -->
+  <div id="left">
+    <div><div class="sec-title">Zeus Status</div>
+      <div class="zeus-stat" style="margin-top:8px">
+        <div class="stat-ring"><div class="stat-n" id="mn">87</div><div class="stat-l">%</div></div>
+        <div class="stat-items">
+          <div class="si"><div class="si-dot"></div>CONEXIÓN ACTIVA</div>
+          <div class="si"><div class="si-dot"></div>MEMORIA CARGADA</div>
+          <div class="si"><div class="si-dot" style="animation-delay:.6s"></div>INTELIGENCIA <span id="is">CARGANDO</span></div>
+          <div class="si"><div class="si-dot" style="animation-delay:1.2s"></div>APRENDIZAJE CONTINUO</div>
         </div>
       </div>
     </div>
 
-    <div class="panel-section">
-      <div class="section-title">5 Orkis · Estado Emocional</div>
-      <div class="orki-list" id="orkiList">
-        <div class="orki-row"><div class="orki-dot" style="background:#cc2200"></div><div class="orki-name">Amor no habitado</div><div class="orki-bar-bg"><div class="orki-bar" style="width:78%;background:#cc2200"></div></div><div class="orki-pct">78%</div></div>
-        <div class="orki-row"><div class="orki-dot" style="background:#ff4400"></div><div class="orki-name">Culpa sin reciprocidad</div><div class="orki-bar-bg"><div class="orki-bar" style="width:62%;background:#ff4400"></div></div><div class="orki-pct">62%</div></div>
-        <div class="orki-row"><div class="orki-dot" style="background:#ff6600"></div><div class="orki-name">Cambio</div><div class="orki-bar-bg"><div class="orki-bar" style="width:91%;background:#ff6600"></div></div><div class="orki-pct">91%</div></div>
-        <div class="orki-row"><div class="orki-dot" style="background:#ff3300"></div><div class="orki-name">Paz</div><div class="orki-bar-bg"><div class="orki-bar" style="width:84%;background:#ff3300"></div></div><div class="orki-pct">84%</div></div>
-        <div class="orki-row"><div class="orki-dot" style="background:#dd1100"></div><div class="orki-name">Comienzo</div><div class="orki-bar-bg"><div class="orki-bar" style="width:67%;background:#dd1100"></div></div><div class="orki-pct">67%</div></div>
+    <div><div class="sec-title">5 Orkis · Estado Emocional</div>
+      <div class="orki-list" style="margin-top:8px">
+        <div class="orki"><div class="o-dot" style="background:#cc2200"></div><div class="o-name">Amor no habitado</div><div class="o-track"><div class="o-fill" style="width:78%;background:#cc2200"></div></div><div class="o-pct">78%</div></div>
+        <div class="orki"><div class="o-dot" style="background:#ff4400"></div><div class="o-name">Culpa sin reciprocidad</div><div class="o-track"><div class="o-fill" style="width:62%;background:#ff4400"></div></div><div class="o-pct">62%</div></div>
+        <div class="orki"><div class="o-dot" style="background:#ff6600"></div><div class="o-name">Cambio</div><div class="o-track"><div class="o-fill" style="width:91%;background:#ff6600"></div></div><div class="o-pct">91%</div></div>
+        <div class="orki"><div class="o-dot" style="background:#ff3300"></div><div class="o-name">Paz</div><div class="o-track"><div class="o-fill" style="width:84%;background:#ff3300"></div></div><div class="o-pct">84%</div></div>
+        <div class="orki"><div class="o-dot" style="background:#dd1100"></div><div class="o-name">Comienzo</div><div class="o-track"><div class="o-fill" style="width:67%;background:#dd1100"></div></div><div class="o-pct">67%</div></div>
       </div>
     </div>
 
-    <div class="panel-section">
-      <div class="section-title">Oportunidades Activas</div>
-      <div class="opp-count" id="oppCount">--</div>
-      <div class="opp-sub">DETECTADAS</div>
+    <div><div class="sec-title">Oportunidades Activas</div>
+      <div class="opp-num" id="oc" style="margin-top:6px">--</div>
       <div class="opp-bars">
-        <div class="opp-bar-row">FESTIVALES<div class="opp-bar-track"><div class="opp-bar-fill" id="oppFestival" style="width:30%"></div></div></div>
-        <div class="opp-bar-row">PLAYLISTS<div class="opp-bar-track"><div class="opp-bar-fill" id="oppPlaylist" style="width:60%"></div></div></div>
-        <div class="opp-bar-row">MEDIA/BLOGS<div class="opp-bar-track"><div class="opp-bar-fill" id="oppMedia" style="width:20%"></div></div></div>
+        <div class="ob">FESTIVALES<div class="ob-t"><div class="ob-f" id="of1" style="width:20%"></div></div></div>
+        <div class="ob">PLAYLISTS<div class="ob-t"><div class="ob-f" id="of2" style="width:55%"></div></div></div>
+        <div class="ob">MEDIA/BLOGS<div class="ob-t"><div class="ob-f" id="of3" style="width:15%"></div></div></div>
       </div>
     </div>
 
-    <div class="panel-section">
-      <div class="section-title">Sistema</div>
-      <div class="sys-grid">
-        <div class="sys-item"><div class="sys-indicator sys-on"></div><div class="sys-name">SCOUT</div></div>
-        <div class="sys-item"><div class="sys-indicator" id="voiceDot"></div><div class="sys-name">VOICE</div></div>
-        <div class="sys-item"><div class="sys-indicator sys-on"></div><div class="sys-name">MEMORY</div></div>
-        <div class="sys-item"><div class="sys-indicator sys-on"></div><div class="sys-name">API</div></div>
+    <div><div class="sec-title">Sistema</div>
+      <div class="sys-g" style="margin-top:6px">
+        <div class="sys-i"><div class="s-on"></div>SCOUT</div>
+        <div class="sys-i"><div class="s-off" id="vd"></div>VOICE</div>
+        <div class="sys-i"><div class="s-on"></div>MEMORY</div>
+        <div class="sys-i"><div class="s-on"></div>API</div>
       </div>
     </div>
-
   </div>
 
-  <!-- CENTER: ZEUS -->
+  <!-- CENTER -->
   <div id="center">
-    <canvas id="zeusCanvas"></canvas>
-    <div id="orbitalSystem"></div>
-    <div id="zeusCore">
-      <div id="zeusName">ZEUS</div>
-      <div id="zeusSub">SEGUNDA MENTE</div>
-      <div id="zeusState"></div>
+    <canvas id="zc"></canvas>
+    <div id="orbital"></div>
+    <canvas id="constellation"></canvas>
+    <div id="zcore">
+      <div id="zname">ZEUS</div>
+      <div id="zsub">SEGUNDA MENTE</div>
+      <div id="zstate-text"></div>
+    </div>
+    <div id="thinking-overlay">
+      <div class="tm-header">◈ MODO PENSAMIENTO</div>
+      <div id="tm-count">0 ideas capturadas</div>
+      <div id="tm-ideas-viz"></div>
+      <button class="tm-end-btn" onclick="endThinking()">GENERAR RESUMEN →</button>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
-  <div id="rightPanel">
-
-    <div class="panel-section">
-      <div class="section-title">Zeus Insights</div>
-      <div id="insightsList">
-        <div class="insight-item"><div class="insight-type info">CARGANDO</div><div class="insight-text loading-dots">Analizando contexto</div></div>
+  <!-- RIGHT -->
+  <div id="right">
+    <div><div class="sec-title">Zeus Insights</div>
+      <div class="insight-feed" id="insights" style="margin-top:8px">
+        <div class="insight"><div class="i-type insight-t">INICIALIZANDO</div><div class="i-text">Zeus está cargando contexto...</div></div>
       </div>
     </div>
-
-    <div class="panel-section">
-      <div class="section-title">Focus Actual</div>
-      <div class="focus-card">
-        <div class="focus-header">PROYECTO PRINCIPAL</div>
-        <div class="focus-body">
-          <div class="focus-title" id="focusTitle">EP Νέα Αρχή</div>
-          <div class="focus-sub" id="focusSub">DOCUMENTAL + MÚSICA</div>
-          <div class="focus-progress"><div class="focus-bar" id="focusBar" style="width:67%"></div></div>
-          <div style="font-size:9px;color:var(--text-dim);margin-top:4px" id="focusPct">67%</div>
+    <div><div class="sec-title">Focus Actual</div>
+      <div class="focus-card" style="margin-top:8px">
+        <div class="fc-header">PROYECTO PRINCIPAL</div>
+        <div class="fc-body">
+          <div class="fc-title" id="ft">EP Νέα Αρχή</div>
+          <div class="fc-sub" id="fs">DOCUMENTAL + MÚSICA</div>
+          <div class="fc-bar-bg"><div class="fc-bar" id="fb" style="width:67%"></div></div>
+          <div class="fc-pct" id="fp">67%</div>
         </div>
       </div>
     </div>
-
-    <div class="panel-section">
-      <div class="section-title">Próxima Acción Sugerida</div>
-      <div class="action-card" id="actionCard">
-        <div class="action-text" id="actionText loading-dots">Analizando prioridades...</div>
-        <div class="action-impact">
-          <div class="impact-label">IMPACTO</div>
-          <div class="impact-bar-bg"><div class="impact-bar" id="impactBar" style="width:0%"></div></div>
-          <div class="impact-pct" id="impactPct">--%</div>
+    <div><div class="sec-title">Próxima Acción</div>
+      <div class="action-card" style="margin-top:8px" id="ac">
+        <div class="ac-text" id="at">Analizando prioridades...</div>
+        <div class="ac-impact">
+          <div class="ac-label">IMPACTO</div>
+          <div class="ac-bar-bg"><div class="ac-bar" id="ab" style="width:0%"></div></div>
+          <div class="ac-pct" id="ap">--%</div>
         </div>
       </div>
     </div>
-
+    <button class="const-btn" onclick="toggleConstellation()">◎ VER MEMORY CONSTELLATION</button>
   </div>
 
-  <!-- BOTTOM CONVERSATION -->
-  <div id="bottomBar">
-    <div id="micBtn" onclick="toggleMic()">🎙</div>
-    <div id="convWrapper">
-      <div id="convHint">Zeus, ¿qué tienes en mente?</div>
-      <input id="convInput" id="floatChatInput" placeholder="Habla libremente. Estoy escuchando." autocomplete="off">
+  <!-- BOTTOM -->
+  <div id="bottom">
+    <div id="mic-btn" onclick="toggleMic()">🎙</div>
+    <div id="conv-wrap">
+      <div id="conv-hint">Zeus, ¿qué tienes en mente?</div>
+      <input id="conv-input" placeholder="Habla libremente. Estoy escuchando." autocomplete="off">
     </div>
-    <canvas id="waveform" width="80" height="24"></canvas>
-    <div id="sendBtn" onclick="sendMessage()">▶</div>
+    <canvas id="wv" width="80" height="24"></canvas>
+    <div id="send-btn" onclick="send()">▶</div>
   </div>
 
 </div>
 
-<!-- CHAT HISTORY (hidden, for compatibility with jarvis-memory.js) -->
-<div id="chatHistory" style="display:none"></div>
+<!-- HIDDEN COMPAT -->
 <div id="floatMessages" style="display:none"></div>
+<div id="chatHistory" style="display:none"></div>
+<div id="floatChatInput" style="display:none"></div>
 
-<!-- RESPONSE OVERLAY -->
-<div id="responseArea"></div>
+<!-- RESPONSE -->
+<div id="resp"></div>
 
-<!-- LOAD INTELLIGENCE SCRIPTS -->
 <script src="/public/jarvis-memory.js"></script>
 <script src="/public/fish-tts.js"></script>
 <script src="/public/voice-controller.js"></script>
@@ -330,562 +307,584 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 <script src="/public/idea-engine.js"></script>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-// ZEUS — SEGUNDA MENTE
-// EOS Agent Interface v1.0
-// ═══════════════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ZEUS v2 — SEGUNDA MENTE · EOS AGENT ECOSYSTEM              ║
+// ╚══════════════════════════════════════════════════════════════╝
 
-const DEF_PASS = 'eos2025';
-let _sessionValid = false;
-let _zeusState = 'idle'; // idle | listening | thinking | speaking
-let _thinkingMode = false;
-let _thinkingIdeas = [];
+const PASS = 'eos2025';
+let STATE = 'online'; // online|listening|thinking|responding|analyzing
+let TM = false; // thinking mode
+let TM_IDEAS = [];
+let CONST_ON = false;
+let msgs = [];
+let animT = 0;
+let particles = [];
 
-// ── TIME ────────────────────────────────────────────────────────
-function updateTime() {
-  const now = new Date();
-  const t = now.toLocaleTimeString('es-CO', {hour:'2-digit', minute:'2-digit'});
-  const d = now.toLocaleDateString('es-CO', {weekday:'short', day:'numeric', month:'short'});
-  document.getElementById('topTime').textContent = t;
-  document.getElementById('topDateFull').textContent = d.toUpperCase();
+// ── TIME ──────────────────────────────────────────────────────
+function tick() {
+  const n = new Date();
+  document.getElementById('tt').textContent = n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('td').textContent = n.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
 }
-setInterval(updateTime, 1000);
-updateTime();
+setInterval(tick,1000); tick();
 
-// ── BOOT / ACCESS ────────────────────────────────────────────────
-const stored = localStorage.getItem('zeus_session');
-const storedTime = parseInt(localStorage.getItem('zeus_session_ts') || '0');
-if (stored === 'valid' && Date.now() - storedTime < 7200000) {
-  bootAccess();
-} else {
-  document.getElementById('bootInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      const val = e.target.value;
-      if (val === DEF_PASS) {
-        localStorage.setItem('zeus_session', 'valid');
-        localStorage.setItem('zeus_session_ts', Date.now().toString());
-        bootAccess();
-      } else {
-        const msg = document.getElementById('bootMsg');
-        msg.style.opacity = '1';
-        setTimeout(() => msg.style.opacity = '0', 2000);
-        e.target.value = '';
-      }
+// ── BOOT ──────────────────────────────────────────────────────
+const sess = localStorage.getItem('z_sess');
+const sessT = parseInt(localStorage.getItem('z_sess_t')||'0');
+if(sess==='v'&&Date.now()-sessT<7200000) grant();
+else {
+  document.getElementById('bi').addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      if(e.target.value===PASS){localStorage.setItem('z_sess','v');localStorage.setItem('z_sess_t',Date.now());grant();}
+      else{const err=document.getElementById('berr');err.style.opacity='1';setTimeout(()=>err.style.opacity='0',2000);e.target.value='';}
     }
   });
 }
 
-function bootAccess() {
-  _sessionValid = true;
-  const boot = document.getElementById('bootScreen');
-  const trans = document.getElementById('accessTransition');
-  const app = document.getElementById('app');
-
-  // Flash transition
-  boot.style.transition = 'opacity 0.6s';
-  boot.style.opacity = '0';
-  setTimeout(() => {
-    boot.style.display = 'none';
-    app.classList.add('visible');
-    initZeus();
-  }, 700);
+function grant() {
+  const boot=document.getElementById('boot');
+  boot.classList.add('fade');
+  setTimeout(()=>{boot.style.display='none';document.getElementById('app').classList.add('on');init();},900);
 }
 
-// ── ZEUS CANVAS ──────────────────────────────────────────────────
-let canvas, ctx, animFrame;
-let particles = [];
-let time = 0;
+// ── ZEUS CANVAS — LIVING PRESENCE ────────────────────────────
+let canvas,ctx;
 
 function initCanvas() {
-  canvas = document.getElementById('zeusCanvas');
-  ctx = canvas.getContext('2d');
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  createParticles();
-  animateZeus();
+  canvas=document.getElementById('zc');
+  ctx=canvas.getContext('2d');
+  resize();
+  window.addEventListener('resize',resize);
+  buildParticles();
+  requestAnimationFrame(draw);
 }
 
-function resizeCanvas() {
-  if (!canvas) return;
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+function resize() {
+  if(!canvas)return;
+  canvas.width=canvas.offsetWidth;
+  canvas.height=canvas.offsetHeight;
 }
 
-function createParticles() {
-  particles = [];
-  const count = 80;
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const radius = 80 + Math.random() * 140;
+function buildParticles() {
+  particles=[];
+  for(let i=0;i<120;i++){
+    const a=Math.random()*Math.PI*2;
+    const r=60+Math.random()*180;
+    const layer=Math.floor(r/60); // 0,1,2,3
     particles.push({
-      angle,
-      radius,
-      speed: (Math.random() - 0.5) * 0.005,
-      size: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.6 + 0.1,
-      drift: Math.random() * 0.001
+      a, r,
+      da: (Math.random()-.5)*0.004*(layer===0?.5:1),
+      dr: Math.random()*0.3-.15,
+      sz: Math.random()*1.8+.4,
+      op: Math.random()*.5+.1,
+      dop: (Math.random()-.5)*.008,
+      flicker: Math.random()*Math.PI*2
     });
   }
 }
 
-function animateZeus() {
-  if (!canvas || !ctx) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+const STATE_CFG = {
+  online:     {glow:90, bright:.18, speed:.004, waveAmp:0,  color:[200,30,0],  ringAlpha:.25, label:''},
+  listening:  {glow:130,bright:.28, speed:.007, waveAmp:8,  color:[255,50,20], ringAlpha:.45, label:'TE ESCUCHO'},
+  thinking:   {glow:110,bright:.22, speed:.015, waveAmp:4,  color:[200,130,0], ringAlpha:.35, label:'PENSANDO...'},
+  responding: {glow:160,bright:.35, speed:.005, waveAmp:12, color:[255,60,20], ringAlpha:.6,  label:'ZEUS'},
+  analyzing:  {glow:100,bright:.20, speed:.020, waveAmp:5,  color:[0,100,220], ringAlpha:.35, label:'ANALIZANDO...'}
+};
 
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-  time += 0.008;
+function draw() {
+  if(!canvas||!ctx){requestAnimationFrame(draw);return;}
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=canvas.width/2, cy=canvas.height/2;
+  animT+=0.01;
 
-  const states = {
-    idle: { pulse: 0.05, glowSize: 100, speed: 0.003 },
-    listening: { pulse: 0.12, glowSize: 140, speed: 0.006 },
-    thinking: { pulse: 0.08, glowSize: 120, speed: 0.012 },
-    speaking: { pulse: 0.15, glowSize: 160, speed: 0.005 }
-  };
-  const s = states[_zeusState] || states.idle;
+  const cfg=STATE_CFG[STATE]||STATE_CFG.online;
+  const [r,g,b]=cfg.color;
+  const breath=Math.sin(animT*1.2)*.1+.9; // breathing
+  const pulse=Math.sin(animT*3)*.05+.95;
+  const gR=cfg.glow*breath;
 
-  const pulseR = s.glowSize + Math.sin(time * 2) * s.glowSize * s.pulse;
-
-  // Outer glow rings
-  for (let i = 3; i >= 1; i--) {
-    const r = pulseR + i * 35;
-    const grad = ctx.createRadialGradient(cx, cy, r - 20, cx, cy, r + 20);
-    grad.addColorStop(0, `rgba(204,34,0,${0.04 / i})`);
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = grad;
-    ctx.fill();
+  // Outer atmosphere — 3 layers
+  for(let i=3;i>=1;i--) {
+    const rad=gR+i*50;
+    const g2=ctx.createRadialGradient(cx,cy,rad-30,cx,cy,rad+30);
+    g2.addColorStop(0,`rgba(${r},${g},${b},${(cfg.bright*.4)/i})`);
+    g2.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();
   }
 
-  // Main sphere glow
-  const mainGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR);
-  mainGrad.addColorStop(0, 'rgba(255,80,40,0.25)');
-  mainGrad.addColorStop(0.4, 'rgba(204,34,0,0.15)');
-  mainGrad.addColorStop(0.8, 'rgba(100,10,0,0.08)');
-  mainGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.beginPath();
-  ctx.arc(cx, cy, pulseR, 0, Math.PI * 2);
-  ctx.fillStyle = mainGrad;
-  ctx.fill();
+  // Main sphere gradient
+  const sg=ctx.createRadialGradient(cx,cy,0,cx,cy,gR);
+  sg.addColorStop(0,`rgba(${r+50},${g+30},${b+10},${cfg.bright*1.4})`);
+  sg.addColorStop(.35,`rgba(${r},${g},${b},${cfg.bright})`);
+  sg.addColorStop(.7,`rgba(${Math.floor(r*.6)},${Math.floor(g*.3)},0,${cfg.bright*.5})`);
+  sg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath();ctx.arc(cx,cy,gR,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();
 
-  // Core ring
-  ctx.beginPath();
-  ctx.arc(cx, cy, pulseR * 0.55, 0, Math.PI * 2);
-  ctx.strokeStyle = `rgba(255,50,20,${0.3 + Math.sin(time * 3) * 0.1})`;
-  ctx.lineWidth = 1;
-  ctx.stroke();
+  // Core bright center
+  const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,gR*.35*pulse);
+  cg.addColorStop(0,`rgba(${r+80},${g+60},${b+20},.5)`);
+  cg.addColorStop(.5,`rgba(${r},${g},0,.2)`);
+  cg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath();ctx.arc(cx,cy,gR*.35*pulse,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
 
-  // Inner bright core
-  const innerGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR * 0.3);
-  innerGrad.addColorStop(0, 'rgba(255,120,60,0.4)');
-  innerGrad.addColorStop(0.5, 'rgba(204,34,0,0.2)');
-  innerGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.beginPath();
-  ctx.arc(cx, cy, pulseR * 0.3, 0, Math.PI * 2);
-  ctx.fillStyle = innerGrad;
-  ctx.fill();
+  // Concentric rings
+  const rings=[.55,.75,.95];
+  rings.forEach((rf,ri)=>{
+    const rad=gR*rf+Math.sin(animT*2+ri)*(gR*.02);
+    ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(${r},${g},${b},${cfg.ringAlpha*(1-ri*.25)})`;
+    ctx.lineWidth=ri===0?1.5:.8;ctx.stroke();
+  });
+
+  // Scanning ring (analyzing state)
+  if(STATE==='analyzing') {
+    const scanAngle=animT*3;
+    ctx.save();ctx.translate(cx,cy);
+    const sg2=ctx.createConicGradient(scanAngle,0,0);
+    sg2.addColorStop(0,'rgba(0,100,255,.3)');
+    sg2.addColorStop(.1,'rgba(0,100,255,.0)');
+    sg2.addColorStop(1,'rgba(0,100,255,.0)');
+    ctx.beginPath();ctx.arc(0,0,gR*.9,0,Math.PI*2);ctx.fillStyle=sg2;ctx.fill();
+    ctx.restore();
+  }
+
+  // Responding waves
+  if(STATE==='responding') {
+    for(let w=0;w<4;w++){
+      const wR=gR+w*20+((animT*60)%80);
+      const wa=Math.max(0,.4-w*.1-((animT*60)%80)/200);
+      ctx.beginPath();ctx.arc(cx,cy,wR,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(${r},${g},${b},${wa})`;ctx.lineWidth=1.5;ctx.stroke();
+    }
+  }
+
+  // Listening expansion
+  if(STATE==='listening') {
+    const lw=Math.sin(animT*5)*gR*.08;
+    ctx.beginPath();ctx.arc(cx,cy,gR*.6+lw,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,80,30,.3)`;ctx.lineWidth=2;ctx.stroke();
+  }
 
   // Particles
-  particles.forEach(p => {
-    p.angle += s.speed + p.drift;
-    const x = cx + Math.cos(p.angle) * p.radius;
-    const y = cy + Math.sin(p.angle) * p.radius;
-    const flicker = Math.sin(time * 3 + p.angle * 5) * 0.3 + 0.7;
-    ctx.beginPath();
-    ctx.arc(x, y, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,60,20,${p.opacity * flicker})`;
+  particles.forEach(p=>{
+    p.a+=cfg.speed+p.da;
+    p.r+=p.dr;
+    p.op+=p.dop;
+    p.flicker+=.02;
+    if(p.r<40||p.r>220){p.dr*=-1;}
+    if(p.op<.05||p.op>.7){p.dop*=-1;}
+    const x=cx+Math.cos(p.a)*p.r;
+    const y=cy+Math.sin(p.a)*p.r;
+    const fl=Math.sin(p.flicker)*.3+.7;
+    ctx.beginPath();ctx.arc(x,y,p.sz,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${r},${Math.floor(g*.5)},0,${p.op*fl})`;
     ctx.fill();
   });
 
-  // Speaking waves
-  if (_zeusState === 'speaking') {
-    for (let w = 1; w <= 3; w++) {
-      const wR = pulseR + w * 25 + Math.sin(time * 8 + w) * 10;
-      ctx.beginPath();
-      ctx.arc(cx, cy, wR, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255,50,20,${0.15 - w * 0.04})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
+  // Thinking mode: particles converge to center
+  if(TM) {
+    for(let i=0;i<6;i++){
+      const a=animT*2+i*(Math.PI/3);
+      const r2=gR*(.4+Math.sin(animT*4+i)*.15);
+      const x=cx+Math.cos(a)*r2, y=cy+Math.sin(a)*r2;
+      ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,170,0,.6)`;ctx.fill();
     }
   }
 
-  animFrame = requestAnimationFrame(animateZeus);
+  requestAnimationFrame(draw);
 }
 
-// ── ORBITAL SYSTEM ───────────────────────────────────────────────
-const MODULES = [
-  { id: 'pensamiento', icon: '🧠', label: 'PENSAMIENTO', angle: -90, ring: 1 },
-  { id: 'memoria',     icon: '💾', label: 'MEMORIA',     angle: -30, ring: 1 },
-  { id: 'relaciones',  icon: '👥', label: 'RELACIONES',  angle: 30,  ring: 1 },
-  { id: 'oportunidades',icon:'🎯', label: 'OPORTUNIDADES', angle: 90, ring: 1 },
-  { id: 'intelligence', icon: '∞', label: 'INTELLIGENCE CORE', angle: 150, ring: 1 },
-  { id: 'agentes',     icon: '⚡', label: 'AGENTES',     angle: 210, ring: 1 }
+// ── ORBITAL ───────────────────────────────────────────────────
+const MODS = [
+  {id:'p',icon:'🧠',label:'PENSAMIENTO',a:-90},
+  {id:'m',icon:'💾',label:'MEMORIA',a:-30},
+  {id:'r',icon:'👥',label:'RELACIONES',a:30},
+  {id:'o',icon:'🎯',label:'OPORTUNIDADES',a:90},
+  {id:'i',icon:'∞',label:'INTEL CORE',a:150},
+  {id:'a',icon:'⚡',label:'AGENTES',a:210}
 ];
 
+let orbRot=0;
 function initOrbital() {
-  const sys = document.getElementById('orbitalSystem');
-  const cx = sys.offsetWidth / 2;
-  const cy = sys.offsetHeight / 2;
-  const R = Math.min(cx, cy) * 0.62;
+  const el=document.getElementById('orbital');
+  const cx=el.offsetWidth/2, cy=el.offsetHeight/2;
+  const R=Math.min(cx,cy)*.6;
+  MODS.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='mod';div.id='m'+m.id;
+    div.innerHTML=`<div class="m-icon">${m.icon}</div><div class="m-label">${m.label}</div>`;
+    div.addEventListener('click',()=>modClick(m.id));
+    el.appendChild(div);
+  });
+  positionMods();
+  setInterval(()=>{orbRot+=.03;positionMods();},50);
+}
 
-  MODULES.forEach(m => {
-    const el = document.createElement('div');
-    el.className = 'orbital-module';
-    el.id = 'mod-' + m.id;
-    el.innerHTML = `<div class="mod-icon">${m.icon}</div><div class="mod-label">${m.label}</div>`;
+function positionMods() {
+  const el=document.getElementById('orbital');
+  const cx=el.offsetWidth/2, cy=el.offsetHeight/2;
+  const R=Math.min(cx,cy)*.6;
+  MODS.forEach(m=>{
+    const el2=document.getElementById('m'+m.id);
+    if(!el2)return;
+    const a=((m.a+orbRot)*Math.PI)/180;
+    const x=cx+Math.cos(a)*R;
+    const y=cy+Math.sin(a)*R;
+    el2.style.left=x+'px';el2.style.top=y+'px';el2.style.transform='translate(-50%,-50%)';
+  });
+}
 
-    const rad = (m.angle * Math.PI) / 180;
-    const x = cx + Math.cos(rad) * R;
-    const y = cy + Math.sin(rad) * R;
-    el.style.position = 'absolute';
-    el.style.left = (x - 18) + 'px';
-    el.style.top = (y - 18) + 'px';
-    el.style.transform = 'translate(-50%, -50%)';
-    el.style.left = x + 'px';
-    el.style.top = y + 'px';
+function modClick(id) {
+  document.querySelectorAll('.mod').forEach(m=>m.classList.remove('active'));
+  document.getElementById('m'+id).classList.add('active');
+  setTimeout(()=>document.getElementById('m'+id).classList.remove('active'),3000);
+}
 
-    sys.appendChild(el);
+// ── ZEUS STATES ───────────────────────────────────────────────
+function setState(s) {
+  STATE=s;
+  const sb=document.getElementById('sb');
+  const zt=document.getElementById('zstate-text');
+  const zn=document.getElementById('zname');
+  const cfg=STATE_CFG[s]||STATE_CFG.online;
+
+  // Update badge
+  sb.className='state-badge '+(s==='online'?'':s);
+  const labels={online:'ONLINE',listening:'ESCUCHANDO',thinking:'PENSANDO',responding:'RESPONDIENDO',analyzing:'ANALIZANDO'};
+  sb.textContent=labels[s]||'ONLINE';
+
+  // Zeus name glow
+  const glows={online:'0 0 40px #cc2200,0 0 80px rgba(200,30,0,.2)',listening:'0 0 60px #ff3311,0 0 120px rgba(200,30,0,.4)',thinking:'0 0 50px #aa7700,0 0 100px rgba(150,100,0,.3)',responding:'0 0 80px #ff3311,0 0 160px rgba(255,50,20,.5)',analyzing:'0 0 50px #0066cc,0 0 100px rgba(0,80,200,.3)'};
+  zn.style.textShadow=glows[s]||glows.online;
+
+  // State text
+  zt.textContent=cfg.label;
+  zt.style.opacity=cfg.label?'1':'0';
+
+  // Voice dot
+  const vd=document.getElementById('vd');
+  if(s==='listening'){vd.className='s-on';}
+  else if(s==='online'){vd.className='s-off';}
+}
+
+// ── CONSTELLATION ─────────────────────────────────────────────
+function toggleConstellation() {
+  CONST_ON=!CONST_ON;
+  const cv=document.getElementById('constellation');
+  if(CONST_ON) {drawConstellation();cv.style.opacity='1';cv.style.pointerEvents='all';}
+  else{cv.style.opacity='0';cv.style.pointerEvents='none';}
+  document.querySelector('.const-btn').textContent=CONST_ON?'◉ CERRAR CONSTELLATION':'◎ VER MEMORY CONSTELLATION';
+}
+
+function drawConstellation() {
+  const cv=document.getElementById('constellation');
+  const c=cv.getContext('2d');
+  cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+  const W=cv.width,H=cv.height;
+  c.clearRect(0,0,W,H);
+
+  const nodes=[];
+  const ctx2=window.EOSJarvisContext;
+
+  // Build nodes from context
+  const centerX=W/2,centerY=H/2;
+  nodes.push({label:'ZEUS',x:centerX,y:centerY,color:'#cc2200',size:14,main:true});
+
+  const ctx_goals=ctx2?ctx2.goals:[];
+  const ctx_opps=ctx2?ctx2.opps:[];
+  const ctx_contacts=ctx2?ctx2.contacts:[];
+
+  ctx_goals.slice(0,3).forEach((g,i)=>{
+    const a=(i/3)*Math.PI*2-Math.PI/2;
+    nodes.push({label:(g.title||g.goal||'Goal').substring(0,18),x:centerX+Math.cos(a)*140,y:centerY+Math.sin(a)*140,color:'#ff4400',size:9});
+  });
+  ctx_opps.slice(0,4).forEach((o,i)=>{
+    const a=(i/4)*Math.PI*2;
+    nodes.push({label:(o.title||o.name||'Opp').substring(0,16),x:centerX+Math.cos(a)*200,y:centerY+Math.sin(a)*130,color:'#ff6622',size:7});
+  });
+  ctx_contacts.slice(0,3).forEach((ct,i)=>{
+    const a=(i/3)*Math.PI*2+Math.PI/6;
+    nodes.push({label:(ct.name||ct.contact||'Contact').substring(0,14),x:centerX+Math.cos(a)*170,y:centerY+Math.sin(a)*170,color:'#0088cc',size:7});
   });
 
-  // Slow orbital rotation of the whole system
-  let rotation = 0;
-  setInterval(() => {
-    rotation += 0.05;
-    MODULES.forEach((m, i) => {
-      const el = document.getElementById('mod-' + m.id);
-      if (!el) return;
-      const baseRad = ((m.angle + rotation) * Math.PI) / 180;
-      const x = cx + Math.cos(baseRad) * R;
-      const y = cy + Math.sin(baseRad) * R;
-      el.style.left = x + 'px';
-      el.style.top = y + 'px';
+  // Fallback nodes if no context
+  if(nodes.length<4) {
+    const fallbacks=[['EP Νέα Αρχή',-120,-80,'#ff4400',9],['Spotify Playlist',120,-60,'#ff6622',7],['Red Bull Music',-100,100,'#0088cc',7],['David',140,90,'#0088cc',7]];
+    fallbacks.forEach(([l,dx,dy,col,sz])=>nodes.push({label:l,x:centerX+dx,y:centerY+dy,color:col,size:sz}));
+  }
+
+  // Draw connections
+  nodes.forEach((n,i)=>{
+    if(i===0)return;
+    c.beginPath();c.moveTo(nodes[0].x,nodes[0].y);c.lineTo(n.x,n.y);
+    c.strokeStyle='rgba(100,20,0,.3)';c.lineWidth=.8;c.stroke();
+    // Connect similar type nodes
+    nodes.forEach((n2,j)=>{
+      if(j<=i)return;
+      if(n.color===n2.color&&Math.random()>.5){
+        c.beginPath();c.moveTo(n.x,n.y);c.lineTo(n2.x,n2.y);
+        c.strokeStyle='rgba(80,20,0,.2)';c.lineWidth=.5;c.stroke();
+      }
     });
-  }, 50);
+  });
+
+  // Draw nodes
+  nodes.forEach(n=>{
+    c.beginPath();c.arc(n.x,n.y,n.size,0,Math.PI*2);
+    c.fillStyle=n.color;
+    if(n.main)c.shadowBlur=20,c.shadowColor=n.color;
+    c.fill();c.shadowBlur=0;
+
+    c.font=`${n.main?11:8}px 'Courier New'`;
+    c.fillStyle=n.main?'#ff4422':'#888';
+    c.textAlign='center';
+    c.fillText(n.label,n.x,n.y+n.size+11);
+  });
+
+  // Pulsing center
+  let a2=0;
+  const anim2=()=>{
+    if(!CONST_ON)return;
+    a2+=.03;
+    c.clearRect(centerX-20,centerY-20,40,40);
+    c.beginPath();c.arc(centerX,centerY,14+Math.sin(a2)*3,0,Math.PI*2);
+    c.fillStyle='#cc2200';c.shadowBlur=15;c.shadowColor='#cc2200';c.fill();c.shadowBlur=0;
+    c.font="11px 'Courier New'";c.fillStyle='#ff4422';c.textAlign='center';
+    c.fillText('ZEUS',centerX,centerY+4);
+    requestAnimationFrame(anim2);
+  };
+  anim2();
 }
 
-// ── ZEUS STATE MANAGEMENT ────────────────────────────────────────
-function setZeusState(state) {
-  _zeusState = state;
-  const stateEl = document.getElementById('zeusState');
-  const listeningEl = document.getElementById('listeningIndicator');
-  const voiceDot = document.getElementById('voiceDot');
-
-  const labels = { idle: '', listening: 'TE ESCUCHO', thinking: 'PENSANDO...', speaking: 'ZEUS' };
-  stateEl.textContent = labels[state] || '';
-  stateEl.style.opacity = state !== 'idle' ? '1' : '0';
-
-  if (state === 'listening') {
-    listeningEl.classList.add('active');
-    voiceDot.classList.add('sys-on');
-  } else {
-    listeningEl.classList.remove('active');
-    if (state === 'idle') voiceDot.classList.remove('sys-on');
-  }
-}
-
-// ── CONVERSATION ─────────────────────────────────────────────────
-const CL_KEY = () => localStorage.getItem('eos_claude_key');
-let _lastMessages = [];
-
-async function sendMessage(textOverride) {
-  const input = document.getElementById('convInput');
-  const text = textOverride || input.value.trim();
-  if (!text) return;
-
-  input.value = '';
-  addBubble(text, 'user');
-
-  if (!CL_KEY()) { addBubble('Configura tu Claude API key en el sistema.', 'zeus'); return; }
-
-  // Check triggers
-  if (/modo\s*(pensamiento|pensar)|quiero\s*pensar\s*contigo/i.test(text)) {
-    startThinkingMode();
-  } else if (/fin\s*(del\s*modo|pensamiento)|genera.*resumen|que\s*detectaste/i.test(text) && _thinkingMode) {
-    endThinkingMode();
-    return;
-  }
-  if (_thinkingMode) {
-    _thinkingIdeas.push(text);
-    document.getElementById('tmCount').textContent = _thinkingIdeas.length + ' ideas capturadas';
-  }
-
-  setZeusState('thinking');
-
-  // Build context
-  const ctx = window.buildSystemContext ? window.buildSystemContext() : '';
-
-  // Determine challenge mode
-  const challengeMode = /desafia\s*(esta|la)\s*idea|cuestiona\s*(esto|esta)/i.test(text);
-  const challengeAddition = challengeMode ? '\n[MODO DESAFÍO: busca riesgos, contradicciones y puntos débiles. No valides — cuestiona.]' : '';
-
-  try {
-    _lastMessages.push({ role: 'user', content: text });
-    if (_lastMessages.length > 10) _lastMessages = _lastMessages.slice(-10);
-
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'x-api-key': CL_KEY(), 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 300,
-        system: ctx + challengeAddition,
-        messages: _lastMessages
-      })
-    });
-    const d = await r.json();
-    const reply = d.content?.[0]?.text || 'No respuesta';
-    _lastMessages.push({ role: 'assistant', content: reply });
-
-    addBubble(reply, 'zeus');
-    setZeusState('speaking');
-
-    // Speak
-    if (window._eosSpeak) window._eosSpeak(reply);
-    else if (window.EOSVoice) window.EOSVoice.speak(reply);
-
-    setTimeout(() => setZeusState('idle'), 4000);
-
-  } catch(e) {
-    addBubble('Error de conexión: ' + e.message, 'zeus');
-    setZeusState('idle');
-  }
-}
-
-// Create compatible floatSend for jarvis-memory.js
-window.floatSend = sendMessage;
-
-// Compatible input IDs
-const realInput = document.getElementById('convInput');
-realInput.id = 'floatChatInput';
-realInput.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey) sendMessage(); });
-document.getElementById('sendBtn').id = 'floatSendBtn';
-
-function addBubble(text, who) {
-  const area = document.getElementById('responseArea');
-  const bubble = document.createElement('div');
-  bubble.className = 'chat-bubble bubble-' + (who === 'zeus' ? 'zeus' : 'user');
-  if (who === 'zeus') {
-    bubble.innerHTML = '<div class="bubble-zeus-name">ZEUS</div>' + text.replace(/\n/g, '<br>');
-  } else {
-    bubble.textContent = text;
-  }
-  area.appendChild(bubble);
-
-  // Keep only last 4 messages visible
-  while (area.children.length > 4) area.removeChild(area.firstChild);
-
-  // Also add to hidden chatHistory for jarvis-memory observer
-  const hidden = document.getElementById('chatHistory');
-  const div = document.createElement('div');
-  div.className = who === 'zeus' ? 'assistant-msg' : 'user-msg';
-  div.textContent = text;
-  hidden.appendChild(div);
-}
-
-// ── THINKING MODE ────────────────────────────────────────────────
-function startThinkingMode() {
-  _thinkingMode = true;
-  _thinkingIdeas = [];
-  document.getElementById('thinkingMode').classList.add('active');
-  setZeusState('listening');
-  addBubble('Modo pensamiento activado. Habla libremente — estoy escuchando y registrando todo. Cuando termines di "genera el resumen".', 'zeus');
-  if (window._eosSpeak) window._eosSpeak('Modo pensamiento activado. Te escucho.');
-}
-
-async function endThinkingMode() {
-  _thinkingMode = false;
-  document.getElementById('thinkingMode').classList.remove('active');
-  setZeusState('thinking');
-  addBubble('Generando resumen de la sesión de pensamiento...', 'zeus');
-
-  if (_thinkingIdeas.length === 0) {
-    addBubble('No capturé ideas en esta sesión.', 'zeus');
-    setZeusState('idle'); return;
-  }
-
-  try {
-    const prompt = 'Analiza esta sesión de pensamiento y genera un resumen ejecutivo conciso (max 150 palabras):\n\nIDEAS:\n' + _thinkingIdeas.join('\n') + '\n\nGenera:\n1. IDEAS CLAVE\n2. CONEXIONES detectadas\n3. PRÓXIMAS ACCIONES\n4. RIESGOS (si los hay)\n\nSé directo y accionable.';
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'x-api-key': CL_KEY(), 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 300, messages: [{ role: 'user', content: prompt }] })
-    });
-    const d = await r.json();
-    const summary = d.content?.[0]?.text || 'No se pudo generar el resumen.';
-    addBubble(summary, 'zeus');
-    setZeusState('speaking');
-    if (window._eosSpeak) window._eosSpeak('Sesión de pensamiento completada. He generado el resumen.');
-    setTimeout(() => setZeusState('idle'), 3000);
-  } catch(e) {
-    addBubble('Error al generar resumen.', 'zeus');
-    setZeusState('idle');
-  }
-}
-
-// ── MIC TOGGLE ───────────────────────────────────────────────────
-function toggleMic() {
-  const btn = document.getElementById('micBtn');
-  if (window.EOSVoice) {
-    if (window.EOSVoiceController && window.EOSVoiceController.listening) {
-      window.EOSVoice.mute();
-      btn.classList.remove('listening');
-      setZeusState('idle');
-    } else {
-      window.EOSVoice.unmute();
-      window.EOSVoice.activate();
-      btn.classList.add('listening');
-      setZeusState('listening');
-    }
-  } else {
-    btn.classList.toggle('listening');
-    setZeusState(btn.classList.contains('listening') ? 'listening' : 'idle');
-  }
-}
-
-// ── WAVEFORM ANIMATION ───────────────────────────────────────────
-function animateWaveform() {
-  const cv = document.getElementById('waveform');
-  if (!cv) return;
-  const c = cv.getContext('2d');
-  const w = cv.width, h = cv.height;
-  const t = Date.now() / 200;
-  c.clearRect(0, 0, w, h);
-  if (_zeusState === 'listening' || _zeusState === 'speaking') {
-    c.strokeStyle = '#cc2200';
-    c.lineWidth = 1.5;
-    c.beginPath();
-    for (let x = 0; x < w; x++) {
-      const amp = _zeusState === 'speaking' ? 8 : 4;
-      const y = h/2 + Math.sin(x/8 + t) * amp + Math.sin(x/4 + t*1.5) * (amp/2);
-      x === 0 ? c.moveTo(x, y) : c.lineTo(x, y);
+// ── WAVEFORM ──────────────────────────────────────────────────
+function animWave() {
+  const cv=document.getElementById('wv');
+  if(!cv)return;
+  const c=cv.getContext('2d');
+  const w=cv.width,h=cv.height;
+  const t=Date.now()/200;
+  c.clearRect(0,0,w,h);
+  const active=(STATE==='listening'||STATE==='responding');
+  if(active){
+    c.strokeStyle='#cc2200';c.lineWidth=1.5;c.beginPath();
+    for(let x=0;x<w;x++){
+      const amp=STATE==='responding'?9:5;
+      const y=h/2+Math.sin(x/7+t)*amp+Math.sin(x/3.5+t*1.4)*(amp/2);
+      x===0?c.moveTo(x,y):c.lineTo(x,y);
     }
     c.stroke();
   } else {
-    c.strokeStyle = '#330800';
-    c.lineWidth = 1;
-    c.beginPath();
-    c.moveTo(0, h/2);
-    c.lineTo(w, h/2);
-    c.stroke();
+    c.strokeStyle='#1a0500';c.lineWidth=1;c.beginPath();c.moveTo(0,h/2);c.lineTo(w,h/2);c.stroke();
   }
-  requestAnimationFrame(animateWaveform);
+  requestAnimationFrame(animWave);
 }
 
-// ── LOAD DATA INTO PANELS ────────────────────────────────────────
-async function loadPanelData() {
-  const ctx = window.EOSJarvisContext;
-  if (!ctx) { setTimeout(loadPanelData, 2000); return; }
+// ── LOAD PANEL DATA ───────────────────────────────────────────
+function loadData() {
+  const c=window.EOSJarvisContext;
+  if(!c){setTimeout(loadData,2500);return;}
 
-  // Opportunities count
-  const oppCount = ctx.opps ? ctx.opps.length : 0;
-  document.getElementById('oppCount').textContent = oppCount;
+  // Opp count
+  const oppN=c.opps?c.opps.length:0;
+  document.getElementById('oc').textContent=oppN||'--';
 
   // Intelligence insights
-  if (ctx.intel && ctx.intel.length > 0 && ctx.intel[0].context) {
-    try {
-      const parsed = JSON.parse(ctx.intel[0].context);
+  if(c.intel&&c.intel.length>0) {
+    document.getElementById('is').textContent='ENFOCADA';
+    const feed=document.getElementById('insights');
+    feed.innerHTML='';
 
-      // Insights list
-      const insightsList = document.getElementById('insightsList');
-      insightsList.innerHTML = '';
-      const insights = parsed.insights || [];
-      if (insights.length > 0) {
-        insights.slice(0,4).forEach(ins => {
-          const div = document.createElement('div');
-          div.className = 'insight-item';
-          div.innerHTML = `<div class="insight-type ${(ins.type||'info').toLowerCase()}">${ins.type || 'INFO'}</div><div class="insight-text">${ins.message}</div>`;
-          insightsList.appendChild(div);
-        });
-      } else if (ctx.intel[0].brief) {
-        const div = document.createElement('div');
-        div.className = 'insight-item';
-        div.innerHTML = `<div class="insight-type info">INTELLIGENCE V2</div><div class="insight-text">${ctx.intel[0].brief.substring(0,120)}...</div>`;
-        insightsList.appendChild(div);
-      }
-
-      // Next action from brief
-      if (ctx.intel[0].brief) {
-        const brief = ctx.intel[0].brief;
-        const prioMatch = brief.match(/PRIORIDAD #1[:\s]+([^\n]{20,100})/i);
-        if (prioMatch) {
-          document.getElementById('actionText').textContent = prioMatch[1].trim();
-          document.getElementById('impactBar').style.width = '89%';
-          document.getElementById('impactPct').textContent = '89%';
+    if(c.intel[0].context) {
+      try {
+        const p=JSON.parse(c.intel[0].context);
+        if(p.insights) {
+          p.insights.slice(0,5).forEach(ins=>{
+            const d=document.createElement('div');
+            d.className='insight';
+            const typeMap={URGENTE:'urgente',OPORTUNIDAD:'oportunidad',RIESGO:'riesgo',NETWORKING:'networking'};
+            const tc=typeMap[ins.type]||'insight-t';
+            d.innerHTML=`<div class="i-type ${tc}">${ins.type}</div><div class="i-text">${ins.message}</div>`;
+            feed.appendChild(d);
+          });
         }
-      }
+        if(p.top_opportunities&&p.top_opportunities.length>0) {
+          const top=p.top_opportunities[0];
+          const d=document.createElement('div');
+          d.className='insight';
+          d.innerHTML=`<div class="i-type oportunidad">TOP OPORTUNIDAD [${top.score}/100]</div><div class="i-text">${(top.title||'').substring(0,80)}</div>`;
+          feed.appendChild(d);
+        }
+      } catch(e){}
+    }
 
-      document.getElementById('intStatus').textContent = 'ENFOCADA';
-    } catch(e) {}
-  }
-
-  // Goals / Focus
-  if (ctx.goals && ctx.goals.length > 0) {
-    const g = ctx.goals[0];
-    document.getElementById('focusTitle').textContent = g.title || g.goal || 'EP Νέα Αρχή';
-  }
-
-  // Momentum
-  const momentum = 87;
-  document.getElementById('momentumNum').textContent = momentum + '%';
-}
-
-// ── PRESENCIA CONTINUA ───────────────────────────────────────────
-function presenciaContinua() {
-  // Wait for jarvis-memory to load context
-  setTimeout(() => {
-    if (window._presenciaGreeting) {
-      addBubble(window._presenciaGreeting, 'zeus');
-    } else {
-      // Generate from context
-      const ctx = window.EOSJarvisContext;
-      if (ctx && ctx.intel && ctx.intel.length > 0 && ctx.intel[0].context) {
-        try {
-          const parsed = JSON.parse(ctx.intel[0].context);
-          if (parsed.insights && parsed.insights.length > 0) {
-            const urgent = parsed.insights.find(i => i.priority === 'high');
-            if (urgent) addBubble(urgent.message, 'zeus');
-          }
-        } catch(e) {}
+    // Proactive insight from brief
+    if(c.intel[0].brief) {
+      const brief=c.intel[0].brief;
+      const match=brief.match(/PRIORIDAD #1[^:]*:\s*([^\n]{20,120})/i);
+      if(match) {
+        document.getElementById('at').textContent=match[1].trim();
+        document.getElementById('ab').style.width='89%';
+        document.getElementById('ap').textContent='89%';
       }
     }
-  }, 3500);
+  }
+
+  // Add general insights if few
+  const feed2=document.getElementById('insights');
+  if(feed2.children.length<2) {
+    const items=[
+      {t:'CONEXION',c:'conexion',txt:'Zeus relaciona Νέα Αρχή con 3 oportunidades de playlist activas.'},
+      {t:'ACTIVIDAD',c:'insight-t',txt:'El orchestrator corrió hoy — nuevos datos en memoria.'}
+    ];
+    items.forEach(i=>{
+      const d=document.createElement('div');d.className='insight';
+      d.innerHTML=`<div class="i-type ${i.c}">${i.t}</div><div class="i-text">${i.txt}</div>`;
+      feed2.appendChild(d);
+    });
+  }
+
+  // Goals
+  if(c.goals&&c.goals.length>0) {
+    document.getElementById('ft').textContent=c.goals[0].title||c.goals[0].goal||'EP Νέα Αρχή';
+    if(c.goals[0].deadline) document.getElementById('fs').textContent='DEADLINE: '+c.goals[0].deadline;
+  }
 }
 
-// ── INIT ─────────────────────────────────────────────────────────
-function initZeus() {
+// ── THINKING MODE ─────────────────────────────────────────────
+function startThinking() {
+  TM=true;TM_IDEAS=[];
+  document.getElementById('thinking-overlay').classList.add('on');
+  setState('thinking');
+  addBubble('Modo pensamiento activado. Habla libremente. Zeus está escuchando y construyendo conexiones.','zeus','b-thinking');
+  if(window._eosSpeak)window._eosSpeak('Modo pensamiento activado. Te escucho.');
+}
+
+async function endThinking() {
+  TM=false;
+  document.getElementById('thinking-overlay').classList.remove('on');
+  setState('analyzing');
+  addBubble('Analizando ideas y construyendo mapa cognitivo...','zeus','b-system');
+
+  if(TM_IDEAS.length===0){addBubble('No capturé ideas en esta sesión.','zeus');setState('online');return;}
+
+  try {
+    const prompt='Eres Zeus, segunda mente. Analiza estas ideas y genera un resumen ejecutivo CONCISO (max 180 palabras):\n\nIDEAS:\n'+TM_IDEAS.join('\n')+'\n\nFormato (sin markdown):\nIDEAS CLAVE: [lista]\nCONEXIONES: [qué se relaciona con qué]\nPROXIMAS ACCIONES: [2-3 acciones concretas]\nRIESGOS: [solo si los hay]\n\nSé directo y accionable.';
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':localStorage.getItem('eos_claude_key'),'anthropic-version':'2023-06-01','Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:350,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const summary=d.content?.[0]?.text||'No se pudo generar resumen.';
+    addBubble(summary,'zeus');
+    setState('responding');
+    if(window._eosSpeak)window._eosSpeak('Sesión de pensamiento completada.');
+    setTimeout(()=>setState('online'),4000);
+  } catch(e){addBubble('Error al generar resumen.','zeus');setState('online');}
+}
+
+// ── CONVERSATION ──────────────────────────────────────────────
+async function send(override) {
+  const inp=document.getElementById('conv-input');
+  const txt=override||inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  addBubble(txt,'user');
+  const ck=localStorage.getItem('eos_claude_key');
+  if(!ck){addBubble('Configura eos_claude_key para activar Zeus.','zeus');return;}
+
+  // Detect triggers
+  if(/modo\s*(pensamiento|pensar)|quiero\s*pensar\s*contigo/i.test(txt)){startThinking();return;}
+  if((/fin\s*(del\s*modo|pensamiento)|genera.*resumen|que\s*detectaste/i.test(txt))&&TM){endThinking();return;}
+  if(/desafia\s*(esta|la)\s*idea|cuestiona\s*(esto|esta)/i.test(txt)){
+    if(window.EOSJarvisContext)window.EOSJarvisContext.challengeMode=true;
+    setTimeout(()=>{if(window.EOSJarvisContext)delete window.EOSJarvisContext.challengeMode;},30000);
+  }
+  if(TM){TM_IDEAS.push(txt);document.getElementById('tm-count').textContent=TM_IDEAS.length+' ideas capturadas';const d=document.createElement('div');d.className='tm-idea';d.textContent=txt;document.getElementById('tm-ideas-viz').appendChild(d);}
+
+  setState('thinking');
+  const sysCtx=window.buildSystemContext?window.buildSystemContext():'';
+
+  try {
+    msgs.push({role:'user',content:txt});
+    if(msgs.length>12)msgs=msgs.slice(-12);
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':ck,'anthropic-version':'2023-06-01','Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:280,system:sysCtx,messages:msgs})});
+    const d=await r.json();
+    const reply=d.content?.[0]?.text||'Sin respuesta.';
+    msgs.push({role:'assistant',content:reply});
+    addBubble(reply,'zeus');
+    setState('responding');
+    if(window._eosSpeak)window._eosSpeak(reply);
+    else if(window.EOSVoice)window.EOSVoice.speak(reply);
+    setTimeout(()=>setState(TM?'thinking':'online'),5000);
+  } catch(e){addBubble('Error: '+e.message,'zeus');setState('online');}
+}
+
+window.floatSend=send;
+
+// Remap IDs for jarvis-memory.js compatibility
+const ci=document.getElementById('conv-input');
+if(ci){ci.id='floatChatInput';ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey)send();});}
+document.getElementById('send-btn').id='floatSendBtn';
+
+function addBubble(txt,who,extra) {
+  const area=document.getElementById('resp');
+  const b=document.createElement('div');
+  b.className='bubble '+(who==='zeus'?'b-zeus':'b-user')+(extra?' '+extra:'');
+  if(who==='zeus')b.innerHTML='<div class="b-zname">ZEUS</div>'+txt.replace(/\n/g,'<br>');
+  else b.textContent=txt;
+  area.appendChild(b);
+  while(area.children.length>5)area.removeChild(area.firstChild);
+  // Also append to hidden chatHistory for observer
+  const hc=document.getElementById('chatHistory');
+  const hd=document.createElement('div');
+  hd.className=who==='zeus'?'assistant-msg':'user-msg';hd.textContent=txt;hc.appendChild(hd);
+}
+
+// ── MIC ───────────────────────────────────────────────────────
+function toggleMic() {
+  const btn=document.getElementById('mic-btn');
+  if(window.EOSVoice){
+    if(window.EOSVoiceController&&window.EOSVoiceController.listening){
+      window.EOSVoice.mute();btn.classList.remove('on');setState('online');
+    }else{
+      window.EOSVoice.unmute();window.EOSVoice.activate();btn.classList.add('on');setState('listening');
+    }
+  }else{btn.classList.toggle('on');setState(btn.classList.contains('on')?'listening':'online');}
+}
+
+// ── PRESENCIA CONTINUA ────────────────────────────────────────
+function presencia() {
+  setTimeout(()=>{
+    if(window._presenciaGreeting){addBubble(window._presenciaGreeting,'zeus');return;}
+    const c=window.EOSJarvisContext;
+    if(!c)return;
+    if(c.intel&&c.intel.length>0&&c.intel[0].context){
+      try{const p=JSON.parse(c.intel[0].context);if(p.insights&&p.insights.length>0){const u=p.insights.find(i=>i.priority==='high');if(u)addBubble(u.message,'zeus');}}catch(e){}
+    }
+  },3500);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+function init() {
   initCanvas();
-  setTimeout(initOrbital, 100);
-  animateWaveform();
-  setZeusState('idle');
+  setTimeout(initOrbital,100);
+  animWave();
+  setState('online');
+  setTimeout(loadData,3000);
+  presencia();
 
-  // Load panel data when context is ready
-  setTimeout(loadPanelData, 3000);
+  // Sync voice state
+  setInterval(()=>{
+    if(!window.EOSVoiceController)return;
+    const vc=window.EOSVoiceController;
+    if(vc.playing&&STATE!=='responding')setState('responding');
+    else if(vc.listening&&STATE==='online')setState('listening');
+    else if(!vc.playing&&!vc.listening&&(STATE==='responding'||STATE==='listening'))
+      setTimeout(()=>{if(STATE==='responding'||STATE==='listening')setState('online');},2000);
+  },600);
 
-  // Presencia continua
-  presenciaContinua();
-
-  // Override EOSVoice to update Zeus state
-  const _origSpeak = window._eosSpeak;
-  window._eosSpeak = function(text) {
-    setZeusState('speaking');
-    if (_origSpeak) _origSpeak(text);
-    setTimeout(() => setZeusState('idle'), Math.min(text.length * 60, 8000));
-  };
-
-  // Listen for voice controller state
-  setInterval(() => {
-    if (window.EOSVoiceController) {
-      const vc = window.EOSVoiceController;
-      if (vc.playing && _zeusState !== 'speaking') setZeusState('speaking');
-      else if (vc.listening && _zeusState === 'idle') setZeusState('listening');
-      else if (!vc.playing && !vc.listening && _zeusState !== 'idle' && _zeusState !== 'thinking') {
-        setTimeout(() => { if (_zeusState !== 'thinking') setZeusState('idle'); }, 2000);
-      }
-    }
-  }, 500);
-
-  console.log('[Zeus] Segunda Mente — Online');
+  // Override _eosSpeak for state sync
+  const orig=window._eosSpeak;
+  window._eosSpeak=function(t){setState('responding');if(orig)orig(t);setTimeout(()=>setState(TM?'thinking':'online'),Math.min(t.length*55,8000));};
+  console.log('[Zeus v2] Segunda Mente — Online');
 }
 </script>
 </body>
