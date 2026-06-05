@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     try {
       // Map to exact Supabase schema: id, title, type, priority, status, deadline, why, action, source, orki_id
       const rows = opps.map(o => ({
-        title: (o.title || 'Oportunidad sin título').substring(0, 200),
+        title: (o.title || 'Oportunidad sin tÃ­tulo').substring(0, 200),
         type: o.type || 'general',
         priority: o.priority === 'alta' ? 'alta' : o.priority === 'baja' ? 'baja' : 'media',
         status: 'nueva',
@@ -75,36 +75,67 @@ export default async function handler(req, res) {
     } catch(e) { return false; }
   }
 
+
+  async function saveToEvents(opps) {
+    if (!supabaseUrl || !supabaseKey) return 0;
+    const eventOpps = opps.filter(o =>
+      ['festival', 'showcase', 'event', 'grant'].includes((o.type||'').toLowerCase()) && o.deadline
+    );
+    if (eventOpps.length === 0) return 0;
+    try {
+      const rows = eventOpps.map(o => ({
+        title: (o.title || 'Evento sin título').substring(0, 200),
+        type: o.type || 'festival',
+        description: (o.why || o.action || '').substring(0, 500),
+        deadline: o.deadline || null,
+        priority: o.priority === 'alta' ? 'high' : o.priority === 'baja' ? 'low' : 'medium',
+        status: 'pending',
+        source: 'Scout Agent v2.6'
+      }));
+      const r = await fetch(supabaseUrl + '/rest/v1/events', {
+        method: 'POST',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': 'Bearer ' + supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(rows)
+      });
+      return (r.status === 201 || r.status === 200) ? eventOpps.length : 0;
+    } catch(e) { return 0; }
+  }
+
   try {
     // Search for opportunities
     const queries = [
-      'convocatorias festivales música emergente Colombia LATAM 2025 2026',
-      'open calls showcases artistas alternativos Bogotá Medellín 2025',
+      'convocatorias festivales mÃºsica emergente Colombia LATAM 2025 2026',
+      'open calls showcases artistas alternativos BogotÃ¡ MedellÃ­n 2025',
       'music grants funding emerging artists Latin America 2025',
       'playlists editoriales Spotify nuevos artistas latinoamericanos',
-      'blogs medios música alternativa cinematic Colombia entrevistas'
+      'blogs medios mÃºsica alternativa cinematic Colombia entrevistas'
     ];
 
     const searchResults = await Promise.all(queries.map(q => searchWeb(q)));
-    const combinedResults = searchResults.map((r, i) => `=== Búsqueda ${i+1}: ${queries[i]} ===\n${r}`).join('\n\n');
+    const combinedResults = searchResults.map((r, i) => `=== BÃºsqueda ${i+1}: ${queries[i]} ===\n${r}`).join('\n\n');
 
-    const prompt = `Eres el Scout Agent de EOS (Νέα Αρχή), proyecto musical/documental de KDK basado en Bogotá.
+    const prompt = `Eres el Scout Agent de EOS (ÎÎ­Î± ÎÏÏÎ®), proyecto musical/documental de KDK basado en BogotÃ¡.
 
-EOS es: música cinematic-alternativa, estética rojo/negro, storytelling documental, inspiración mitología griega, artista emergente.
+EOS es: mÃºsica cinematic-alternativa, estÃ©tica rojo/negro, storytelling documental, inspiraciÃ³n mitologÃ­a griega, artista emergente.
 
-Analiza estos resultados de búsqueda y extrae las 6-8 mejores oportunidades reales y accionables:
+Analiza estos resultados de bÃºsqueda y extrae las 6-8 mejores oportunidades reales y accionables:
 
 ${combinedResults}
 
-Responde SOLO con JSON válido (array):
+Responde SOLO con JSON vÃ¡lido (array):
 [
   {
-    "title": "Nombre específico de la oportunidad",
+    "title": "Nombre especÃ­fico de la oportunidad",
     "type": "festival|showcase|playlist|media|grant|collaboration|other",
     "priority": "alta|media|baja",
     "deadline": "YYYY-MM-DD o null",
-    "why": "Por qué es perfecta para EOS — máx 200 chars",
-    "action": "Acción específica que KDK debe tomar — máx 150 chars"
+    "why": "Por quÃ© es perfecta para EOS â mÃ¡x 200 chars",
+    "action": "AcciÃ³n especÃ­fica que KDK debe tomar â mÃ¡x 150 chars"
   }
 ]
 
@@ -126,9 +157,11 @@ Solo JSON, sin markdown, sin explicaciones.`;
     }
 
     const savedToMemory = await saveToSupabase(opps);
+    const savedToEvents = await saveToEvents(opps);
     const critical = opps.find(o => o.priority === 'alta');
+    const criticalCount = opps.filter(o => o.priority === 'alta').length;
 
-        // ── Telegram Notify: fire for critical/high opps ──
+        // ââ Telegram Notify: fire for critical/high opps ââ
     const TG_TOKEN = req.headers['x-telegram-token'];
     const TG_CHAT  = req.headers['x-telegram-chat-id'];
     if (TG_TOKEN && TG_CHAT && criticalCount > 0) {
@@ -151,6 +184,7 @@ Solo JSON, sin markdown, sin explicaciones.`;
       success: true,
       opps: opps.length,
       savedToMemory,
+      savedToEvents,
       critical: critical ? critical.action : null,
       opportunities: opps
     });
