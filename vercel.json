@@ -2,7 +2,10 @@
   "version": 2,
   "name": "eos-agent",
   "outputDirectory": ".",
-  "rewrites": [{ "source": "/(.*)", "destination": "/eos-agent.html" }],
+  "rewrites": [
+    { "source": "/legacy", "destination": "/eos-agent.html" },
+    { "source": "/(.*)", "destination": "/zeus.html" }
+  ],
   "headers": [{ "source": "/(.*)", "headers": [
     { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
     { "key": "X-Content-Type-Options", "value": "nosniff" }
